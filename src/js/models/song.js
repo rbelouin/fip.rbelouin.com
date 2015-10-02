@@ -17,7 +17,13 @@ SongModel.fetchCurrent = function(url) {
       id: json.current.song.id,
       title: json.current.song.titre,
       artist: json.current.song.interpreteMorceau,
-      startTime: json.current.song.startTime
+      album: json.current.song.titreAlbum,
+      year: json.current.song.anneeEditionMusique,
+      label: json.current.song.label,
+      startTime: json.current.song.startTime,
+      endTime: json.current.song.endTime,
+      icons: json.current.song.visuel,
+      itunes: json.current.song.lien
     };
   });
 

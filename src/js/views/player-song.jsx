@@ -14,8 +14,16 @@ var Song = module.exports = React.createClass({
   render: function() {
     var song = this.state.song;
 
-    return (song ?
-      <div className="player-song"><strong className="player-song-title">{song.title}</strong> by <span className="player-song-artist">{song.artist}</span></div> :
+    return song ? (
+      <div className="player-song">
+        <div>
+          <strong className="player-song-title">{song.title}</strong> by <span className="player-song-artist">{song.artist}</span>
+        </div>
+        <div>
+          <span className="player-song-album">{song.album}</span> (<span className="player-song-year">{song.year}</span>), by <span className="player-song-label">{song.label}</span>
+        </div>
+      </div>
+    ) : (
       <div className="player-song">Loading...</div>
     );
   }

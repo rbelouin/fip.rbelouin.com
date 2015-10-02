@@ -5,8 +5,11 @@ var SongItem = React.createClass({
   render: function() {
     return (
       <tr>
-        <td>{this.props.title}</td>
-        <td>{this.props.artist}</td>
+        <td>{this.props.song.title}</td>
+        <td>{this.props.song.artist}</td>
+        <td>{this.props.song.album}</td>
+        <td>{this.props.song.year}</td>
+        <td>{this.props.song.label}</td>
       </tr>
     );
   }
@@ -26,7 +29,7 @@ var SongList = module.exports = React.createClass({
   render: function() {
     var songNodes = this.state.songs.map(function(song) {
       return (
-        <SongItem title={song.title} artist={song.artist} />
+        <SongItem song={song} />
       );
     });
 
@@ -38,6 +41,9 @@ var SongList = module.exports = React.createClass({
           <tr>
             <th>Title</th>
             <th>Artist</th>
+            <th>Album</th>
+            <th>Year</th>
+            <th>Label</th>
           </tr>
         </thead>
         <tbody>
