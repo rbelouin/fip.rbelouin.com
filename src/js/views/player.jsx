@@ -3,6 +3,7 @@ var React = require("react");
 
 var Song = require("./player-song.jsx");
 var SongList = require("./player-song-list.jsx");
+var Controls = require("./player-controls.jsx");
 
 var Player = module.exports = React.createClass({
   render: function() {
@@ -12,7 +13,7 @@ var Player = module.exports = React.createClass({
     return (
       <div className="player">
         <Song p_song={p_song} />
-        <audio src={this.props.url} autoPlay controls />
+        <Controls url={this.props.url} />
         <SongList p_songs={p_played} />
       </div>
     );
