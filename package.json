@@ -16,13 +16,17 @@
     "node": 4
   },
   "devDependencies": {
+    "baconjs": "^0.7.74",
     "browserify": "^11.2.0",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
+    "lodash": "^3.10.1",
     "reactify": "^1.1.1",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "baconjs": "^0.7.74",
+    "lodash": "^3.10.1",
     "react": "^0.13.3"
   },
   "scripts": {
