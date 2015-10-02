@@ -14,5 +14,19 @@
   "license": "MIT",
   "engines": {
     "node": 4
+  },
+  "devDependencies": {
+    "browserify": "^11.2.0",
+    "express": "^4.13.3",
+    "gulp": "^3.9.0",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "react": "^0.13.3"
+  },
+  "scripts": {
+    "build": "gulp browserify",
+    "start": "node ./test/server.js"
   }
 }
