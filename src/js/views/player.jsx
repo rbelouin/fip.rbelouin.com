@@ -11,10 +11,12 @@ var Player = module.exports = React.createClass({
     var p_played = this.props.p_songs.map(_.tail);
 
     return (
-      <div className="player">
-        <Song p_song={p_song} />
-        <Controls url={this.props.url} />
-        <SongList p_songs={p_played} />
+      <div className="player row">
+        <div className="col-md-8 col-md-offset-2">
+          <Song p_song={p_song} />
+          <Controls url={this.props.url} />
+          <SongList p_songs={p_played} />
+        </div>
       </div>
     );
   }

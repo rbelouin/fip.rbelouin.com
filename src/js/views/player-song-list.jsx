@@ -34,9 +34,9 @@ var SongList = module.exports = React.createClass({
     });
 
     return _.isEmpty(this.state.songs) ? (
-      <table className="player-song-history"></table>
+      <table className="player-history"></table>
     ) : (
-      <table className="player-song-history">
+      <table className="player-history table">
         <thead>
           <tr>
             <th>Title</th>

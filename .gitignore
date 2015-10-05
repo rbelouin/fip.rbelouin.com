@@ -1,2 +1,4 @@
 /node_modules
+/test/css
+/test/fonts
 /test/js/

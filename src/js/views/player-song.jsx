@@ -16,11 +16,13 @@ var Song = module.exports = React.createClass({
 
     return song ? (
       <div className="player-song">
-        <div>
-          <strong className="player-song-title">{song.title}</strong> by <span className="player-song-artist">{song.artist}</span>
-        </div>
-        <div>
-          <span className="player-song-album">{song.album}</span> (<span className="player-song-year">{song.year}</span>), by <span className="player-song-label">{song.label}</span>
+        <img className="player-song-icon" alt="icon" src={song.icons.medium} />
+        <div className="player-song-info">
+          <div className="player-song-title">{song.title}</div>
+          <div className="player-song-artist">{song.artist}</div>
+          <div>
+            <span className="player-song-album">{song.album}</span> (<span className="player-song-year">{song.year}</span>), by <span className="player-song-label">{song.label}</span>
+          </div>
         </div>
       </div>
     ) : (
