@@ -8,23 +8,8 @@ var SongModel = module.exports;
  * Return a Bacon property
  */
 SongModel.fetchCurrent = function(url) {
-  var p_response = fetch(url).then(function(res) {
+  var p_song = fetch(url).then(function(res) {
     return res.ok ? res.json() : Promise.reject();
-  });
-
-  var p_song = p_response.then(function(json) {
-    return {
-      id: json.current.song.id,
-      title: json.current.song.titre,
-      artist: json.current.song.interpreteMorceau,
-      album: json.current.song.titreAlbum,
-      year: json.current.song.anneeEditionMusique,
-      label: json.current.song.label,
-      startTime: json.current.song.startTime,
-      endTime: json.current.song.endTime,
-      icons: json.current.song.visuel,
-      itunes: json.current.song.lien
-    };
   });
 
   return Bacon.fromPromise(p_song).toProperty();

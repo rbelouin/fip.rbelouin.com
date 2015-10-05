@@ -7,7 +7,7 @@ var app = express();
 var p_song = require("./data.js");
 
 p_song.onValue(function(song) {
-  console.log("song: " + song.current.song.titre);
+  console.log("song: " + song.title);
 });
 
 app.get("/api/songs", function(req, res) {
