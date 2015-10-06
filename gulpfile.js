@@ -25,5 +25,9 @@ gulp.task("less", function() {
     .pipe(gulp.dest("./test/css"));
 });
 
-gulp.task("build", ["browserify", "less"]);
+gulp.task("watch", ["browserify", "less"], function() {
+  gulp.watch(["./src/js/**/*"], ["browserify"]);
+  gulp.watch(["./src/less/**/*"], ["less"]);
+});
 
+gulp.task("build", ["browserify", "less"]);

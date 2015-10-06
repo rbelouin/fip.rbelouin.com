@@ -34,6 +34,7 @@
   "scripts": {
     "build": "gulp build",
     "install": "gulp build",
-    "start": "node ./test/server.js"
+    "start": "node ./test/server.js",
+    "watch": "gulp watch"
   }
 }
