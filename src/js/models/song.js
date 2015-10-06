@@ -8,11 +8,24 @@ var SongModel = module.exports;
  * Return a Bacon property
  */
 SongModel.fetchCurrent = function(url) {
-  var p_song = fetch(url).then(function(res) {
-    return res.ok ? res.json() : Promise.reject();
-  });
+  return Bacon.fromBinder(function(sink) {
+    var xhr = new XMLHttpRequest();
 
-  return Bacon.fromPromise(p_song).toProperty();
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4) {
+        var ok = xhr.status >= 200 && xhr.status < 300;
+        sink(ok ? JSON.parse(xhr.responseText) : new Bacon.Error());
+        sink(new Bacon.End());
+      }
+    };
+
+    xhr.open("GET", url);
+    xhr.send();
+
+    return function() {
+      xhr.abort();
+    };
+  });
 };
 
 SongModel.fetch = function(url, interval) {
