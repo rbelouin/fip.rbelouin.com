@@ -9,6 +9,9 @@ gulp.task("browserify", function() {
     .bundle()
     .pipe(source("bundle.js"))
     .pipe(gulp.dest("./test/js"));
+
+  gulp.src("./node_modules/intl/dist/Intl.min.js")
+    .pipe(gulp.dest("./test/js/"));
 });
 
 gulp.task("less", function() {

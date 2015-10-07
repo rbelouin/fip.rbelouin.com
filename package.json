@@ -28,8 +28,10 @@
   },
   "dependencies": {
     "baconjs": "^0.7.74",
+    "intl": "^1.0.0",
     "lodash": "^3.10.1",
-    "react": "^0.13.3"
+    "react": "^0.13.3",
+    "react-intl": "^1.2.0"
   },
   "scripts": {
     "build": "gulp build",

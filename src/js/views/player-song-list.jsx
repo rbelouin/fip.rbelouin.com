@@ -1,5 +1,8 @@
 var _ = require("lodash");
 var React = require("react");
+var ReactIntl = require("react-intl");
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 
 var SongItem = React.createClass({
   render: function() {
@@ -16,6 +19,7 @@ var SongItem = React.createClass({
 });
 
 var SongList = module.exports = React.createClass({
+  mixins: [IntlMixin],
   getInitialState: function() {
     return {
       songs: []
@@ -39,11 +43,21 @@ var SongList = module.exports = React.createClass({
       <table className="player-history table">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Year</th>
-            <th>Label</th>
+            <th>
+              <FormattedMessage message={this.getIntlMessage("title")} />
+            </th>
+            <th>
+              <FormattedMessage message={this.getIntlMessage("artist")} />
+            </th>
+            <th>
+              <FormattedMessage message={this.getIntlMessage("album")} />
+            </th>
+            <th>
+              <FormattedMessage message={this.getIntlMessage("year")} />
+            </th>
+            <th>
+              <FormattedMessage message={this.getIntlMessage("label")} />
+            </th>
           </tr>
         </thead>
         <tbody>

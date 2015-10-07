@@ -1,0 +1,15 @@
+{
+  "locales": "en-US",
+  "messages": {
+    "loading": "Loading…",
+    "song-details": "{album} ({year}), by {label}",
+    "title": "Title",
+    "artist": "Artist",
+    "album": "Album",
+    "year": "Year",
+    "label": "Label",
+    "error-audio": "Your browser is not compatible with this player because it cannot play music without Adobe Flash installed. Please use another browser, or see {player}",
+    "error-mpeg": "Your browser is not compatible with this player because it cannot play audio/mpeg streams without any plugin. Please use another browser, or see {player}",
+    "official-player": "the official FIP player"
+  }
+}

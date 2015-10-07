@@ -1,0 +1,15 @@
+{
+  "locales": "fr-FR",
+  "messages": {
+    "loading": "Chargement…",
+    "song-details": "{album} ({year}), chez {label}",
+    "title": "Titre",
+    "artist": "Interprète",
+    "album": "Album",
+    "year": "Année",
+    "label": "Label",
+    "error-audio": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer de la musique sans le plugin Adoble Flash. Veuillez utiliser un autre navigateur, ou voir {player}",
+    "error-mpeg": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer un flux audio/mpeg sans plugin. Veuillez utiliser un autre navigateur, ou voir {player}",
+    "official-player": "le lecteur officiel"
+  }
+}
