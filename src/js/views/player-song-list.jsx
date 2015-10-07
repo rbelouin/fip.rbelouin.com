@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var Bacon = require("baconjs");
 var React = require("react");
 var ReactIntl = require("react-intl");
 var IntlMixin = ReactIntl.IntlMixin;
@@ -17,6 +18,8 @@ var SongItem = React.createClass({
     );
   }
 });
+
+var Song = require("./player-song.jsx");
 
 var SongList = module.exports = React.createClass({
   mixins: [IntlMixin],
@@ -37,33 +40,49 @@ var SongList = module.exports = React.createClass({
       );
     });
 
+    var songNodes2 = this.state.songs.map(function(song) {
+      return (
+        <li>
+          <Song p_song={Bacon.constant(song)} />
+        </li>
+      );
+    });
+
     return _.isEmpty(this.state.songs) ? (
-      <table className="player-history"></table>
+      <div>
+        <table className="player-history"></table>
+        <ul className="player-history"></ul>
+      </div>
     ) : (
-      <table className="player-history table">
-        <thead>
-          <tr>
-            <th>
-              <FormattedMessage message={this.getIntlMessage("title")} />
-            </th>
-            <th>
-              <FormattedMessage message={this.getIntlMessage("artist")} />
-            </th>
-            <th>
-              <FormattedMessage message={this.getIntlMessage("album")} />
-            </th>
-            <th>
-              <FormattedMessage message={this.getIntlMessage("year")} />
-            </th>
-            <th>
-              <FormattedMessage message={this.getIntlMessage("label")} />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {songNodes}
-        </tbody>
-      </table>
+      <div>
+        <table className="player-history table">
+          <thead>
+            <tr>
+              <th>
+                <FormattedMessage message={this.getIntlMessage("title")} />
+              </th>
+              <th>
+                <FormattedMessage message={this.getIntlMessage("artist")} />
+              </th>
+              <th>
+                <FormattedMessage message={this.getIntlMessage("album")} />
+              </th>
+              <th>
+                <FormattedMessage message={this.getIntlMessage("year")} />
+              </th>
+              <th>
+                <FormattedMessage message={this.getIntlMessage("label")} />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {songNodes}
+          </tbody>
+        </table>
+        <ul className="player-history">
+          {songNodes2}
+        </ul>
+      </div>
     );
   }
 });

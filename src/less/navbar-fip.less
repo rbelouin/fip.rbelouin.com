@@ -5,8 +5,29 @@
   border: none;
 
   .navbar-brand {
-    background-color: @fip-pink;
     color: white;
-    width: 50px;
+    padding: 0;
+
+    .glyphicon {
+      background-color: @fip-pink;
+      display: inline-block;
+      line-height: 50px;
+      margin-top: -1px;
+      text-align: center;
+      width: 50px;
+    }
+
+    &:hover, &:active, &:focus {
+      color: white;
+    }
+  }
+
+  @media (max-width: 470px) {
+    & {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
   }
 }

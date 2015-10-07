@@ -23,8 +23,8 @@ function getSong(index) {
     "year": "YEAR " + index.toString(),
     "label": "LABEL " + index.toString(),
     "icons": {
-      "small": "http://www.fipradio.fr/sites/all/modules/custom/rf_rel/images/logo_65.png",
-      "medium": "http://www.fipradio.fr/sites/all/modules/custom/rf_rel/images/logo_65.png"
+      "small": "https://www.placehold.it/100/E2007A/FFFFFF",
+      "medium": "https://www.placehold.it/400/E2007A/FFFFFF"
     },
     "itunes": "https://itunes.apple.com/"
   };
