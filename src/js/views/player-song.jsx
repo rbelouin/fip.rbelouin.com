@@ -16,13 +16,21 @@ var Song = module.exports = React.createClass({
     }.bind(this));
   },
   renderSongDetails: function(song) {
-    return (
+    return song.label ? (
       <div className="player-song-details">
         <FormattedMessage
           message={this.getIntlMessage("song-details")}
           album={<span className="player-song-album">{song.album}</span>}
           year={<span className="player-song-year">{song.year}</span>}
           label={<span className="player-song-label">{song.label}</span>}
+        />
+      </div>
+    ) : (
+      <div className="player-song-details">
+        <FormattedMessage
+          message={this.getIntlMessage("song-details-no-label")}
+          album={<span className="player-song-album">{song.album}</span>}
+          year={<span className="player-song-year">{song.year}</span>}
         />
       </div>
     );

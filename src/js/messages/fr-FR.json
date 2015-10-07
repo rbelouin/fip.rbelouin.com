@@ -3,6 +3,7 @@
   "messages": {
     "loading": "Chargement…",
     "song-details": "{album} ({year}), chez {label}",
+    "song-details-no-label": "{album} ({year})",
     "title": "Titre",
     "artist": "Interprète",
     "album": "Album",

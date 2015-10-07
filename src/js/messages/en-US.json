@@ -3,6 +3,7 @@
   "messages": {
     "loading": "Loading…",
     "song-details": "{album} ({year}), by {label}",
+    "song-details-no-label": "{album} ({year})",
     "title": "Title",
     "artist": "Artist",
     "album": "Album",
