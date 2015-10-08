@@ -1,5 +1,2 @@
 /node_modules
-/test/css
-/test/fonts
-/test/img/
-/test/js/
+/test/public

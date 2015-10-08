@@ -2,6 +2,7 @@
   "name": "fip-client",
   "version": "0.0.0",
   "description": "HTML5 Player for the awesome FIP Radio",
+  "main": "./src/js/index.jsx",
   "keywords": [
     "fip",
     "fipradio",

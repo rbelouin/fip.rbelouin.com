@@ -2,25 +2,22 @@ var _ = require("lodash");
 var React = require("react");
 var IntlMixin = require("react-intl").IntlMixin;
 
-var intl = require("./models/intl.js").getIntlData("en");
-var SongModel = require("./models/song.js");
+exports.start = function(conf) {
+  var intl = require("./models/intl.js")
+    .getIntlData(conf.DefaultLanguage);
 
-var p_songs = SongModel.fetch("/api/songs/current", 2000);
+  var SongModel = require("./models/song.js");
 
-var Player = require("./views/player.jsx");
+  var p_songs = SongModel
+    .fetch("/api/songs/current", conf.FetchInterval)
+    .delay(conf.FetchDelay);
 
-var App = React.createClass({
-  mixins: [IntlMixin],
-  render: function() {
-    return (
-      <Player url="/api/songs" p_songs={p_songs} {...intl} />
+  var Player = require("./views/player.jsx");
+
+  window.addEventListener("load", function() {
+    React.render(
+      <Player url="/api/songs" p_songs={p_songs} {...intl} />,
+      document.querySelector("main")
     );
-  }
-});
-
-window.addEventListener("load", function() {
-  React.render(
-    <App />,
-    document.querySelector("main")
-  );
-});
+  });
+};
