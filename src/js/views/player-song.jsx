@@ -48,7 +48,9 @@ var Song = module.exports = React.createClass({
         </div>
       </div>
     ) : (
-      <div className="player-song">Loading...</div>
+      <div className="player-song">
+        <FormattedMessage message={this.getIntlMessage("loading")} />
+      </div>
     );
   }
 });

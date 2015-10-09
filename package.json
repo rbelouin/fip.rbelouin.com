@@ -25,6 +25,8 @@
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
     "reactify": "^1.1.1",
+    "tape": "^4.2.1",
+    "testling": "^1.7.1",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
@@ -38,6 +40,13 @@
     "build": "gulp build",
     "install": "gulp build",
     "start": "node ./test/server.js",
+    "test": "testling -x chromium",
     "watch": "gulp watch"
+  },
+  "browserify": {
+    "transform": ["reactify"]
+  },
+  "testling": {
+    "files": ["./test/**/*.spec.*"]
   }
 }

@@ -2,10 +2,13 @@ var _ = require("lodash");
 var React = require("react");
 var Bacon = require("baconjs");
 
+var IntlMixin = require("react-intl").IntlMixin;
+
 var NoAudioWarning = require("./warning.jsx").NoAudioWarning;
 var NoMPEGWarning = require("./warning.jsx").NoMPEGWarning;
 
 var Controls = module.exports = React.createClass({
+  mixins: [IntlMixin],
   componentDidMount: function() {
     var controls = React.findDOMNode(this);
     var audio = controls.querySelector("audio");
@@ -38,20 +41,23 @@ var Controls = module.exports = React.createClass({
     var audioDefined = typeof Audio == "function";
     var mpegCompliant = audioDefined && new Audio().canPlayType(type);
 
-    return  !audioDefined ? <NoAudioWarning /> :
-            !mpegCompliant ? <NoMPEGWarning /> :
-            (
-              <audio autoPlay>
-                <source src={this.props.url} type="audio/mpeg" />
-              </audio>
-            );
+    return (
+      <div>
+        {
+          !audioDefined ? <NoAudioWarning /> :
+          !mpegCompliant ? <NoMPEGWarning /> :
+          ""
+        }
+        <audio autoPlay>
+          <source src={this.props.url} type={type} />
+        </audio>
+      </div>
+    );
   },
   render: function() {
     return (
       <div className="player-controls">
-        <div>
-          {this.getAudioTag()}
-        </div>
+        {this.getAudioTag()}
         <span className="player-controls-volume-icon glyphicon glyphicon-volume-up"></span>
         <input type="range" name="volume" />
       </div>
