@@ -8,7 +8,7 @@ var FormattedMessage = ReactIntl.FormattedMessage;
 var SongItem = React.createClass({
   render: function() {
     return (
-      <tr>
+      <tr key={"table-" + this.props.song.id}>
         <td>{this.props.song.title}</td>
         <td>{this.props.song.artist}</td>
         <td>{this.props.song.album}</td>
@@ -42,7 +42,7 @@ var SongList = module.exports = React.createClass({
 
     var songNodes2 = this.state.songs.map(function(song) {
       return (
-        <li>
+        <li key={"ul-" + song.id}>
           <Song p_song={Bacon.constant(song)} />
         </li>
       );
