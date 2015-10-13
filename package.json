@@ -39,7 +39,7 @@
   "scripts": {
     "build": "gulp build",
     "install": "gulp build",
-    "start": "node ./test/server.js",
+    "start": "node ./prod/js/server.js",
     "test": "testling -x chromium",
     "watch": "gulp watch"
   },

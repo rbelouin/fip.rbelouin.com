@@ -9,8 +9,7 @@ exports.start = function(conf) {
   var SongModel = require("./models/song.js");
 
   var p_songs = SongModel
-    .fetch("/api/songs/current", conf.FetchInterval)
-    .delay(conf.FetchDelay);
+    .fetch("/api/songs/current", conf.FetchInterval);
 
   var Player = require("./views/player.jsx");
 

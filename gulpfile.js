@@ -4,11 +4,11 @@ var browserify = require("browserify");
 var less = require("gulp-less");
 
 gulp.task("browserify", function() {
-  browserify("./test/index.js")
+  browserify("./prod/js/index.js")
     .transform("reactify")
     .bundle()
     .pipe(source("bundle.js"))
-    .pipe(gulp.dest("./test/public/js"));
+    .pipe(gulp.dest("./prod/public/js"));
 });
 
 gulp.task("copy", function() {
@@ -16,16 +16,16 @@ gulp.task("copy", function() {
     "./node_modules/bootstrap/fonts/glyphicons-halflings-regular.*",
     "./src/fonts/*"
   ])
-    .pipe(gulp.dest("./test/public/fonts"));
+    .pipe(gulp.dest("./prod/public/fonts"));
 
   gulp.src("./node_modules/intl/dist/Intl.min.js")
-    .pipe(gulp.dest("./test/public/js/"));
+    .pipe(gulp.dest("./prod/public/js/"));
 
   gulp.src("./src/img/icon.png")
-    .pipe(gulp.dest("./test/public/img/"));
+    .pipe(gulp.dest("./prod/public/img/"));
 
   gulp.src("./src/html/index.html")
-    .pipe(gulp.dest("./test/public"));
+    .pipe(gulp.dest("./prod/public"));
 });
 
 gulp.task("less", function() {
@@ -33,7 +33,7 @@ gulp.task("less", function() {
     .pipe(less({
       paths: ["./node_modules/bootstrap/less/"]
     }))
-    .pipe(gulp.dest("./test/public/css"));
+    .pipe(gulp.dest("./prod/public/css"));
 });
 
 gulp.task("watch", ["build"], function() {
