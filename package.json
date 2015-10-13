@@ -20,11 +20,13 @@
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
     "browserify": "^11.2.0",
+    "casperjs": "^1.1.0-beta3",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
     "reactify": "^1.1.1",
+    "slimerjs": "^0.9.6",
     "tape": "^4.2.1",
     "testling": "^1.7.1",
     "vinyl-source-stream": "^1.1.0"
@@ -40,13 +42,17 @@
     "build": "gulp build",
     "install": "gulp build",
     "start": "node ./prod/js/server.js",
-    "test": "testling -x chromium",
+    "test": " Xvfb :1 -screen 0 1440x900x24 & DISPLAY=:1.0 testling -x 'casperjs --engine=slimerjs test/casper.js'",
     "watch": "gulp watch"
   },
   "browserify": {
-    "transform": ["reactify"]
+    "transform": [
+      "reactify"
+    ]
   },
   "testling": {
-    "files": ["./test/**/*.spec.*"]
+    "files": [
+      "./test/**/*.spec.*"
+    ]
   }
 }
