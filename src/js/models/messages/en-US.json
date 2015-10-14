@@ -11,6 +11,7 @@
     "label": "Label",
     "error-audio": "Your browser is not compatible with this player because it cannot play music without Adobe Flash installed. Please use another browser, or see {player}",
     "error-mpeg": "Your browser is not compatible with this player because it cannot play audio/mpeg streams without any plugin. Please use another browser, or see {player}",
-    "official-player": "the official FIP player"
+    "official-player": "the official FIP player",
+    "intro-baseline": "You are one click away from listening to an awesome radio"
   }
 }
