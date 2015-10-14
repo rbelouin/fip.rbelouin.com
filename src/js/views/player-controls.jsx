@@ -15,6 +15,8 @@ var Controls = module.exports = React.createClass({
     var input = controls.querySelector("input");
     var icon = controls.querySelector(".player-controls-volume-icon");
 
+    audio.play();
+
     var p_volume = Bacon.fromEventTarget(input, "input").map(function(e) {
       return e.target.value;
     }).toProperty(input.value);
@@ -48,7 +50,7 @@ var Controls = module.exports = React.createClass({
           !mpegCompliant ? <NoMPEGWarning /> :
           ""
         }
-        <audio autoPlay>
+        <audio>
           <source src={this.props.url} type={type} />
         </audio>
       </div>
