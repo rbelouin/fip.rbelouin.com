@@ -42,7 +42,7 @@
     "build": "gulp build",
     "install": "gulp build",
     "start": "node ./prod/js/server.js",
-    "test": " Xvfb :1 -screen 0 1440x900x24 & DISPLAY=:1.0 testling -x 'casperjs --engine=slimerjs test/casper.js'",
+    "test": " Xvfb :1 -screen 0 1440x900x24 & DISPLAY=:1.0 testling -x 'casperjs --engine=slimerjs test/casper.js' && pkill Xvfb || pkill Xvfb",
     "watch": "gulp watch"
   },
   "browserify": {
