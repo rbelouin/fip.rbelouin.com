@@ -11,11 +11,11 @@ exports.start = function(conf) {
   var p_songs = SongModel
     .fetch("/api/songs/current", conf.FetchInterval);
 
-  var Player = require("./views/player.jsx");
+  var App = require("./views/app.jsx");
 
   window.addEventListener("load", function() {
     React.render(
-      <Player url="/api/songs" p_songs={p_songs} {...intl} />,
+      <App url="/api/songs" p_songs={p_songs} {...intl} />,
       document.querySelector("main")
     );
   });
