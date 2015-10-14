@@ -15,7 +15,7 @@ var Intro = module.exports = React.createClass({
           <FormattedMessage message={this.getIntlMessage("intro-baseline")} />
         </h2>
         <div>
-          <button className="intro-play" ref="play">Play</button>
+          <button className="intro-play glyphicon glyphicon-play" ref="play"></button>
         </div>
       </div>
     );
