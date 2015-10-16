@@ -55,3 +55,8 @@ var songs = exports.songs = [{
   },
   "itunes": "https://itunes.apple.com/fr/album/roule/id1011387842?i=1011388395&uo=4"
 }];
+
+var favorites = exports.favorites = [
+  songs[0].id,
+  songs[2].id
+];

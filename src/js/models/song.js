@@ -36,9 +36,20 @@ SongModel.fetch = function(url, interval) {
 
   var p_song = stream.skipDuplicates(function(song1, song2) {
     return song1.startTime >= song2.startTime;
-  }).toProperty();
+  })
+  .map(function(song) {
+    return _.extend({}, song, {
+      favorite: SongModel.isFavorite(song)
+    });
+  })
+  .toProperty();
 
   return p_song.scan([], function(songs, song) {
     return [song].concat(songs);
   });
+};
+
+SongModel.isFavorite = function(song) {
+  var favorites = JSON.parse(localStorage.favorites || "[]");
+  return _.contains(favorites, song);
 };
