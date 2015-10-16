@@ -60,8 +60,14 @@ var Controls = module.exports = React.createClass({
     return (
       <div className="player-controls">
         {this.getAudioTag()}
-        <span className="player-controls-volume-icon glyphicon glyphicon-volume-up"></span>
-        <input type="range" name="volume" />
+        <button type="button" className="player-controls-favorite">
+          <span className="player-controls-favorite-icon glyphicon glyphicon-heart"></span>
+          {this.getIntlMessage("add-to-favorites")}
+        </button>
+        <div className="player-controls-volume">
+          <span className="player-controls-volume-icon glyphicon glyphicon-volume-up"></span>
+          <input type="range" name="volume" />
+        </div>
       </div>
     );
   }
