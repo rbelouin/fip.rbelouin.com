@@ -70,3 +70,21 @@ SongModel.removeFavorite = function(song) {
     return id === song.id
   }));
 };
+
+SongModel.favBus = new Bacon.Bus();
+
+SongModel.favStream = SongModel.favBus.map(function(ev) {
+  switch(ev.type) {
+    case "add":
+      SongModel.addFavorite(ev.song);
+      return {type: "added", song: ev.song.id};
+      break;
+    case "remove":
+      SongModel.removeFavorite(ev.song);
+      return {type: "removed", song: ev.song.id};
+      break;
+    default:
+      return new Bacon.Error("Unknown type: " + ev.type);
+      break;
+  }
+});

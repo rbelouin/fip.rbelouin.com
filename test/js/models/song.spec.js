@@ -6,10 +6,11 @@ var SongModel = require("../../../src/js/models/song.js");
 var SONG_DURATION = 1000;
 
 var songs = require("../data.js").songs;
-var favorites = require("../data.js").favorites;
 
 var withMock = function(test) {
   return function(t) {
+    var favorites = require("../data.js").favorites;
+
     var fetchCurrent = SongModel.fetchCurrent;
     var getFavorites = SongModel.getFavorites;
     var setFavorites = SongModel.setFavorites;
@@ -56,4 +57,32 @@ test("SongModel should manage favorite songs correctly", withMock(function(t) {
   t.deepEqual(_.sortBy([songs[1].id, songs[2].id]), SongModel.getFavorites());
 
   t.end();
+}));
+
+test("SongModel should add a favorite via a bus call", withMock(function(t) {
+  SongModel.favStream.take(1).onValue(function(ev) {
+    t.equal(ev.type, "added");
+    t.equal(ev.song, songs[1].id);
+    t.deepEqual(_.sortBy([songs[0].id, songs[1].id, songs[2].id]), SongModel.getFavorites());
+    t.end();
+  });
+
+  SongModel.favBus.push({
+    type: "add",
+    song: songs[1]
+  });
+}));
+
+test("SongModel should remove a favorite via a bus call", withMock(function(t) {
+  SongModel.favStream.take(1).onValue(function(ev) {
+    t.equal(ev.type, "removed");
+    t.equal(ev.song, songs[0].id);
+    t.deepEqual([songs[2].id], SongModel.getFavorites());
+    t.end();
+  });
+
+  SongModel.favBus.push({
+    type: "remove",
+    song: songs[0]
+  });
 }));
