@@ -49,7 +49,24 @@ SongModel.fetch = function(url, interval) {
   });
 };
 
+SongModel.getFavorites = function() {
+  return JSON.parse(localStorage.favorites || "[]");
+};
+
+SongModel.setFavorites = function(favorites) {
+  localStorage.favorites = JSON.stringify(favorites);
+};
+
 SongModel.isFavorite = function(song) {
-  var favorites = JSON.parse(localStorage.favorites || "[]");
-  return _.contains(favorites, song);
+  return _.contains(SongModel.getFavorites(), song);
+};
+
+SongModel.addFavorite = function(song) {
+  SongModel.setFavorites(_.union(SongModel.getFavorites(), [song.id]));
+};
+
+SongModel.removeFavorite = function(song) {
+  SongModel.setFavorites(_.reject(SongModel.getFavorites(), function(id) {
+    return id === song.id
+  }));
 };

@@ -11,7 +11,8 @@ var favorites = require("../data.js").favorites;
 var withMock = function(test) {
   return function(t) {
     var fetchCurrent = SongModel.fetchCurrent;
-    var isFavorite = SongModel.isFavorite;
+    var getFavorites = SongModel.getFavorites;
+    var setFavorites = SongModel.setFavorites;
 
     var p_song = Bacon.sequentially(SONG_DURATION, songs).toProperty();
     p_song.onValue();
@@ -20,8 +21,12 @@ var withMock = function(test) {
       return p_song.take(1);
     };
 
-    SongModel.isFavorite = function(song) {
-      return _.contains(favorites, song.id);
+    SongModel.getFavorites = function() {
+      return favorites;
+    };
+
+    SongModel.setFavorites = function(fs) {
+      favorites = fs;
     };
 
     test(t);
@@ -41,4 +46,14 @@ test("SongModel.fetch fetches songs correctly", withMock(function(t) {
     }));
     t.end();
   });
+}));
+
+test("SongModel should manage favorite songs correctly", withMock(function(t) {
+  SongModel.addFavorite(songs[1]);
+  t.deepEqual(_.sortBy([songs[0].id, songs[1].id, songs[2].id]), SongModel.getFavorites());
+
+  SongModel.removeFavorite(songs[0]);
+  t.deepEqual(_.sortBy([songs[1].id, songs[2].id]), SongModel.getFavorites());
+
+  t.end();
 }));
