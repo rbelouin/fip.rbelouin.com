@@ -22,7 +22,7 @@ var App = module.exports = React.createClass({
       <div className="app">
         {
           this.state.play ? (
-            <Player url={this.props.url} p_songs={this.props.p_songs} />
+            <Player url={this.props.url} p_songs={this.props.p_songs} favStream={this.props.favStream} favBus={this.props.favBus} />
           ) : (
             <Intro onPlay={this.onPlay} />
           )

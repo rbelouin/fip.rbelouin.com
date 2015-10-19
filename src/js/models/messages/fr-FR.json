@@ -13,6 +13,7 @@
     "error-mpeg": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer un flux audio/mpeg sans plugin. Veuillez utiliser un autre navigateur, ou voir {player}",
     "official-player": "le lecteur officiel",
     "intro-baseline": "Vous êtes à un clic d'écouter une radio qui déchire",
-    "add-to-favorites": "Ajouter aux favoris"
+    "add-to-favorites": "Ajouter aux favoris",
+    "added-to-favorites": "Ajouté !"
   }
 }

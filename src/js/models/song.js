@@ -58,7 +58,7 @@ SongModel.setFavorites = function(favorites) {
 };
 
 SongModel.isFavorite = function(song) {
-  return _.contains(SongModel.getFavorites(), song);
+  return _.contains(SongModel.getFavorites(), song.id);
 };
 
 SongModel.addFavorite = function(song) {

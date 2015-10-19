@@ -8,12 +8,26 @@ var intl = require("../../../src/js/models/intl.js").getIntlData("en");
 
 var songs = require("../data.js").songs;
 
-function renderPlayer(p_songs) {
+function renderPlayer(p_songs, favBus, favStream) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
+  favBus = favBus || new Bacon.Bus();
+  favStream = favStream || favBus.map(function(ev) {
+    if(ev.type === "add") {
+      return _.extend({}, ev, {type: "added"});
+    }
+    else if (ev.type === "remove") {
+      return _.extend({}, ev, {type: "removed"});
+    }
+    else {
+      return new Bacon.Error("Unknown type: " + ev.type);
+    }
+  });
+
+
   React.render(
-    <Player p_songs={p_songs} {...intl} />,
+    <Player p_songs={p_songs} favBus={favBus} favStream={favStream} {...intl} />,
     $main
   );
 }

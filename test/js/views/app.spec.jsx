@@ -1,16 +1,30 @@
 var test = require("tape");
 var React = require("react");
 var Bacon = require("baconjs");
+var _ = require("lodash");
 
 var App = require("../../../src/js/views/app.jsx");
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");
 
-function renderApp() {
+function renderApp(favBus, favStream) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
+  favBus = favBus || new Bacon.Bus();
+  favStream = favStream || favBus.map(function(ev) {
+    if(ev.type === "add") {
+      return _.extend({}, ev, {type: "added"});
+    }
+    else if (ev.type === "remove") {
+      return _.extend({}, ev, {type: "removed"});
+    }
+    else {
+      return new Bacon.Error("Unknown type: " + ev.type);
+    }
+  });
+
   React.render(
-    <App {...intl} url="/api/songs" p_songs={Bacon.constant([])} />,
+    <App {...intl} url="/api/songs" p_songs={Bacon.constant([])} favBus={favBus} favStream={favStream} />,
     $main
   );
 }
