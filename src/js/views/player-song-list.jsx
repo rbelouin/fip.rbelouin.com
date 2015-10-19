@@ -9,6 +9,9 @@ var SongItem = React.createClass({
   render: function() {
     return (
       <tr key={"table-" + this.props.song.id}>
+        <td className={this.props.song.favorite ? "player-history-favorite" : ""}>
+          <span className="glyphicon glyphicon-heart" onClick={this.props.toggleFavorite}></span>
+        </td>
         <td>{this.props.song.title}</td>
         <td>{this.props.song.artist}</td>
         <td>{this.props.song.album}</td>
@@ -29,16 +32,34 @@ var SongList = module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
-    this.props.p_songs.onValue(function(songs) {
+    var p_songs = this.props.p_songs.flatMapLatest(function(songs) {
+      return this.props.favStream.map(function(ev) {
+        return _.map(songs, function(song) {
+          return ev.song != song.id ? song : _.extend({}, song, {
+            favorite: ev.type === "added"
+          });
+        });
+      }).toProperty(songs);
+    }.bind(this));
+
+    p_songs.onValue(function(songs) {
       this.setState({songs: songs});
     }.bind(this));
+  },
+  toggleFavorite: function(song) {
+    this.props.favBus.push({
+      type: song.favorite ? "remove" : "add",
+      song: song
+    });
   },
   render: function() {
     var songNodes = this.state.songs.map(function(song) {
       return (
-        <SongItem song={song} />
+        <SongItem song={song} toggleFavorite={function() {
+          this.toggleFavorite(song);
+        }.bind(this)} />
       );
-    });
+    }, this);
 
     var songNodes2 = this.state.songs.map(function(song) {
       return (
@@ -58,6 +79,7 @@ var SongList = module.exports = React.createClass({
         <table className="player-history table">
           <thead>
             <tr>
+              <th></th>
               <th>
                 <FormattedMessage message={this.getIntlMessage("title")} />
               </th>
