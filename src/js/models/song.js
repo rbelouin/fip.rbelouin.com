@@ -49,7 +49,9 @@ SongModel.fetch = function(url, interval) {
       return p_favorites.map(function(favorites) {
         return _.map(songs, function(song) {
           return _.extend({}, song, {
-            favorite: _.contains(favorites, song.id)
+            favorite: _.any(favorites, function(favSong) {
+              return favSong.id === song.id;
+            })
           });
         });
       });
@@ -65,16 +67,20 @@ SongModel.setFavorites = function(favorites) {
 };
 
 SongModel.isFavorite = function(song) {
-  return _.contains(SongModel.getFavorites(), song.id);
+  return _.any(SongModel.getFavorites(), function(favSong) {
+    return favSong.id === song.id;
+  });
 };
 
 SongModel.addFavorite = function(song) {
-  SongModel.setFavorites(_.union(SongModel.getFavorites(), [song.id]));
+  if(!SongModel.isFavorite(song)) {
+    SongModel.setFavorites(SongModel.getFavorites().concat([song]));
+  }
 };
 
 SongModel.removeFavorite = function(song) {
-  SongModel.setFavorites(_.reject(SongModel.getFavorites(), function(id) {
-    return id === song.id
+  SongModel.setFavorites(_.reject(SongModel.getFavorites(), function(favSong) {
+    return favSong.id === song.id
   }));
 };
 
@@ -95,3 +101,7 @@ SongModel.favStream = SongModel.favBus.map(function(ev) {
       break;
   }
 });
+
+SongModel.favSongs = SongModel.favStream.map(function() {
+  return SongModel.getFavorites();
+}).toProperty(SongModel.getFavorites());
