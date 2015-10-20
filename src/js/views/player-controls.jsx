@@ -9,11 +9,6 @@ var NoMPEGWarning = require("./warning.jsx").NoMPEGWarning;
 
 var Controls = module.exports = React.createClass({
   mixins: [IntlMixin],
-  getInitialState: function() {
-    return {
-      song: null
-    };
-  },
   componentDidMount: function() {
     var controls = React.findDOMNode(this);
     var audio = controls.querySelector("audio");
@@ -21,19 +16,6 @@ var Controls = module.exports = React.createClass({
     var icon = controls.querySelector(".player-controls-volume-icon");
 
     audio.play();
-
-    var p_song = this.props.p_song.flatMapLatest(function(song) {
-      return this.props.favStream
-        .filter(function(ev) {
-          return ev.song === song.id;
-        })
-        .map(function(ev) {
-          return _.extend({}, song, {
-            favorite: ev.type === "added"
-          });
-        })
-        .toProperty(song);
-    }.bind(this));
 
     var p_volume = Bacon.fromEventTarget(input, "input").map(function(e) {
       return e.target.value;
@@ -44,10 +26,6 @@ var Controls = module.exports = React.createClass({
               volume > 50 ? "up" :
                             "down";
     }).skipDuplicates();
-
-    p_song.onValue(function(song) {
-      this.setState({song: song})
-    }.bind(this));
 
     p_volume.filter(audio != null).onValue(function(volume) {
       audio.volume = volume / 100;
@@ -85,7 +63,7 @@ var Controls = module.exports = React.createClass({
     });
   },
   getFavoriteTag: function() {
-    var song = this.state.song;
+    var song = this.props.song;
     var favorited = song && song.favorite;
 
     return song ? (

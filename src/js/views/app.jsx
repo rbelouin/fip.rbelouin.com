@@ -9,20 +9,29 @@ var App = module.exports = React.createClass({
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
-      play: false
+      play: false,
+      songs: []
     };
   },
   onPlay: function() {
     this.setState({
-      play: true
+      play: true,
+      songs: []
     });
+
+    this.props.p_songs.onValue(function(songs) {
+      this.setState({
+        play: true,
+        songs: songs
+      });
+    }.bind(this));
   },
   render: function() {
     return (
       <div className="app">
         {
           this.state.play ? (
-            <Player url={this.props.url} p_songs={this.props.p_songs} favStream={this.props.favStream} favBus={this.props.favBus} />
+            <Player url={this.props.url} songs={this.state.songs} favStream={this.props.favStream} favBus={this.props.favBus} />
           ) : (
             <Intro onPlay={this.onPlay} />
           )

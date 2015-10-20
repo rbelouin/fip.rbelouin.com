@@ -7,12 +7,12 @@ var intl = require("../../../src/js/models/intl.js").getIntlData("en");
 
 var song = require("../data.js").songs[0];
 
-function renderSong(p_song) {
+function renderSong(song) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
   React.render(
-    <Song p_song={p_song} {...intl} />,
+    <Song song={song} {...intl} />,
     $main
   );
 }
@@ -22,7 +22,7 @@ function cleanSong() {
 }
 
 test("Song should render a message, when waiting for a song", function(t) {
-  renderSong(Bacon.never());
+  renderSong();
   t.equal(document.querySelector("main .player-song").textContent, intl.messages["loading"]);
 
   cleanSong();
@@ -30,7 +30,7 @@ test("Song should render a message, when waiting for a song", function(t) {
 });
 
 test("Song should display the song information", function(t) {
-  renderSong(Bacon.constant(song));
+  renderSong(song);
 
   t.equal(document.querySelector("main .player-song .player-song-title").textContent, song.title);
   t.equal(document.querySelector("main .player-song .player-song-artist").textContent, song.artist);

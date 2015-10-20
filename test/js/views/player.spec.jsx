@@ -13,7 +13,7 @@ var songs = _.map(require("../data.js").songs, function(song) {
   });
 });
 
-function renderPlayer(p_songs, favBus, favStream) {
+function renderPlayer(songs, favBus, favStream) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
@@ -32,7 +32,7 @@ function renderPlayer(p_songs, favBus, favStream) {
 
 
   React.render(
-    <Player p_songs={p_songs} favBus={favBus} favStream={favStream} {...intl} />,
+    <Player songs={songs} favBus={favBus} favStream={favStream} {...intl} />,
     $main
   );
 }
@@ -42,7 +42,7 @@ function cleanPlayer() {
 }
 
 test("Player should display the current song", function(t) {
-  renderPlayer(Bacon.constant(songs));
+  renderPlayer(songs);
 
   t.equal(document.querySelector("main .player .player-song .player-song-title").textContent, _.first(songs).title);
   t.equal(document.querySelector("main .player .player-song .player-song-artist").textContent, _.first(songs).artist);
@@ -55,7 +55,7 @@ test("Player should display the current song", function(t) {
 });
 
 test("Player should display the controls", function(t) {
-  renderPlayer(Bacon.constant(songs));
+  renderPlayer(songs);
 
   t.notEqual(document.querySelector("main .player .player-controls"), null);
 
@@ -64,7 +64,7 @@ test("Player should display the controls", function(t) {
 });
 
 test("Player should display the history", function(t) {
-  renderPlayer(Bacon.constant(songs));
+  renderPlayer(songs);
 
   _.each(_.tail(songs), function(song, index) {
     t.equal(_.contains(document.querySelector("main .player-history tbody tr:nth-child(" + (index + 1) + ") td:nth-child(1)").classList, "player-history-favorite"), song.favorite);

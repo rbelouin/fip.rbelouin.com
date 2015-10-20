@@ -13,7 +13,7 @@ var songs = _.map(require("../data.js").songs, function(song) {
   });
 });
 
-function renderHistory(p_songs, favBus, favStream) {
+function renderHistory(songs, favBus, favStream) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
@@ -31,7 +31,7 @@ function renderHistory(p_songs, favBus, favStream) {
   });
 
   React.render(
-    <SongList p_songs={p_songs} favBus={favBus} favStream={favStream} {...intl} />,
+    <SongList songs={songs} favBus={favBus} favStream={favStream} {...intl} />,
     $main
   );
 }
@@ -41,7 +41,7 @@ function cleanHistory() {
 }
 
 test("SongList should display one row per song", function(t) {
-  renderHistory(Bacon.constant(songs));
+  renderHistory(songs);
 
   t.equal(document.querySelectorAll("main .player-history tbody tr").length, songs.length);
 
@@ -50,7 +50,7 @@ test("SongList should display one row per song", function(t) {
 });
 
 test("SongList should display the information of every song", function(t) {
-  renderHistory(Bacon.constant(songs));
+  renderHistory(songs);
 
   _.each(songs, function(song, index) {
     t.equal(_.contains(document.querySelector("main .player-history tbody tr:nth-child(" + (index + 1) + ") td:nth-child(1)").classList, "player-history-favorite"), song.favorite);

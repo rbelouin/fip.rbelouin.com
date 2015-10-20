@@ -26,26 +26,6 @@ var Song = require("./player-song.jsx");
 
 var SongList = module.exports = React.createClass({
   mixins: [IntlMixin],
-  getInitialState: function() {
-    return {
-      songs: []
-    };
-  },
-  componentDidMount: function() {
-    var p_songs = this.props.p_songs.flatMapLatest(function(songs) {
-      return this.props.favStream.map(function(ev) {
-        return _.map(songs, function(song) {
-          return ev.song != song.id ? song : _.extend({}, song, {
-            favorite: ev.type === "added"
-          });
-        });
-      }).toProperty(songs);
-    }.bind(this));
-
-    p_songs.onValue(function(songs) {
-      this.setState({songs: songs});
-    }.bind(this));
-  },
   toggleFavorite: function(song) {
     this.props.favBus.push({
       type: song.favorite ? "remove" : "add",
@@ -53,7 +33,7 @@ var SongList = module.exports = React.createClass({
     });
   },
   render: function() {
-    var songNodes = this.state.songs.map(function(song) {
+    var songNodes = this.props.songs.map(function(song) {
       return (
         <SongItem song={song} toggleFavorite={function() {
           this.toggleFavorite(song);
@@ -61,7 +41,7 @@ var SongList = module.exports = React.createClass({
       );
     }, this);
 
-    var songNodes2 = this.state.songs.map(function(song) {
+    var songNodes2 = this.props.songs.map(function(song) {
       return (
         <li key={"ul-" + song.id}>
           <Song p_song={Bacon.constant(song)} />
@@ -69,7 +49,7 @@ var SongList = module.exports = React.createClass({
       );
     });
 
-    return _.isEmpty(this.state.songs) ? (
+    return _.isEmpty(this.props.songs) ? (
       <div>
         <table className="player-history"></table>
         <ul className="player-history"></ul>

@@ -5,16 +5,6 @@ var FormattedMessage = ReactIntl.FormattedMessage;
 
 var Song = module.exports = React.createClass({
   mixins: [IntlMixin],
-  getInitialState: function() {
-    return {
-      song: null
-    };
-  },
-  componentDidMount: function() {
-    this.props.p_song.onValue(function(song) {
-      this.setState({song: song});
-    }.bind(this));
-  },
   renderSongDetails: function(song) {
     return song.label ? (
       <div className="player-song-details">
@@ -36,7 +26,7 @@ var Song = module.exports = React.createClass({
     );
   },
   render: function() {
-    var song = this.state.song;
+    var song = this.props.song;
 
     return song ? (
       <div className="player-song">

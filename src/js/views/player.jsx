@@ -9,15 +9,15 @@ var Controls = require("./player-controls.jsx");
 var Player = module.exports = React.createClass({
   mixins: [IntlMixin],
   render: function() {
-    var p_song = this.props.p_songs.map(_.head);
-    var p_played = this.props.p_songs.map(_.tail);
+    var song = _.head(this.props.songs);
+    var history = _.tail(this.props.songs);
 
     return (
       <div className="player row">
         <div className="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          <Song p_song={p_song} />
-          <Controls url={this.props.url} p_song={p_song} favStream={this.props.favStream} favBus={this.props.favBus} />
-          <SongList p_songs={p_played} favStream={this.props.favStream} favBus={this.props.favBus} />
+          <Song song={song} />
+          <Controls url={this.props.url} song={song} favStream={this.props.favStream} favBus={this.props.favBus} />
+          <SongList songs={history} favStream={this.props.favStream} favBus={this.props.favBus} />
         </div>
       </div>
     );
