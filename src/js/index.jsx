@@ -11,14 +11,13 @@ exports.start = function(conf) {
   var p_songs = SongModel
     .fetch("/api/songs/current", conf.FetchInterval);
 
-  var favStream = window.favStream = SongModel.favStream;
   var favBus = window.favBus = SongModel.favBus;
 
   var App = require("./views/app.jsx");
 
   window.addEventListener("load", function() {
     React.render(
-      <App url="/api/songs" p_songs={p_songs} favStream={favStream} favBus={favBus} {...intl} />,
+      <App url="/api/songs" p_songs={p_songs} favBus={favBus} {...intl} />,
       document.querySelector("main")
     );
   });

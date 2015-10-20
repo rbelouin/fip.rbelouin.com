@@ -36,17 +36,24 @@ SongModel.fetch = function(url, interval) {
 
   var p_song = stream.skipDuplicates(function(song1, song2) {
     return song1.startTime >= song2.startTime;
-  })
-  .map(function(song) {
-    return _.extend({}, song, {
-      favorite: SongModel.isFavorite(song)
-    });
-  })
-  .toProperty();
+  }).toProperty();
 
-  return p_song.scan([], function(songs, song) {
-    return [song].concat(songs);
-  });
+  return p_song
+    .scan([], function(songs, song) {
+      return [song].concat(songs);
+    })
+    .flatMapLatest(function(songs) {
+      var p_favorites = SongModel.favStream.map(SongModel.getFavorites)
+                          .toProperty(SongModel.getFavorites());
+
+      return p_favorites.map(function(favorites) {
+        return _.map(songs, function(song) {
+          return _.extend({}, song, {
+            favorite: _.contains(favorites, song.id)
+          });
+        });
+      });
+    });
 };
 
 SongModel.getFavorites = function() {

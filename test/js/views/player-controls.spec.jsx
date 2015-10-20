@@ -7,25 +7,14 @@ var Controls = require("../../../src/js/views/player-controls.jsx");
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");
 var song = require("../data.js").songs[0];
 
-function renderControls(url, song, favBus, favStream) {
+function renderControls(url, song, favBus) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
   favBus = favBus || new Bacon.Bus();
-  favStream = favStream || favBus.map(function(ev) {
-    if(ev.type === "add") {
-      return _.extend({}, ev, {type: "added"});
-    }
-    else if (ev.type === "remove") {
-      return _.extend({}, ev, {type: "removed"});
-    }
-    else {
-      return new Bacon.Error("Unknown type: " + ev.type);
-    }
-  });
 
   React.render(
-    <Controls url="" {...intl} song={song} favBus={favBus} favStream={favStream} />,
+    <Controls url="" {...intl} song={song} favBus={favBus} />,
     $main
   );
 }

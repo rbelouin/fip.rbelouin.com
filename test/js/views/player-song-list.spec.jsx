@@ -13,25 +13,14 @@ var songs = _.map(require("../data.js").songs, function(song) {
   });
 });
 
-function renderHistory(songs, favBus, favStream) {
+function renderHistory(songs, favBus) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
   favBus = favBus || new Bacon.Bus();
-  favStream = favStream || favBus.map(function(ev) {
-    if(ev.type === "add") {
-      return _.extend({}, ev, {type: "added"});
-    }
-    else if(ev.type === "remove") {
-      return _.extend({}, ev, {type: "removed"});
-    }
-    else {
-      return new Bacon.Error("Unknown type: " + ev.type);
-    }
-  });
 
   React.render(
-    <SongList songs={songs} favBus={favBus} favStream={favStream} {...intl} />,
+    <SongList songs={songs} favBus={favBus} {...intl} />,
     $main
   );
 }
