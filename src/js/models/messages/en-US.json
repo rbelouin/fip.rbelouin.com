@@ -14,6 +14,8 @@
     "official-player": "the official FIP player",
     "intro-baseline": "You are one click away from listening to an awesome radio",
     "add-to-favorites": "Add to favorites",
-    "added-to-favorites": "Added!"
+    "added-to-favorites": "Added!",
+    "fip-radio": "Radio",
+    "favorites": "Favorite songs"
   }
 }

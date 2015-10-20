@@ -3,6 +3,7 @@
 
 .navbar {
   border: none;
+  margin-bottom: 0;
 
   .navbar-brand {
     color: white;
@@ -10,11 +11,28 @@
 
     .glyphicon {
       background-color: @fip-pink;
+      color: white;
       display: inline-block;
       line-height: 50px;
+      margin-right: 10px;
       margin-top: -1px;
       text-align: center;
       width: 50px;
+
+      &:hover, &:active, &:focus {
+        text-decoration: none;
+      }
+
+      @media (max-width: 991px) {
+        & {
+          font-size: 26px;
+          vertical-align: middle;
+        }
+
+        &::before {
+          content: "\e236";
+        }
+      }
     }
 
     &:hover, &:active, &:focus {
