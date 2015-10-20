@@ -6,12 +6,12 @@ exports.start = function(conf) {
   var intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
 
-  var SongModel = window.SongModel = require("./models/song.js");
+  var SongModel = require("./models/song.js");
 
   var p_songs = SongModel
     .fetch("/api/songs/current", conf.FetchInterval);
 
-  var favBus = window.favBus = SongModel.favBus;
+  var favBus = SongModel.favBus;
 
   var App = require("./views/app.jsx");
 
