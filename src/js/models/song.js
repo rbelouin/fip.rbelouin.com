@@ -63,7 +63,11 @@ SongModel.getFavorites = function() {
 };
 
 SongModel.setFavorites = function(favorites) {
-  localStorage.favorites = JSON.stringify(favorites);
+  localStorage.favorites = JSON.stringify(_.map(favorites, function(song) {
+    return _.extend({}, song, {
+      favorite: true
+    });
+  }));
 };
 
 SongModel.isFavorite = function(song) {
