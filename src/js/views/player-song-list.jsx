@@ -44,7 +44,7 @@ var SongList = module.exports = React.createClass({
     var songNodes2 = this.props.songs.map(function(song) {
       return (
         <li key={"ul-" + song.id}>
-          <Song p_song={Bacon.constant(song)} />
+          <Song song={song} />
         </li>
       );
     });
