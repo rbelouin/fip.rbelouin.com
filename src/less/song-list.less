@@ -1,0 +1,55 @@
+table.table.song-list {
+  border-collapse: separate;
+  border-spacing: 0 2px;
+  font-family: Oxygen, sans-serif;
+
+  td, th {
+    border: none;
+  }
+
+  th {
+    font-size: 16px;
+    font-weight: lighter;
+    text-transform: uppercase;
+  }
+
+  td {
+    background-color: #303030;
+
+    &:first-child {
+      color: #bbbbbb;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+
+    &.song-list-favorite:first-child {
+      color: @fip-pink;
+    }
+  }
+
+  @media (max-width: 470px) {
+    & {
+      display: none;
+    }
+  }
+}
+
+ul.song-list {
+  margin: 0 0 20px 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin-top: 20px;
+
+    .player-song-icon {
+      display: none;
+    }
+  }
+
+  @media (min-width: 471px) {
+    & {
+      display: none;
+    }
+  }
+}

@@ -7,20 +7,20 @@ var Song = module.exports = React.createClass({
   mixins: [IntlMixin],
   renderSongDetails: function(song) {
     return song.label ? (
-      <div className="player-song-details">
+      <div className="song-details">
         <FormattedMessage
           message={this.getIntlMessage("song-details")}
-          album={<span className="player-song-album">{song.album}</span>}
-          year={<span className="player-song-year">{song.year}</span>}
-          label={<span className="player-song-label">{song.label}</span>}
+          album={<span className="song-album">{song.album}</span>}
+          year={<span className="song-year">{song.year}</span>}
+          label={<span className="song-label">{song.label}</span>}
         />
       </div>
     ) : (
-      <div className="player-song-details">
+      <div className="song-details">
         <FormattedMessage
           message={this.getIntlMessage("song-details-no-label")}
-          album={<span className="player-song-album">{song.album}</span>}
-          year={<span className="player-song-year">{song.year}</span>}
+          album={<span className="song-album">{song.album}</span>}
+          year={<span className="song-year">{song.year}</span>}
         />
       </div>
     );
@@ -29,16 +29,16 @@ var Song = module.exports = React.createClass({
     var song = this.props.song;
 
     return song ? (
-      <div className="player-song">
-        <img className="player-song-icon" alt="icon" src={song.icons.medium} />
-        <div className="player-song-info">
-          <div className="player-song-title">{song.title}</div>
-          <div className="player-song-artist">{song.artist}</div>
+      <div className="song">
+        <img className="song-icon" alt="icon" src={song.icons.medium} />
+        <div className="song-info">
+          <div className="song-title">{song.title}</div>
+          <div className="song-artist">{song.artist}</div>
           {this.renderSongDetails(song)}
         </div>
       </div>
     ) : (
-      <div className="player-song">
+      <div className="song">
         <FormattedMessage message={this.getIntlMessage("loading")} />
       </div>
     );

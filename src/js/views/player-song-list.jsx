@@ -9,7 +9,7 @@ var SongItem = React.createClass({
   render: function() {
     return (
       <tr key={"table-" + this.props.song.id}>
-        <td className={this.props.song.favorite ? "player-history-favorite" : ""}>
+        <td className={this.props.song.favorite ? "song-list-favorite" : ""}>
           <span className="glyphicon glyphicon-heart" onClick={this.props.toggleFavorite}></span>
         </td>
         <td>{this.props.song.title}</td>
@@ -51,12 +51,12 @@ var SongList = module.exports = React.createClass({
 
     return _.isEmpty(this.props.songs) ? (
       <div>
-        <table className="player-history"></table>
-        <ul className="player-history"></ul>
+        <table className="song-list"></table>
+        <ul className="song-list"></ul>
       </div>
     ) : (
       <div>
-        <table className="player-history table">
+        <table className="song-list table">
           <thead>
             <tr>
               <th></th>
@@ -81,7 +81,7 @@ var SongList = module.exports = React.createClass({
             {songNodes}
           </tbody>
         </table>
-        <ul className="player-history">
+        <ul className="song-list">
           {songNodes2}
         </ul>
       </div>
