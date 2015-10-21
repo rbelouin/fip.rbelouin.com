@@ -65,6 +65,10 @@ var App = module.exports = React.createClass({
     var paneIsOpen = this.state.paneIsOpen;
     var navClass = paneIsOpen ? "app-nav-open" : "app-nav-close";
 
+    var active = function(route) {
+      return this.state.route === route ? "active" : "";
+    }.bind(this);
+
     return (
       <div className="app">
         <main className="app-main container-fluid">
@@ -78,10 +82,10 @@ var App = module.exports = React.createClass({
         </main>
         <nav className={"app-nav " + navClass}>
           <ul>
-            <li>
+            <li className={active("radio")}>
               <A href="/">{this.getIntlMessage("fip-radio")}</A>
             </li>
-            <li>
+            <li className={active("favorites")}>
               <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
             </li>
           </ul>

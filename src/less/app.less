@@ -25,9 +25,15 @@
           line-height: 40px;
           padding: 0 20px;
 
-          &:hover {
+          &:hover, &:active, &:focus {
             color: white;
             text-decoration: none;
+          }
+        }
+
+        &.active {
+          a {
+            color: white;
           }
         }
       }
