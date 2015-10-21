@@ -32,11 +32,11 @@ function cleanPlayer() {
 test("Player should display the current song", function(t) {
   renderPlayer(songs);
 
-  t.equal(document.querySelector("main .player .player-song .player-song-title").textContent, _.first(songs).title);
-  t.equal(document.querySelector("main .player .player-song .player-song-artist").textContent, _.first(songs).artist);
-  t.equal(document.querySelector("main .player .player-song .player-song-album").textContent, _.first(songs).album);
-  t.equal(document.querySelector("main .player .player-song .player-song-year").textContent, _.first(songs).year);
-  t.equal(document.querySelector("main .player .player-song .player-song-label").textContent, _.first(songs).label);
+  t.equal(document.querySelector("main .player .song .song-title").textContent, _.first(songs).title);
+  t.equal(document.querySelector("main .player .song .song-artist").textContent, _.first(songs).artist);
+  t.equal(document.querySelector("main .player .song .song-album").textContent, _.first(songs).album);
+  t.equal(document.querySelector("main .player .song .song-year").textContent, _.first(songs).year);
+  t.equal(document.querySelector("main .player .song .song-label").textContent, _.first(songs).label);
 
   cleanPlayer();
   t.end();

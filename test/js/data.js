@@ -57,6 +57,6 @@ var songs = exports.songs = [{
 }];
 
 var favorites = exports.favorites = [
-  songs[0].id,
-  songs[2].id
+  songs[0],
+  songs[2]
 ];
