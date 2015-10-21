@@ -53,7 +53,12 @@ var App = module.exports = React.createClass({
   },
   renderFavorites: function() {
     return (
-      <SongList songs={this.state.favSongs} favBus={this.props.favBus} />
+      <div>
+        <div className="alert alert-warning">
+          {this.getIntlMessage("favorites-alert")}
+        </div>
+        <SongList songs={this.state.favSongs} favBus={this.props.favBus} />
+      </div>
    );
   },
   render: function() {

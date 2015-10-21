@@ -16,6 +16,7 @@
     "add-to-favorites": "Ajouter aux favoris",
     "added-to-favorites": "Ajouté !",
     "fip-radio": "Radio",
-    "favorites": "Chansons favorites"
+    "favorites": "Chansons favorites",
+    "favorites-alert": "Vous pouvez désormais sauvegarder une chanson en cliquant sur le petit cœur associé. Notez bien que vos chansons favorites sont stockées localement dans votre navigateur, et qu'elles ne sont donc pas accessibles depuis un autre navigateur pour le moment."
   }
 }
