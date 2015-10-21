@@ -18,10 +18,7 @@ exports.start = function(conf) {
   var favBus = SongModel.favBus;
 
   var routes = Bacon.fromRoutes({
-    routes: {
-      favorites:  "/users/me/songs",
-      radio:      "/"
-    }
+    routes: conf.routes
   });
 
   routes.errors.onValue(function() {
