@@ -25,7 +25,6 @@
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
-    "react-addons-test-utils": "^0.14.0",
     "reactify": "^1.1.1",
     "slimerjs": "^0.9.6",
     "tape": "^4.2.1",
@@ -37,7 +36,7 @@
     "baconjs": "^0.7.74",
     "intl": "^1.0.0",
     "lodash": "^3.10.1",
-    "react": "^0.14.0",
+    "react": "^0.13.3",
     "react-intl": "^1.2.0"
   },
   "scripts": {

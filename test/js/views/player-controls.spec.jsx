@@ -2,7 +2,7 @@ var test = require("tape");
 var _ = require("lodash");
 var Bacon = require("baconjs");
 var React = require("react");
-var ReactTestUtils = require("react-addons-test-utils");
+var ReactTestUtils = require("react/lib/ReactTestUtils.js");
 
 var Controls = require("../../../src/js/views/player-controls.jsx");
 

@@ -1,6 +1,6 @@
 var test = require("tape");
 var React = require("react");
-var ReactTestUtils = require("react-addons-test-utils");
+var ReactTestUtils = require("react/lib/ReactTestUtils.js");
 
 var Intro = require("../../../src/js/views/intro.jsx");
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");

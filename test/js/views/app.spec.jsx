@@ -1,6 +1,6 @@
 var test = require("tape");
 var React = require("react");
-var ReactTestUtils = require("react-addons-test-utils");
+var ReactTestUtils = require("react/lib/ReactTestUtils.js");
 var Bacon = require("baconjs");
 var _ = require("lodash");
 
