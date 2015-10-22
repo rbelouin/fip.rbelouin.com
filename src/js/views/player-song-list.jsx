@@ -36,9 +36,11 @@ SongList.table = React.createClass({
   render: function() {
     var songNodes = this.props.songs.map(function(song) {
       return (
-        <Song.tr song={song} key={song.id} toggleFavorite={function() {
-          this.toggleFavorite(song);
-        }} />
+        <Song.tr
+          song={song}
+          key={song.id}
+          toggleFavorite={_.partial(this.toggleFavorite, song)}
+        />
       );
     }, this);
 
