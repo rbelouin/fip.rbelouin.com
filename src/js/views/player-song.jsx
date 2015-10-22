@@ -3,9 +3,11 @@ var ReactIntl = require("react-intl");
 var IntlMixin = ReactIntl.IntlMixin;
 var FormattedMessage = ReactIntl.FormattedMessage;
 
-var Song = module.exports = React.createClass({
+var SongDetails = React.createClass({
   mixins: [IntlMixin],
-  renderSongDetails: function(song) {
+  render: function() {
+    var song = this.props.song;
+
     return song.label ? (
       <div className="song-details">
         <FormattedMessage
@@ -24,7 +26,11 @@ var Song = module.exports = React.createClass({
         />
       </div>
     );
-  },
+  }
+});
+
+var Song = module.exports = React.createClass({
+  mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
 
@@ -34,13 +40,44 @@ var Song = module.exports = React.createClass({
         <div className="song-info">
           <div className="song-title">{song.title}</div>
           <div className="song-artist">{song.artist}</div>
-          {this.renderSongDetails(song)}
+          <SongDetails song={song} />
         </div>
       </div>
     ) : (
       <div className="song">
         <FormattedMessage message={this.getIntlMessage("loading")} />
       </div>
+    );
+  }
+});
+
+Song.tr = React.createClass({
+  render: function() {
+    var song = this.props.song;
+
+    return (
+      <tr>
+        <td className={song.favorite ? "song-list-favorite" : ""}>
+          <span className="glyphicon glyphicon-heart" onClick={this.props.toggleFavorite}></span>
+        </td>
+        <td>{song.title}</td>
+        <td>{song.artist}</td>
+        <td>{song.album}</td>
+        <td>{song.year}</td>
+        <td>{song.label}</td>
+      </tr>
+    );
+  }
+});
+
+Song.li = React.createClass({
+  render: function() {
+    var song = this.props.song;
+
+    return (
+      <li>
+        <Song song={song} />
+      </li>
     );
   }
 });

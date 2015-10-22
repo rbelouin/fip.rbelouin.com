@@ -3,11 +3,9 @@ var React = require("react");
 var ReactIntl = require("react-intl");
 var IntlMixin = ReactIntl.IntlMixin;
 
-var Intro = require("./intro.jsx");
-var Player = require("./player.jsx");
-var SongList = require("./player-song-list.jsx");
-
-var A = require("./link.jsx");
+var Radio = require("./radio.jsx");
+var Favorites = require("./favorites.jsx");
+var AppNav = require("./app-nav.jsx");
 
 var App = module.exports = React.createClass({
   mixins: [IntlMixin],
@@ -40,56 +38,31 @@ var App = module.exports = React.createClass({
       this.setState({"favSongs": songs});
     }.bind(this));
   },
-  renderRadio: function() {
-    return this.state.play ? (
-      <Player
-        url={this.props.url}
-        songs={this.state.songs}
-        favBus={this.props.favBus}
-      />
-    ) : (
-      <Intro onPlay={this.onPlay} />
-    )
-  },
-  renderFavorites: function() {
-    return (
-      <div>
-        <div className="alert alert-warning">
-          {this.getIntlMessage("favorites-alert")}
-        </div>
-        <SongList songs={this.state.favSongs} favBus={this.props.favBus} />
-      </div>
-   );
-  },
   render: function() {
-    var paneIsOpen = this.state.paneIsOpen;
-    var navClass = paneIsOpen ? "app-nav-open" : "app-nav-close";
-
-    var active = function(route) {
-      return this.state.route === route ? "active" : "";
-    }.bind(this);
+    var page =  this.state.route === "favorites" ?
+                  <Favorites
+                    favSongs={this.state.favSongs}
+                    favBus={this.props.favBus}
+                  /> :
+                this.state.route === "radio" ?
+                  <Radio
+                    url={this.props.url}
+                    play={this.state.play}
+                    songs={this.state.songs}
+                    favBus={this.props.favBus}
+                    onPlay={this.onPlay}
+                  /> :
+                "";
 
     return (
       <div className="app">
         <main className="app-main container-fluid">
-          {
-            (this.state.route === "favorites") ?
-              this.renderFavorites()
-            : (this.state.route === "radio") ?
-              this.renderRadio()
-            : ""
-          }
+          {page}
         </main>
-        <nav className={"app-nav " + navClass}>
-          <ul>
-            <li className={active("radio")}>
-              <A href="/">{this.getIntlMessage("fip-radio")}</A>
-            </li>
-            <li className={active("favorites")}>
-              <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
-            </li>
-          </ul>
-        </nav>
+        <AppNav
+          route={this.state.route}
+          paneIsOpen={this.state.paneIsOpen}
+        />
       </div>
     );
   }

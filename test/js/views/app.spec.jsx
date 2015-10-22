@@ -1,5 +1,6 @@
 var test = require("tape");
 var React = require("react");
+var ReactTestUtils = require("react-addons-test-utils");
 var Bacon = require("baconjs");
 var _ = require("lodash");
 
@@ -34,7 +35,7 @@ test("App should display the Intro component", function(t) {
 test("App should hide the Intro and display the Player once the user asked for playing the radio", function(t) {
   renderApp(Bacon.constant("radio"));
 
-  document.querySelector("main .app .intro .intro-play").dispatchEvent(new Event("click"));
+  ReactTestUtils.Simulate.click(document.querySelector("main .app .intro .intro-play"));
 
   t.equal(document.querySelector("main .app .intro"), null);
   t.notEqual(document.querySelector("main .app .player"), null);

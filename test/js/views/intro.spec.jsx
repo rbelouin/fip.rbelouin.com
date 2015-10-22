@@ -1,5 +1,6 @@
 var test = require("tape");
 var React = require("react");
+var ReactTestUtils = require("react-addons-test-utils");
 
 var Intro = require("../../../src/js/views/intro.jsx");
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");
@@ -43,7 +44,7 @@ test("Intro should call the onPlay callback when the user clicks on the play but
     called = true;
   });
 
-  document.querySelector("main .intro .intro-play").dispatchEvent(new Event("click"));
+  ReactTestUtils.Simulate.click(document.querySelector("main .intro .intro-play"));
 
   setTimeout(function() {
     t.ok(called);

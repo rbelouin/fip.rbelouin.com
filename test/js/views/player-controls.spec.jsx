@@ -2,6 +2,8 @@ var test = require("tape");
 var _ = require("lodash");
 var Bacon = require("baconjs");
 var React = require("react");
+var ReactTestUtils = require("react-addons-test-utils");
+
 var Controls = require("../../../src/js/views/player-controls.jsx");
 
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");
@@ -48,15 +50,15 @@ test("Changing the input range value changes the volume", function(t) {
   var audio = document.querySelector("main audio");
 
   input.value = "0";
-  input.dispatchEvent(new Event("input"));
+  ReactTestUtils.Simulate.input(input);
   t.equal(audio.volume, 0);
 
   input.value = "50";
-  input.dispatchEvent(new Event("input"));
+  ReactTestUtils.Simulate.input(input);
   t.equal(audio.volume, 0.5);
 
   input.value = "100";
-  input.dispatchEvent(new Event("input"));
+  ReactTestUtils.Simulate.input(input);
   t.equal(audio.volume, 1);
 
   cleanControls();
