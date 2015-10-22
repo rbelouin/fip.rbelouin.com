@@ -1,0 +1,70 @@
+.app {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .app-nav {
+    background-color: #444444;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+
+    ul {
+      list-style: none;
+      margin-top: 20px;
+      padding: 0;
+
+      li {
+        a {
+          color: #C0C0C0;
+          font-size: 18px;
+          line-height: 40px;
+          padding: 0 20px;
+
+          &:hover, &:active, &:focus {
+            color: white;
+            text-decoration: none;
+          }
+        }
+
+        &.active {
+          a {
+            color: white;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 991px) {
+      &.app-nav-close {
+        transform: translate(-300px);
+        transition: transform 300ms;
+      }
+
+      &.app-nav-open {
+        transform: translate(0px);
+        transition: transform 300ms;
+      }
+    }
+  }
+
+  .app-main {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    bottom: 0;
+    right: 0;
+    padding-top: 20px;
+    overflow-y: auto;
+
+    @media (max-width: 991px) {
+      & {
+        left: 0;
+      }
+    }
+  }
+}

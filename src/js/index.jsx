@@ -1,4 +1,6 @@
 var _ = require("lodash");
+var Bacon = window.Bacon = require("baconjs");
+require("bacon-routes");
 var React = require("react");
 var IntlMixin = require("react-intl").IntlMixin;
 
@@ -11,12 +13,48 @@ exports.start = function(conf) {
   var p_songs = SongModel
     .fetch("/api/songs/current", conf.FetchInterval);
 
+  var p_favSongs = SongModel.favSongs;
+
+  var favBus = SongModel.favBus;
+
+  var routes = Bacon.fromRoutes({
+    routes: conf.routes
+  });
+
+  routes.errors.onValue(function() {
+    Bacon.history.pushState(null, null, "/");
+  });
+
+  var p_route = _.foldl(routes, function(p_route, stream, name) {
+    return name === "errors" ? p_route : p_route.merge(stream.map(name));
+  }, Bacon.never());
+
   var App = require("./views/app.jsx");
 
   window.addEventListener("load", function() {
-    React.render(
-      <App url="/api/songs" p_songs={p_songs} {...intl} />,
-      document.querySelector("main")
+    var s_click = Bacon.fromEvent(
+      document.querySelector(".navbar .navbar-brand a"),
+      "click"
     );
+
+    var p_paneIsOpen = s_click.doAction(".preventDefault")
+                              .scan(false, function(isOpen) {
+                                return !isOpen;
+                              });
+
+    React.render(
+      <App
+        url="/api/songs"
+        p_route={p_route}
+        p_paneIsOpen={p_paneIsOpen}
+        p_songs={p_songs}
+        p_favSongs={p_favSongs}
+        favBus={favBus}
+        {...intl}
+      />,
+      document.querySelector("#app")
+    );
+
+    Bacon.history.pushState(null, null, window.location.pathname);
   });
 };

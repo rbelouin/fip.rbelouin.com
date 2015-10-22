@@ -4,64 +4,46 @@ var Bacon = require("baconjs");
 
 var IntlMixin = require("react-intl").IntlMixin;
 
-var NoAudioWarning = require("./warning.jsx").NoAudioWarning;
-var NoMPEGWarning = require("./warning.jsx").NoMPEGWarning;
+var Audio = require("./audio.jsx");
+var FavoriteButton = require("./favorite-button.jsx");
 
 var Controls = module.exports = React.createClass({
   mixins: [IntlMixin],
-  componentDidMount: function() {
-    var controls = React.findDOMNode(this);
-    var audio = controls.querySelector("audio");
-    var input = controls.querySelector("input");
-    var icon = controls.querySelector(".player-controls-volume-icon");
-
-    audio.play();
-
-    var p_volume = Bacon.fromEventTarget(input, "input").map(function(e) {
-      return e.target.value;
-    }).toProperty(input.value);
-
-    var p_icon = p_volume.map(function(volume) {
-      return  volume == 0 ? "off" :
-              volume > 50 ? "up" :
-                            "down";
-    }).skipDuplicates();
-
-    p_volume.filter(audio != null).onValue(function(volume) {
-      audio.volume = volume / 100;
-    });
-
-    p_icon.onValue(function(iconName) {
-      icon.className = _.map(icon.classList, function(className) {
-        var isIconClass = className.indexOf("glyphicon-volume-") == 0;
-        return isIconClass ? "glyphicon-volume-" + iconName : className;
-      }).join(" ");
+  getInitialState: function() {
+    return {
+      volume: 0.5
+    };
+  },
+  toggleFavorite: function(song) {
+    this.props.favBus.push({
+      type: song.favorite ? "remove" : "add",
+      song: song
     });
   },
-  getAudioTag: function() {
-    var type = "audio/mpeg";
-    var audioDefined = typeof Audio == "function";
-    var mpegCompliant = audioDefined && new Audio().canPlayType(type);
-
-    return (
-      <div>
-        {
-          !audioDefined ? <NoAudioWarning /> :
-          !mpegCompliant ? <NoMPEGWarning /> :
-          ""
-        }
-        <audio>
-          <source src={this.props.url} type={type} />
-        </audio>
-      </div>
-    );
+  onInput: function(e) {
+    this.setState({
+      volume: e.target.value / 100
+    });
   },
   render: function() {
+    var favorite = this.props.song ? this.props.song.favorite : false;
+    var icon =  this.state.volume == 0 ?  "off" :
+                this.state.volume > 0.5 ? "up" :
+                                          "down";
+
     return (
       <div className="player-controls">
-        {this.getAudioTag()}
-        <span className="player-controls-volume-icon glyphicon glyphicon-volume-up"></span>
-        <input type="range" name="volume" />
+        <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} />
+        <FavoriteButton
+          favorite={favorite}
+          onClick={
+            _.partial(this.toggleFavorite, this.props.song)
+          }
+        />
+        <div className="player-controls-volume">
+          <span className={"player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
+          <input type="range" name="volume" onInput={this.onInput} />
+        </div>
       </div>
     );
   }

@@ -1,69 +1,8 @@
 .player {
-  .player-song {
-    background-color: #222222;
-    font-family: Oxygen, sans-serif;
-    font-size: 16px;
-    font-weight: lighter;
-    line-height: 20px;
-    padding: 20px;
-
-    .player-song-icon {
-      display: inline-block;
-      height: 100px;
-      vertical-align: top;
-      width: 100px;
-
-      @media (max-width: 470px) {
-        & {
-          display: block;
-          height: auto;
-          width: 100%;
-        }
-      }
-    }
-
-    .player-song-info {
-      display: inline-block;
-      padding-left: 20px;
-      width: ~"calc(100% - 100px)";
-
-      .player-song-title {
-        font-size: 40px;
-        font-weight: bold;
-        line-height: 40px;
-      }
-
-      .player-song-artist {
-        font-size: 30px;
-        line-height: 30px;
-        margin-bottom: 10px;
-      }
-
-      @media (max-width: 470px) {
-        & {
-          display: block;
-          padding-left: 0;
-          width: 100%;
-
-          .player-song-title {
-            font-size: 24px;
-            line-height: 30px;
-            margin-top: 10px;
-          }
-
-          .player-song-artist {
-            font-size: 20px;
-          }
-        }
-      }
-    }
-  }
-
   .player-controls {
     background-color: #222222;
     margin-bottom: 50px;
     padding: 0 20px 10px;
-    text-align: right;
 
     input[type="range"] {
       -moz-appearance: none;
@@ -102,11 +41,41 @@
 
     }
 
-    .player-controls-volume-icon {
+    .player-controls-volume {
+      float: right;
+
+      .player-controls-volume-icon {
+        display: inline-block;
+        font-size: 20px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    }
+
+    .player-controls-favorite {
+      background-color: transparent;
+      border: none;
+      color: #bbbbbb;
       display: inline-block;
-      font-size: 20px;
-      margin-right: 10px;
-      vertical-align: middle;
+      height: 20px;
+      outline: none;
+      padding: 1px 0;
+
+      .player-controls-favorite-icon {
+        color: #bbbbbb;
+        font-size: 16px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      &:hover,
+      &.player-controls-favorite-added {
+        color: #ffffff;
+
+        .player-controls-favorite-icon {
+          color: @fip-pink;
+        }
+      }
     }
 
     .alert {
@@ -114,57 +83,7 @@
     }
 
     @media (max-width: 470px) {
-      & input[type="range"] {
-        display: none;
-      }
-
-      & .player-controls-volume-icon {
-        display: none;
-      }
-    }
-  }
-
-  table.player-history {
-    border-collapse: separate;
-    border-spacing: 0 2px;
-    font-family: Oxygen, sans-serif;
-
-    td, th {
-      border: none;
-    }
-
-    th {
-      font-size: 16px;
-      font-weight: lighter;
-      text-transform: uppercase;
-    }
-
-    td {
-      background-color: #303030;
-    }
-
-    @media (max-width: 470px) {
-      & {
-        display: none;
-      }
-    }
-  }
-
-  ul.player-history {
-    margin: 0 0 20px 0;
-    padding: 0;
-
-    li {
-      list-style: none;
-      margin-top: 20px;
-
-      .player-song-icon {
-        display: none;
-      }
-    }
-
-    @media (min-width: 471px) {
-      & {
+      & .player-controls-volume {
         display: none;
       }
     }
