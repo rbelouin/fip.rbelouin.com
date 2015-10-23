@@ -3,11 +3,7 @@ var Bacon = require("baconjs");
 
 var SongModel = module.exports;
 
-/*
- * Fetch the song currently played
- * Return a Bacon property
- */
-SongModel.fetchCurrent = function(url) {
+var send = function(verb, url, data) {
   return Bacon.fromBinder(function(sink) {
     var xhr = new XMLHttpRequest();
 
@@ -19,13 +15,40 @@ SongModel.fetchCurrent = function(url) {
       }
     };
 
-    xhr.open("GET", url);
-    xhr.send();
+    xhr.open(verb, url);
+    xhr.send(data);
 
     return function() {
       xhr.abort();
     };
   });
+};
+
+SongModel.fetchCurrent = function(url) {
+  return send("GET", url);
+};
+
+SongModel.searchOnSpotify = function(song) {
+  function search(query) {
+    var p_result = send("GET", "https://api.spotify.com/v1/search?type=track&q=" + _.map(query, function(value, name) {
+      return name + ":" + encodeURIComponent(value);
+    }).join("+"));
+
+    return p_result.map(function(result) {
+      var firstItem = result && result.tracks.items[0];
+      var href = firstItem && firstItem.external_urls.spotify;
+
+      return href;
+    });
+  }
+
+  var query = {
+    track: song.title,
+    artist: song.artist,
+    album: song.album
+  };
+
+  return search(query);
 };
 
 SongModel.fetch = function(url, interval) {
@@ -39,6 +62,14 @@ SongModel.fetch = function(url, interval) {
   }).toProperty();
 
   return p_song
+    .flatMapLatest(function(song) {
+      var p_spotify = SongModel.searchOnSpotify(song).toProperty();
+      return p_spotify.mapError(null).map(function(spotify) {
+        return _.extend({}, song, {
+          spotify: spotify
+        });
+      });
+    })
     .scan([], function(songs, song) {
       return [song].concat(songs);
     })

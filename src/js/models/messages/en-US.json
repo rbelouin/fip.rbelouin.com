@@ -17,6 +17,7 @@
     "added-to-favorites": "Added!",
     "fip-radio": "Radio",
     "favorites": "Favorite songs",
-    "favorites-alert": "You can now save a song by clicking on the corresponding little heart. Please note that your favorite songs are stored in your browser local storage, and thus they won't be accessible from another browser at the moment."
+    "favorites-alert": "You can now save a song by clicking on the corresponding little heart. Please note that your favorite songs are stored in your browser local storage, and thus they won't be accessible from another browser at the moment.",
+    "open-in-spotify": "Open in Spotify"
   }
 }
