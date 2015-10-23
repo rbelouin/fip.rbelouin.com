@@ -10,7 +10,7 @@ var SpotifyButton = module.exports = React.createClass({
         target="_blank"
         className="player-controls-spotify"
       >
-        <span className="player-controls-spotify-icon glyphicon glyphicon-music"></span>
+        <span className="player-controls-spotify-icon fa fa-spotify"></span>
         {this.getIntlMessage("open-in-spotify")}
       </a>
     );

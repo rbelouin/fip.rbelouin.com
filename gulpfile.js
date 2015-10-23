@@ -14,6 +14,7 @@ gulp.task("browserify", function() {
 gulp.task("copy", function() {
   gulp.src([
     "./node_modules/bootstrap/fonts/glyphicons-halflings-regular.*",
+    "./node_modules/font-awesome/fonts/*",
     "./src/fonts/*"
   ])
     .pipe(gulp.dest("./prod/public/fonts"));
@@ -31,7 +32,10 @@ gulp.task("copy", function() {
 gulp.task("less", function() {
   return gulp.src("./src/less/all.less")
     .pipe(less({
-      paths: ["./node_modules/bootstrap/less/"]
+      paths: [
+        "./node_modules/bootstrap/less/",
+        "./node_modules/font-awesome/less/"
+      ]
     }))
     .pipe(gulp.dest("./prod/public/css"));
 });
