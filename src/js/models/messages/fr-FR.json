@@ -17,7 +17,10 @@
     "added-to-favorites": "Ajouté !",
     "fip-radio": "Radio",
     "favorites": "Chansons favorites",
-    "favorites-alert": "Vous pouvez désormais sauvegarder une chanson en cliquant sur le petit cœur associé. Notez bien que vos chansons favorites sont stockées localement dans votre navigateur, et qu'elles ne sont donc pas accessibles depuis un autre navigateur pour le moment.",
+    "favorites-alert": "Cliquez sur les petits cœurs pour ajouter ou retirer une chanson de vos favoris. Vous pouvez garder cette liste sur votre navigateur ou bien la synchroniser avec Spotify.",
+    "sync-with-spotify": "Synchroniser",
+    "unsync-from-spotify": "Désynchroniser",
+    "connected-as": "Connecté en tant que : {name}",
     "open-in-spotify": "Ouvrir dans Spotify"
   }
 }

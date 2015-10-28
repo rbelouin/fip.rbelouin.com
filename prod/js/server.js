@@ -9,7 +9,7 @@ var app = express();
 
 app.use(function(req, res, next) {
   if(req.path.indexOf("/api") === 0) {
-    require("http").get("http://localhost:9000" + req.path, function(res2) {
+    require("http").get("http://fip.rbelouin.local:9000" + req.url, function(res2) {
       for(var name in res2.headers) {
         res.setHeader(name, res2.headers[name]);
       }

@@ -15,7 +15,8 @@ var App = module.exports = React.createClass({
       paneIsOpen: false,
       route: "radio",
       songs: [],
-      favSongs: []
+      favSongs: [],
+      user: null
     };
   },
   onPlay: function() {
@@ -37,12 +38,18 @@ var App = module.exports = React.createClass({
     this.props.p_favSongs.onValue(function(songs) {
       this.setState({"favSongs": songs});
     }.bind(this));
+
+    this.props.p_user.onValue(function(user) {
+      this.setState({"user": user});
+    }.bind(this));
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
                   <Favorites
                     favSongs={this.state.favSongs}
                     favBus={this.props.favBus}
+                    syncBus={this.props.syncBus}
+                    user={this.state.user}
                   /> :
                 this.state.route === "radio" ?
                   <Radio
