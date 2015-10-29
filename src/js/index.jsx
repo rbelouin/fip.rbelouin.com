@@ -53,7 +53,12 @@ exports.start = function(conf) {
           });
         }
         else {
-          return SpotifyModel.getUser(localStorage.access_token).toProperty();
+          return SpotifyModel.getUser(localStorage.access_token).toProperty().flatMapError(function() {
+            window.location.href = window.location.protocol + "//" + window.location.host + "/api/login?" + qs.stringify({
+              redirect_uri: window.location.href,
+              refresh_token: localStorage.refresh_token
+            })
+          });
         }
       }
     });
