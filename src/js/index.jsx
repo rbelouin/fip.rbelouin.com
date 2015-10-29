@@ -15,8 +15,6 @@ exports.start = function(conf) {
   var p_songs = SongModel
     .fetch("/api/songs/current", conf.FetchInterval);
 
-  var p_favSongs = SongModel.favSongs;
-
   var favBus = SongModel.favBus;
   var syncBus = new Bacon.Bus();
 
@@ -53,15 +51,53 @@ exports.start = function(conf) {
           });
         }
         else {
-          return SpotifyModel.getUser(localStorage.access_token).toProperty().flatMapError(function() {
+          return SpotifyModel.getUser(localStorage.access_token).flatMapError(function() {
             window.location.href = window.location.protocol + "//" + window.location.host + "/api/login?" + qs.stringify({
               redirect_uri: window.location.href,
               refresh_token: localStorage.refresh_token
             })
-          });
+          }).toProperty();
         }
       }
+    }).toProperty();
+
+  var p_playlist = p_user
+  .filter(function(user) {
+    return user;
+  })
+  .flatMapLatest(function(user) {
+    return SpotifyModel.getOrCreatePlaylist(localStorage.access_token, user.id, "fipradio");
+  }).toProperty();
+
+  var p_tracks =  p_user.flatMapLatest(function(user) {
+    return !user ? Bacon.constant([]) : p_playlist.flatMapLatest(function(playlist) {
+      return SpotifyModel.getPlaylistTracks(localStorage.access_token, user.id, playlist.id).toProperty();
     });
+  }).toProperty();
+
+  var p_spotifySongs = p_tracks.map(function(data) {
+    var tracks = _.pluck(data, "track");
+    return _.map(tracks, function(track) {
+      return {
+        id: track.id,
+        title: track.name,
+        artist: _.pluck(track.artists, "name").join("/"),
+        album: track.album.name,
+        spotify: track.external_urls.spotify,
+        icons: {
+          medium: _.first(track.album.images).url
+        }
+      };
+    });
+  });
+
+  var p_favSongs = p_spotifySongs.flatMapLatest(function(songs) {
+    var savedSongs = SongModel.getFavorites();
+    var allSongs = _.uniq(savedSongs.concat(songs), "spotify");
+
+    SongModel.setFavorites(allSongs);
+    return SongModel.favSongs.changes().toProperty(SongModel.getFavorites());
+  }).toProperty();
 
   var routes = Bacon.fromRoutes({
     routes: conf.routes
