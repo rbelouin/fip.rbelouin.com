@@ -10,7 +10,19 @@ var send = function(verb, url, access_token, data) {
     xhr.onreadystatechange = function() {
       if(xhr.readyState === 4) {
         var ok = xhr.status >= 200 && xhr.status < 300;
-        sink(ok ? JSON.parse(xhr.responseText) : new Bacon.Error(JSON.parse(xhr.responseText)));
+
+        if(ok) {
+          try {
+            sink(JSON.parse(xhr.responseText))
+          }
+          catch(e) {
+            console.error(e);
+            sink();
+          }
+        }
+        else {
+          new Bacon.Error(JSON.parse(xhr.responseText));
+        }
         sink(new Bacon.End());
       }
     };
@@ -63,4 +75,12 @@ SpotifyModel.getOrCreatePlaylist = function(access_token, userId, name) {
 
     return playlist ? Bacon.once(playlist) : SpotifyModel.createPlaylist(access_token, userId, name, false);
   }).toProperty();
+};
+
+SpotifyModel.setTracksToPlaylist = function(access_token, userId, playlistId, trackIds) {
+  return send("PUT", "https://api.spotify.com/v1/users/" + userId + "/playlists/" + playlistId + "/tracks", access_token, JSON.stringify({
+    uris: _.map(trackIds, function(trackId) {
+      return "spotify:track:" + trackId;
+    })
+  }));
 };

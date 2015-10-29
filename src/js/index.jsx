@@ -84,6 +84,7 @@ exports.start = function(conf) {
         artist: _.pluck(track.artists, "name").join("/"),
         album: track.album.name,
         spotify: track.external_urls.spotify,
+        spotifyId: track.id,
         icons: {
           medium: _.first(track.album.images).url
         }
@@ -93,10 +94,16 @@ exports.start = function(conf) {
 
   var p_favSongs = p_spotifySongs.flatMapLatest(function(songs) {
     var savedSongs = SongModel.getFavorites();
-    var allSongs = _.uniq(savedSongs.concat(songs), "spotify");
+    var allSongs = _.uniq(savedSongs.concat(songs), "spotifyId");
 
     SongModel.setFavorites(allSongs);
-    return SongModel.favSongs.changes().toProperty(SongModel.getFavorites());
+    return SongModel.favSongs.changes().toProperty(SongModel.getFavorites()).flatMapLatest(function(songs) {
+      return p_user.flatMapLatest(function(user) {
+        return p_playlist.flatMapLatest(function(playlist) {
+          return !user || _.isEmpty(songs) ? Bacon.once(songs) : SpotifyModel.setTracksToPlaylist(localStorage.access_token, user.id, playlist.id, _(songs).pluck("spotifyId").compact().value()).map(songs);
+        });
+      });
+    });
   }).toProperty();
 
   var routes = Bacon.fromRoutes({
