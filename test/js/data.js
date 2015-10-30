@@ -7,6 +7,8 @@ var songs = exports.songs = [{
   "artist": "GOLDEN RULES",
   "year": "2015",
   "label": "LEX RECORDS",
+  "spotify": null,
+  "spotifyId": null,
   "icons": {
     "small": "http://is4.mzstatic.com/image/thumb/Music1/v4/fe/89/17/fe8917d9-43dd-fe57-28f5-5d8a1e47863b/dj.jjeudvlu.jpg/100x100bb-85.jpg",
     "medium": "http://is4.mzstatic.com/image/thumb/Music1/v4/fe/89/17/fe8917d9-43dd-fe57-28f5-5d8a1e47863b/dj.jjeudvlu.jpg/400x400bb-85.jpg"
@@ -21,6 +23,8 @@ var songs = exports.songs = [{
   "artist": "MAMALUKE/FLEVANS",
   "year": "2005",
   "label": "JACK TO PHONO",
+  "spotify": null,
+  "spotifyId": null,
   "icons": {
     "small": "http://is4.mzstatic.com/image/thumb/Music/da/ba/70/mzi.wfehdplm.jpg/100x100bb-85.jpg",
     "medium": "http://is4.mzstatic.com/image/thumb/Music/da/ba/70/mzi.wfehdplm.jpg/400x400bb-85.jpg"
@@ -35,6 +39,8 @@ var songs = exports.songs = [{
   "artist": "SLY AND THE FAMILY STONE",
   "year": "1972",
   "label": "EPIC",
+  "spotify": null,
+  "spotifyId": null,
   "icons": {
     "small": "http://is3.mzstatic.com/image/thumb/Music/77/b5/0e/mzi.dsctwvto.jpg/100x100bb-85.jpg",
     "medium": "http://is3.mzstatic.com/image/thumb/Music/77/b5/0e/mzi.dsctwvto.jpg/400x400bb-85.jpg"
@@ -49,6 +55,8 @@ var songs = exports.songs = [{
   "artist": "MINUIT",
   "year": "2015",
   "label": "BECAUSE MUSIC",
+  "spotify": null,
+  "spotifyId": null,
   "icons": {
     "small": "http://is1.mzstatic.com/image/thumb/Music69/v4/4d/72/62/4d726201-b65b-c942-ff0f-307699662c35/dj.ntmiqkzr.jpg/100x100bb-85.jpg",
     "medium": "http://is1.mzstatic.com/image/thumb/Music69/v4/4d/72/62/4d726201-b65b-c942-ff0f-307699662c35/dj.ntmiqkzr.jpg/400x400bb-85.jpg"
