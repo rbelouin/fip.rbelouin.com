@@ -30,6 +30,10 @@ var withMock = function(test) {
       favorites = fs;
     };
 
+    SongModel.searchOnSpotify = function() {
+      return Bacon.once(new Bacon.Error());
+    };
+
     test(t);
   };
 };

@@ -14,7 +14,7 @@ function renderApp(p_route, favBus) {
   favBus = favBus || new Bacon.Bus();
 
   React.render(
-    <App {...intl} url="/api/songs" p_songs={Bacon.constant([])} favBus={favBus} p_route={p_route} p_paneIsOpen={Bacon.constant(false)} p_favSongs={Bacon.constant([])} />,
+    <App {...intl} url="/api/songs" p_songs={Bacon.constant([])} favBus={favBus} p_route={p_route} p_paneIsOpen={Bacon.constant(false)} p_favSongs={Bacon.constant([])} p_user={Bacon.constant(null)} />,
     $main
   );
 }

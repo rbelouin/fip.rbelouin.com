@@ -38,7 +38,10 @@ SongModel.searchOnSpotify = function(song) {
       var firstItem = result && result.tracks.items[0];
       var href = firstItem && firstItem.external_urls.spotify;
 
-      return href;
+      return firstItem && {
+        href: href,
+        id: firstItem.id
+      };
     });
   }
 
@@ -66,7 +69,8 @@ SongModel.fetch = function(url, interval) {
       var p_spotify = SongModel.searchOnSpotify(song).toProperty();
       return p_spotify.mapError(null).map(function(spotify) {
         return _.extend({}, song, {
-          spotify: spotify
+          spotify: spotify && spotify.href,
+          spotifyId: spotify && spotify.id
         });
       });
     })

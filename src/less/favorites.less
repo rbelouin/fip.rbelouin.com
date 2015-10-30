@@ -1,0 +1,39 @@
+.favorites {
+  .alert.alert-info {
+    background: #303030;
+    border: none;
+    color: white;
+
+    p {
+      margin-bottom: 30px;
+    }
+
+    .sync-controls {
+      height: 40px;
+      text-align: right;
+
+      button {
+        background: #666666;
+        margin-left: 10px;
+
+        span {
+          margin-right: 10px;
+        }
+
+        &:hover, &:active, &:focus {
+          background: lighten(#666666, 5%);
+          color: white;
+          outline: none;
+        }
+      }
+      button.sync {
+        background: #84bd00;
+
+        &:hover, &:active, &:focus {
+          background: lighten(#84bd00, 5%);
+          color: white;
+        } 
+      }
+    }
+  }
+}
