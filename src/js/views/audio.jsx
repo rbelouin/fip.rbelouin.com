@@ -14,13 +14,16 @@ var AudioComponent = module.exports = React.createClass({
     var audio = controls.querySelector("audio");
 
     audio.volume = this.props.volume;
-    audio.play();
   },
   shouldComponentUpdate: function(nextProps, nextState) {
     var controls = React.findDOMNode(this);
     var audio = controls.querySelector("audio");
 
     audio.volume = nextProps.volume;
+
+    if(nextProps.play) {
+      audio.play();
+    }
 
     return true;
   },

@@ -16,7 +16,7 @@ var Player = module.exports = React.createClass({
       <div className="player row">
         <div className="col-lg-10 col-lg-offset-1 col-md-12">
           <Song song={song} />
-          <Controls url={this.props.url} song={song} favBus={this.props.favBus} />
+          <Controls song={song} favBus={this.props.favBus} volBus={this.props.volBus} volume={this.props.volume} />
           <SongList songs={history} favBus={this.props.favBus} />
         </div>
       </div>

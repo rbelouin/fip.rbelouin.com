@@ -6,6 +6,7 @@ var IntlMixin = ReactIntl.IntlMixin;
 var Radio = require("./radio.jsx");
 var Favorites = require("./favorites.jsx");
 var AppNav = require("./app-nav.jsx");
+var Audio = require("./audio.jsx");
 
 var App = module.exports = React.createClass({
   mixins: [IntlMixin],
@@ -16,7 +17,8 @@ var App = module.exports = React.createClass({
       route: "radio",
       songs: [],
       favSongs: [],
-      user: null
+      user: null,
+      volume: 1
     };
   },
   onPlay: function() {
@@ -42,6 +44,10 @@ var App = module.exports = React.createClass({
     this.props.p_user.onValue(function(user) {
       this.setState({"user": user});
     }.bind(this));
+
+    this.props.volBus.onValue(function(volume) {
+      this.setState({"volume": volume});
+    }.bind(this));
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
@@ -53,16 +59,18 @@ var App = module.exports = React.createClass({
                   /> :
                 this.state.route === "radio" ?
                   <Radio
-                    url={this.props.url}
                     play={this.state.play}
                     songs={this.state.songs}
                     favBus={this.props.favBus}
+                    volBus={this.props.volBus}
+                    volume={this.state.volume}
                     onPlay={this.onPlay}
                   /> :
                 "";
 
     return (
       <div className="app">
+        <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} play={this.state.play} />
         <main className="app-main container-fluid">
           {page}
         </main>

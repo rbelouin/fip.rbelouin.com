@@ -4,17 +4,11 @@ var Bacon = require("baconjs");
 
 var IntlMixin = require("react-intl").IntlMixin;
 
-var Audio = require("./audio.jsx");
 var FavoriteButton = require("./favorite-button.jsx");
 var SpotifyButton = require("./spotify-button.jsx");
 
 var Controls = module.exports = React.createClass({
   mixins: [IntlMixin],
-  getInitialState: function() {
-    return {
-      volume: 0.5
-    };
-  },
   toggleFavorite: function(song) {
     this.props.favBus.push({
       type: song.favorite ? "remove" : "add",
@@ -22,19 +16,18 @@ var Controls = module.exports = React.createClass({
     });
   },
   onInput: function(e) {
-    this.setState({
-      volume: e.target.value / 100
-    });
+    var volume = e.target.value / 100;
+
+    this.props.volBus.push(volume);
   },
   render: function() {
     var favorite = this.props.song ? this.props.song.favorite : false;
-    var icon =  this.state.volume == 0 ?  "off" :
-                this.state.volume > 0.5 ? "up" :
+    var icon =  this.props.volume == 0 ?  "off" :
+                this.props.volume > 0.5 ? "up" :
                                           "down";
 
     return (
       <div className="player-controls">
-        <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} />
         <FavoriteButton
           favorite={favorite}
           onClick={
@@ -50,7 +43,7 @@ var Controls = module.exports = React.createClass({
         }
         <div className="player-controls-volume">
           <span className={"player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
-          <input type="range" name="volume" onInput={this.onInput} />
+          <input type="range" name="volume" onInput={this.onInput} min="0" max="100" defaultValue={this.props.volume * 100} />
         </div>
       </div>
     );
