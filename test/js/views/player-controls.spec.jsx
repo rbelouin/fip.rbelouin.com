@@ -9,14 +9,15 @@ var Controls = require("../../../src/js/views/player-controls.jsx");
 var intl = require("../../../src/js/models/intl.js").getIntlData("en");
 var song = require("../data.js").songs[0];
 
-function renderControls(url, song, favBus) {
+function renderControls(url, song, favBus, volBus) {
   var $main = document.createElement("main");
   document.body.appendChild($main);
 
   favBus = favBus || new Bacon.Bus();
+  volBus = volBus || new Bacon.Bus();
 
   React.render(
-    <Controls url="" {...intl} song={song} favBus={favBus} />,
+    <Controls url="" {...intl} song={song} favBus={favBus} volBus={volBus} />,
     $main
   );
 }
@@ -24,15 +25,6 @@ function renderControls(url, song, favBus) {
 function cleanControls() {
   document.querySelector("main").remove();
 }
-
-test("Controls render an audio tag", function(t) {
-  renderControls("url", song);
-
-  t.notEqual(document.querySelector("main audio"), null);
-
-  cleanControls();
-  t.end();
-});
 
 test("Controls render a range input tag for volume", function(t) {
   renderControls("url", song);
@@ -44,22 +36,32 @@ test("Controls render a range input tag for volume", function(t) {
 });
 
 test("Changing the input range value changes the volume", function(t) {
-  renderControls("url", song);
+  var volBus = new Bacon.Bus();
+
+  renderControls("url", song, volBus);
 
   var input = document.querySelector("main input[type='range']");
-  var audio = document.querySelector("main audio");
+
+  volBus.take(1).onValue(function(volume) {
+    t.equal(volume, 0);
+  });
 
   input.value = "0";
   ReactTestUtils.Simulate.input(input);
-  t.equal(audio.volume, 0);
+
+  volBus.take(1).onValue(function(volume) {
+    t.equal(volume, 0.5);
+  });
 
   input.value = "50";
   ReactTestUtils.Simulate.input(input);
-  t.equal(audio.volume, 0.5);
+
+  volBus.take(1).onValue(function(volume) {
+    t.equal(volume, 1);
+  });
 
   input.value = "100";
   ReactTestUtils.Simulate.input(input);
-  t.equal(audio.volume, 1);
 
   cleanControls();
   t.end();

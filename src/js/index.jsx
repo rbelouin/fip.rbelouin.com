@@ -16,6 +16,7 @@ exports.start = function(conf) {
     .fetch("/api/songs/current", conf.FetchInterval);
 
   var favBus = SongModel.favBus;
+  var volBus = new Bacon.Bus();
   var syncBus = new Bacon.Bus();
 
   var params = qs.parse(window.location.search.slice(1));
@@ -141,6 +142,7 @@ exports.start = function(conf) {
         p_user={p_user}
         syncBus={syncBus}
         favBus={favBus}
+        volBus={volBus}
         {...intl}
       />,
       document.querySelector("#app")
