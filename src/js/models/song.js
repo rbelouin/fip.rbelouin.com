@@ -2,56 +2,26 @@ var _ = require("lodash");
 var Bacon = require("baconjs");
 
 var SongModel = module.exports;
+var SpotifyModel = require("./spotify.js");
 
 var send = function(verb, url, data) {
-  return Bacon.fromBinder(function(sink) {
-    var xhr = new XMLHttpRequest();
+  return Bacon.fromPromise(fetch(url, {
+    method: verb,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: data
+  })).flatMapLatest(function(res) {
+    var isJson = res.headers.has("Content-Type") && res.headers.get("Content-Type").split(";")[0] === "application/json";
 
-    xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4) {
-        var ok = xhr.status >= 200 && xhr.status < 300;
-        sink(ok ? JSON.parse(xhr.responseText) : new Bacon.Error());
-        sink(new Bacon.End());
-      }
-    };
-
-    xhr.open(verb, url);
-    xhr.send(data);
-
-    return function() {
-      xhr.abort();
-    };
-  });
+    return  res.ok && isJson ? Bacon.fromPromise(res.json()) :
+            res.ok ? Bacon.once(res) :
+            Bacon.once(new Bacon.Error(res));
+  }).toProperty();
 };
 
 SongModel.fetchCurrent = function(url) {
   return send("GET", url);
-};
-
-SongModel.searchOnSpotify = function(song) {
-  function search(query) {
-    var p_result = send("GET", "https://api.spotify.com/v1/search?type=track&q=" + _.map(query, function(value, name) {
-      return name + ":" + encodeURIComponent(value);
-    }).join("+"));
-
-    return p_result.map(function(result) {
-      var firstItem = result && result.tracks.items[0];
-      var href = firstItem && firstItem.external_urls.spotify;
-
-      return firstItem && {
-        href: href,
-        id: firstItem.id
-      };
-    });
-  }
-
-  var query = {
-    track: song.title,
-    artist: song.artist,
-    album: song.album
-  };
-
-  return search(query);
 };
 
 SongModel.fetch = function(url, interval) {
@@ -66,7 +36,7 @@ SongModel.fetch = function(url, interval) {
 
   return p_song
     .flatMapLatest(function(song) {
-      var p_spotify = SongModel.searchOnSpotify(song).toProperty();
+      var p_spotify = SpotifyModel.search(song).toProperty();
       return p_spotify.mapError(null).map(function(spotify) {
         return _.extend({}, song, {
           spotify: spotify && spotify.href,

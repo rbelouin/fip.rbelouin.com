@@ -2,6 +2,7 @@ var test = require("tape");
 var _ = require("lodash");
 var Bacon = require("baconjs");
 var SongModel = require("../../../src/js/models/song.js");
+var SpotifyModel = require("../../../src/js/models/spotify.js");
 
 var SONG_DURATION = 1000;
 
@@ -14,6 +15,7 @@ var withMock = function(test) {
     var fetchCurrent = SongModel.fetchCurrent;
     var getFavorites = SongModel.getFavorites;
     var setFavorites = SongModel.setFavorites;
+    var search = SpotifyModel.search;
 
     var p_song = Bacon.sequentially(SONG_DURATION, songs).toProperty();
     p_song.onValue();
@@ -30,7 +32,7 @@ var withMock = function(test) {
       favorites = fs;
     };
 
-    SongModel.searchOnSpotify = function() {
+    SpotifyModel.search = function() {
       return Bacon.once(new Bacon.Error());
     };
 
