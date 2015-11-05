@@ -12,13 +12,24 @@ var withMock = function(test) {
   return function(t) {
     var favorites = require("../data.js").favorites;
 
-    var fetchCurrent = SongModel.fetchCurrent;
+    var wrapWebSocket = SongModel._wrapWebSocket;
     var getFavorites = SongModel.getFavorites;
     var setFavorites = SongModel.setFavorites;
     var search = SpotifyModel.search;
 
     var p_song = Bacon.sequentially(SONG_DURATION, songs).toProperty();
     p_song.onValue();
+
+    SongModel._wrapWebSocket = function(settings) {
+      p_song.onValue(function(song) {
+        settings.onmessage({
+          data: JSON.stringify({
+            type: "song",
+            song: song
+          })
+        });
+      });
+    };
 
     SongModel.fetchCurrent = function(url) {
       return p_song.take(1);
