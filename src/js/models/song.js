@@ -22,7 +22,7 @@ SongModel._wrapWebSocket = function(settings) {
 SongModel.fetch = function(url, interval) {
   var stream = Bacon.fromBinder(function(sink) {
     SongModel._wrapWebSocket({
-      url: "ws://fip.rbelouin.local:9000/api/ws/songs",
+      url: "ws://" + window.location.host + "/api/ws/songs",
       onmessage: function(message) {
         try {
           var data = JSON.parse(message.data);
