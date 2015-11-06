@@ -70,8 +70,8 @@ var App = module.exports = React.createClass({
 
     return (
       <div className="app">
-        <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} play={this.state.play} />
         <main className="app-main container-fluid">
+          <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} play={this.state.play} />
           {page}
         </main>
         <AppNav

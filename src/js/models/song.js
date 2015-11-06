@@ -2,62 +2,42 @@ var _ = require("lodash");
 var Bacon = require("baconjs");
 
 var SongModel = module.exports;
+var SpotifyModel = require("./spotify.js");
 
-var send = function(verb, url, data) {
-  return Bacon.fromBinder(function(sink) {
-    var xhr = new XMLHttpRequest();
+SongModel._wrapWebSocket = function(settings) {
+  var socket = new WebSocket(settings.url);
 
-    xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4) {
-        var ok = xhr.status >= 200 && xhr.status < 300;
-        sink(ok ? JSON.parse(xhr.responseText) : new Bacon.Error());
-        sink(new Bacon.End());
-      }
-    };
+  socket.onmessage = settings.onmessage;
+  socket.onerror = settings.onerror;
 
-    xhr.open(verb, url);
-    xhr.send(data);
-
-    return function() {
-      xhr.abort();
-    };
-  });
-};
-
-SongModel.fetchCurrent = function(url) {
-  return send("GET", url);
-};
-
-SongModel.searchOnSpotify = function(song) {
-  function search(query) {
-    var p_result = send("GET", "https://api.spotify.com/v1/search?type=track&q=" + _.map(query, function(value, name) {
-      return name + ":" + encodeURIComponent(value);
-    }).join("+"));
-
-    return p_result.map(function(result) {
-      var firstItem = result && result.tracks.items[0];
-      var href = firstItem && firstItem.external_urls.spotify;
-
-      return firstItem && {
-        href: href,
-        id: firstItem.id
-      };
-    });
-  }
-
-  var query = {
-    track: song.title,
-    artist: song.artist,
-    album: song.album
+  socket.onclose = function() {
+    setTimeout(function() {
+      SongModel._wrapWebSocket(settings);
+    }, interval);
   };
 
-  return search(query);
+  return socket;
 };
 
 SongModel.fetch = function(url, interval) {
-  var stream = Bacon.repeat(function(i) {
-    return i == 0 ? SongModel.fetchCurrent(url) :
-                    Bacon.later(interval, url).flatMap(SongModel.fetchCurrent);
+  var stream = Bacon.fromBinder(function(sink) {
+    SongModel._wrapWebSocket({
+      url: "ws://fip.rbelouin.local:9000/api/ws/songs",
+      onmessage: function(message) {
+        try {
+          var data = JSON.parse(message.data);
+          sink(data.type === "song" ? data.song : new Bacon.Error(data.error));
+        }
+        catch(e) {
+          sink(new Bacon.Error(e));
+        }
+      },
+      onerror: function(error) {
+        sink(new Bacon.Error(error));
+      }
+    });
+
+    return function() {};
   });
 
   var p_song = stream.skipDuplicates(function(song1, song2) {
@@ -66,7 +46,7 @@ SongModel.fetch = function(url, interval) {
 
   return p_song
     .flatMapLatest(function(song) {
-      var p_spotify = SongModel.searchOnSpotify(song).toProperty();
+      var p_spotify = SpotifyModel.search(song).toProperty();
       return p_spotify.mapError(null).map(function(spotify) {
         return _.extend({}, song, {
           spotify: spotify && spotify.href,

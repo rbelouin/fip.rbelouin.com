@@ -4,7 +4,11 @@ var browserify = require("browserify");
 var less = require("gulp-less");
 
 gulp.task("browserify", function() {
-  browserify("./prod/js/index.js")
+  browserify([
+    "./node_modules/intl/dist/Intl.min.js",
+    "./node_modules/whatwg-fetch/fetch.js",
+    "./prod/js/index.js"
+  ])
     .transform("reactify")
     .bundle()
     .pipe(source("bundle.js"))
@@ -18,9 +22,6 @@ gulp.task("copy", function() {
     "./src/fonts/*"
   ])
     .pipe(gulp.dest("./prod/public/fonts"));
-
-  gulp.src("./node_modules/intl/dist/Intl.min.js")
-    .pipe(gulp.dest("./prod/public/js/"));
 
   gulp.src("./src/img/icon.png")
     .pipe(gulp.dest("./prod/public/img/"));
