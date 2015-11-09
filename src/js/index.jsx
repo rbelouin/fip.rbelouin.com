@@ -3,6 +3,7 @@ var qs = require("querystring");
 var Bacon = window.Bacon = require("baconjs");
 require("bacon-routes");
 var React = require("react");
+var Intl = window.Intl = require("intl");
 var IntlMixin = require("react-intl").IntlMixin;
 
 exports.start = function(conf) {

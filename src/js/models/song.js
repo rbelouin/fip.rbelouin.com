@@ -13,7 +13,7 @@ SongModel._wrapWebSocket = function(settings) {
   socket.onclose = function() {
     setTimeout(function() {
       SongModel._wrapWebSocket(settings);
-    }, interval);
+    }, settings.interval);
   };
 
   return socket;
@@ -23,6 +23,7 @@ SongModel.fetch = function(url, interval) {
   var stream = Bacon.fromBinder(function(sink) {
     SongModel._wrapWebSocket({
       url: "ws://" + window.location.host + "/api/ws/songs",
+      interval: interval,
       onmessage: function(message) {
         try {
           var data = JSON.parse(message.data);
