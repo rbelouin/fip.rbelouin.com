@@ -5,7 +5,6 @@ var less = require("gulp-less");
 
 gulp.task("browserify", function() {
   browserify([
-    "./node_modules/intl/dist/Intl.min.js",
     "./node_modules/whatwg-fetch/fetch.js",
     "./prod/js/index.js"
   ])
