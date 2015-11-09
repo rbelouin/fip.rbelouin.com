@@ -8,7 +8,7 @@ gulp.task("browserify", function() {
     "./node_modules/whatwg-fetch/fetch.js",
     "./prod/js/index.js"
   ])
-    .transform("reactify")
+    .transform("babelify")
     .bundle()
     .pipe(source("bundle.js"))
     .pipe(gulp.dest("./prod/public/js"));
