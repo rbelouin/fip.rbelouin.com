@@ -12,7 +12,29 @@ require("bacon-routes");
 import TokenController from "./controllers/token.js";
 import SongController from "./controllers/song.js";
 
+// TODO: remove this code after a while (2016)
+function _legacyMoveToken() {
+  if(localStorage.access_token
+  && localStorage.refresh_token
+  && localStorage.expires_in
+  && localStorage.token_type) {
+    localStorage.token = JSON.stringify({
+      access_token: localStorage.access_token,
+      refresh_token: localStorage.refresh_token,
+      expires_in: localStorage.expires_in,
+      token_type: localStorage.token_type
+    });
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("expires_in");
+    localStorage.removeItem("token_type");
+  }
+}
+
 export function start(conf) {
+  _legacyMoveToken();
+
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
 
