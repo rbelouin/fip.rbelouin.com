@@ -16,7 +16,7 @@ import {
   getPlaylistTracks,
   setPlaylistTracks,
   sync
-} from "../../../src/js/models/spotify2.js";
+} from "../../../src/js/models/spotify.js";
 
 test("Spotify.getAuthorization should return an Authorization header", function(t) {
   const token = {

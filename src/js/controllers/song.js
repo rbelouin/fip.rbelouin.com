@@ -2,7 +2,7 @@ import _ from "lodash";
 import Bacon from "baconjs";
 
 import Fip from "../models/fip.js";
-import Spotify from "../models/spotify2.js";
+import Spotify from "../models/spotify.js";
 import Storage from "../models/storage.js";
 
 export function searchOnSpotify(Spotify, song) {

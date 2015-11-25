@@ -1,7 +1,7 @@
-var FipClient = require("../../src/js/index.jsx");
+var {start} = require("../../src/js/index.jsx");
 var routes = require("./routes.json");
 
-FipClient.start({
+start({
   DefaultLanguage: "en",
   FetchInterval: 2000,
   routes: routes

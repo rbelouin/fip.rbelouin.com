@@ -3,7 +3,7 @@ import qs from "querystring";
 import Bacon from "baconjs";
 
 import Storage from "../models/storage.js";
-import Spotify from "../models/spotify2.js";
+import Spotify from "../models/spotify.js";
 
 export function getTokenFromQS(location) {
   const params = qs.parse(location.search.slice(1));
