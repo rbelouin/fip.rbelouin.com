@@ -58,7 +58,10 @@ Song.tr = React.createClass({
     return (
       <tr>
         <td className={song.favorite ? "song-list-favorite" : ""}>
-          <span className="glyphicon glyphicon-heart" onClick={this.props.toggleFavorite}></span>
+          <span className="fa fa-heart" onClick={this.props.toggleFavorite}></span>
+        </td>
+        <td className={song.spotify ? "song-list-spotify" : ""}>
+          <a href={song.spotify} target="_blank" className="fa fa-spotify"></a>
         </td>
         <td>{song.title}</td>
         <td>{song.artist}</td>
