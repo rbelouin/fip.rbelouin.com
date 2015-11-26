@@ -2,9 +2,16 @@ table.table.song-list {
   border-collapse: separate;
   border-spacing: 0 2px;
   font-family: Oxygen, sans-serif;
+  table-layout: fixed;
 
   td, th {
     border: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:nth-child(1) {width: 38px;}
+    &:nth-child(5) {width: 70px;}
   }
 
   th {
