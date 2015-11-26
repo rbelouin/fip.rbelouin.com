@@ -51,6 +51,7 @@ SongList.table = React.createClass({
         <thead>
           <tr>
             <th></th>
+            <th></th>
             <th>
               <FormattedMessage message={this.getIntlMessage("title")} />
             </th>

@@ -2,9 +2,17 @@ table.table.song-list {
   border-collapse: separate;
   border-spacing: 0 2px;
   font-family: Oxygen, sans-serif;
+  table-layout: fixed;
 
   td, th {
     border: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:nth-child(1) {width: 38px;}
+    &:nth-child(2) {width: 38px;}
+    &:nth-child(6) {width: 70px;}
   }
 
   th {
@@ -16,14 +24,32 @@ table.table.song-list {
   td {
     background-color: #303030;
 
-    &:first-child {
-      color: #bbbbbb;
+    &:nth-child(1),
+    &:nth-child(2) {
       font-size: 16px;
       vertical-align: middle;
     }
 
+    &:first-child {
+      color: #bbbbbb;
+    }
     &.song-list-favorite:first-child {
       color: @fip-pink;
+    }
+
+    &:nth-child(2) {
+      color: transparent;
+
+      & a {
+        color: inherit;
+
+        &:hover, &:focus, &:active {
+          text-decoration: none;
+        }
+      }
+    }
+    &.song-list-spotify:nth-child(2) {
+      color: #84bd00;
     }
   }
 
