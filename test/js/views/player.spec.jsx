@@ -56,11 +56,12 @@ test("Player should display the history", function(t) {
 
   _.each(_.tail(songs), function(song, index) {
     t.equal(_.contains(document.querySelector("main .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(1)").classList, "song-list-favorite"), song.favorite);
-    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(2)").textContent, song.title);
-    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(3)").textContent, song.artist);
-    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(4)").textContent, song.album);
-    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(5)").textContent, song.year);
-    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(6)").textContent, song.label);
+    t.equal(_.contains(document.querySelector("main .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(2)").classList, "song-list-spotify"), typeof song.spotify === "string");
+    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(3)").textContent, song.title);
+    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(4)").textContent, song.artist);
+    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(5)").textContent, song.album);
+    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(6)").textContent, song.year);
+    t.equal(document.querySelector("main .player .song-list tbody tr:nth-child(" + (index + 1) + ") td:nth-child(7)").textContent, song.label);
   });
 
   cleanPlayer();
