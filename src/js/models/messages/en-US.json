@@ -21,6 +21,7 @@
     "sync-with-spotify": "Sync with Spotify",
     "unsync-from-spotify": "Unsync from Spotify",
     "connected-as": "Connected as: {name}",
-    "open-in-spotify": "Open in Spotify"
+    "open-in-spotify": "Open in Spotify",
+    "title-not-available": "Title not available"
   }
 }

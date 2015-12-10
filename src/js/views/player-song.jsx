@@ -34,7 +34,7 @@ var Song = module.exports = React.createClass({
   render: function() {
     var song = this.props.song;
 
-    return song ? (
+    return (
       <div className="song">
         <img className="song-icon" alt="icon" src={song.icons.medium} />
         <div className="song-info">
@@ -43,9 +43,34 @@ var Song = module.exports = React.createClass({
           <SongDetails song={song} />
         </div>
       </div>
-    ) : (
+    );
+  }
+});
+
+Song.loading = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    return (
       <div className="song">
         <FormattedMessage message={this.getIntlMessage("loading")} />
+      </div>
+    );
+  }
+});
+
+Song.unknown = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    return (
+      <div className="song song-unknown">
+        <div className="song-icon">
+          <span className="fa fa-question"></span>
+        </div>
+        <div className="song-info">
+          <div className="song-title">
+            <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+          </div>
+        </div>
       </div>
     );
   }
