@@ -15,7 +15,11 @@ export function searchOnSpotify(Spotify, song) {
 export function getFipSongList(Fip, Spotify, location) {
   return Fip.fetchFipSongs("ws://" + location.host + "/api/ws/songs")
     .flatMapLatest(_.partial(searchOnSpotify, Spotify))
-    .scan([], (songs, song) => [song].concat(songs));
+    .flatMapError(data => {
+      const code = data && data.error && data.error.code;
+      return code === 100 ? Bacon.once(null) : Bacon.never();
+    })
+    .scan([], (songs, song) => [song].concat(_.compact(songs)));
 }
 
 export function getSpotifyPrint(Spotify, token) {
@@ -93,7 +97,7 @@ export function getFavSongsStream(syncs, favBus) {
 export function mergeFavsAndSongs(songs, favSongs) {
   const favSongsById = _.indexBy(favSongs, "id");
 
-  return _.map(songs, song => _.extend({}, song, {
+  return _.map(songs, song => song && _.extend({}, song, {
     favorite: _.has(favSongsById, song.id) || _.has(favSongsById, song.spotifyId)
   }));
 }
@@ -124,19 +128,10 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
     p_favSongs
   );
 
-  const p_songErrors = p_songs.errors().flatMapError(data => {
-    const code = data && data.error && data.error.code;
-    return code === 100 ? Bacon.once(null) : Bacon.never();
-  });
-
-  const p_songsWithErrors = p_songs.flatMapLatest(songs => {
-    return p_songErrors.map(() => [null].concat(songs)).toProperty(songs);
-  }).toProperty()
-
   return Bacon.combineTemplate({
     user: p_print.map(print => print && print.user),
     favSongs: p_favSongs,
-    songs: p_songsWithErrors
+    songs: p_songs
   });
 }
 
