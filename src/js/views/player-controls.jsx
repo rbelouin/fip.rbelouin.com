@@ -26,21 +26,25 @@ var Controls = module.exports = React.createClass({
                 this.props.volume > 0.5 ? "up" :
                                           "down";
 
+    const favoriteButton = this.props.song ? (
+      <FavoriteButton
+        favorite={favorite}
+        onClick={
+          _.partial(this.toggleFavorite, this.props.song)
+        }
+      />
+    ) : "";
+
+    const spotifyButton = this.props.song && this.props.song.spotify ? (
+      <SpotifyButton
+        song={this.props.song}
+      />
+    ) : "";
+
     return (
       <div className="player-controls">
-        <FavoriteButton
-          favorite={favorite}
-          onClick={
-            _.partial(this.toggleFavorite, this.props.song)
-          }
-        />
-        {
-          this.props.song && this.props.song.spotify ?
-            <SpotifyButton
-              song={this.props.song}
-            /> :
-            ""
-        }
+        {favoriteButton}
+        {spotifyButton}
         <div className="player-controls-volume">
           <span className={"player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
           <input type="range" name="volume" onInput={this.onInput} min="0" max="100" defaultValue={this.props.volume * 100} />

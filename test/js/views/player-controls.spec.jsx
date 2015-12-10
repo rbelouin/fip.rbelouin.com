@@ -86,3 +86,12 @@ test("Controls display a favorite button", function(t) {
   cleanControls();
   t.end();
 });
+
+test("Controls should not display the favorite button on invalid song data", function(t) {
+  renderControls("url", null);
+
+  t.equal(document.querySelector("main .player-controls .player-controls-favorite"), null);
+
+  cleanControls();
+  t.end();
+});
