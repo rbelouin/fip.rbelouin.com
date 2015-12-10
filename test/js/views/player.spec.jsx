@@ -42,6 +42,24 @@ test("Player should display the current song", function(t) {
   t.end();
 });
 
+test("Player should display a loader when waiting for a song", function(t) {
+  renderPlayer([]);
+
+  t.equal(document.querySelector("main .player .song").textContent, intl.messages["loading"]);
+
+  cleanPlayer();
+  t.end();
+});
+
+test("Player should display a message when the song information is invalid", function(t) {
+  renderPlayer([null]);
+
+  t.equal(document.querySelector("main .player .song.song-unknown .song-title").textContent, intl.messages["title-not-available"]);
+
+  cleanPlayer();
+  t.end();
+});
+
 test("Player should display the controls", function(t) {
   renderPlayer(songs);
 

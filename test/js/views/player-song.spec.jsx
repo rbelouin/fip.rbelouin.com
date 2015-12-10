@@ -22,6 +22,21 @@ test("Song.loading should render a message, when waiting for a song", function(t
   t.end();
 });
 
+test("Song.unknown should render a message, when the song information is not available", function(t) {
+  var $main = document.createElement("main");
+  document.body.appendChild($main);
+
+  React.render(
+    <Song.unknown {...intl} />,
+    $main
+  );
+
+  t.equal(document.querySelector("main .song .song-title").textContent, intl.messages["title-not-available"]);
+
+  document.querySelector("main").remove();
+  t.end();
+});
+
 test("Song should display the song information", function(t) {
   var $main = document.createElement("main");
   document.body.appendChild($main);

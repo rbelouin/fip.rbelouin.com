@@ -58,6 +58,24 @@ Song.loading = React.createClass({
   }
 });
 
+Song.unknown = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    return (
+      <div className="song song-unknown">
+        <div className="song-icon">
+          <span className="fa fa-question"></span>
+        </div>
+        <div className="song-info">
+          <div className="song-title">
+            <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+});
+
 Song.tr = React.createClass({
   render: function() {
     var song = this.props.song;

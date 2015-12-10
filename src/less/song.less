@@ -57,3 +57,30 @@
     }
   }
 }
+
+.song.song-unknown {
+  .song-icon {
+    background-color: @fip-pink;
+    text-align: center;
+
+    span {
+      display: inline-block;
+      font-size: 80px;
+      margin: 10px 0;
+    }
+  }
+
+  .song-title {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: lighter;
+
+    @media (max-width: 470px) {
+      & {
+        font-size: 20px;
+        line-height: 30px;
+        margin-top: 10px;
+      }
+    }
+  }
+}
