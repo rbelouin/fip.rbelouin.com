@@ -51,7 +51,9 @@ export function removeTokenFromQS(location, history) {
     "token_type"
   ]);
 
-  const href = _.isEmpty(params) ? "" : "?" + qs.stringify(params);
+  const pathname = location.pathname;
+  const href = _.isEmpty(params) ? pathname : "?" + qs.stringify(params);
+
   history.pushState(null, null, href);
 }
 
