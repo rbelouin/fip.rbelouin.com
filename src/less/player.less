@@ -2,6 +2,7 @@
   .player-controls {
     background-color: #222222;
     margin-bottom: 50px;
+    min-height: 30px;
     padding: 0 20px 10px;
 
     input[type="range"] {
@@ -130,6 +131,10 @@
     }
 
     @media (max-width: 470px) {
+      & {
+        min-height: 0;
+      }
+
       & .player-controls-volume {
         display: none;
       }
