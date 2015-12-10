@@ -175,6 +175,7 @@ test("The Token controller should be able to save a token in the localStorage", 
 
 test("The Token controller should be able to remove the query params that are related to a token", function(t) {
   const location1 = {
+    pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d&e=f&g=h"
   };
 
@@ -187,12 +188,13 @@ test("The Token controller should be able to remove the query params that are re
   removeTokenFromQS(location1, history1);
 
   const location2 = {
+    pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d"
   };
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "");
+      t.equal(href, "/");
       t.end();
     }
   };
@@ -218,12 +220,13 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const location1 = {
+    pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=c&token_type=d"
   };
 
   const history1 = {
     pushState: function($, $$, href) {
-      t.equal(href, "");
+      t.equal(href, "/");
     }
   };
 
@@ -266,12 +269,13 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const location2 = {
+    pathname: "/",
     search: ""
   };
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "");
+      t.equal(href, "/");
     }
   };
 
@@ -309,6 +313,7 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const location3 = {
+    pathname: "/",
     search: ""
   };
 
@@ -346,12 +351,13 @@ test("The Token controller should request a token everytime a user wants to sync
   };
 
   const location1 = {
+    pathname: "/",
     search: ""
   };
 
   const history1 = {
     pushState: function($, $$, href) {
-      t.equal(href, "");
+      t.equal(href, "/");
       location1.search = href;
     }
   };
@@ -389,12 +395,13 @@ test("The Token controller should request a token everytime a user wants to sync
   };
 
   const location2 = {
+    pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=c&token_type=d"
   };
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "");
+      t.equal(href, "/");
       location2.search = href;
     }
   };
