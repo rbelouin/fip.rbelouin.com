@@ -9,13 +9,14 @@ var Controls = require("./player-controls.jsx");
 var Player = module.exports = React.createClass({
   mixins: [IntlMixin],
   render: function() {
-    var song = _.head(this.props.songs);
-    var history = _.tail(this.props.songs);
+    var songs = this.props.songs;
+    var song = _.head(songs);
+    var history = _.tail(songs);
 
     return (
       <div className="player row">
         <div className="col-lg-10 col-lg-offset-1 col-md-12">
-          <Song song={song} />
+          {(_.isEmpty(songs) ? <Song.loading /> : <Song song={song} />)}
           <Controls song={song} favBus={this.props.favBus} volBus={this.props.volBus} volume={this.props.volume} />
           <SongList songs={history} favBus={this.props.favBus} />
         </div>
