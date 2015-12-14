@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var Bacon = require("baconjs");
 var React = require("react");
 var ReactIntl = require("react-intl");
@@ -5,28 +6,19 @@ var IntlMixin = ReactIntl.IntlMixin;
 
 var Radio = require("./radio.jsx");
 var Favorites = require("./favorites.jsx");
-var AppNav = require("./app-nav.jsx");
-var Audio = require("./audio.jsx");
+
+import AppNav from "./app-nav.jsx";
 
 var App = module.exports = React.createClass({
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
-      play: false,
       paneIsOpen: false,
       route: "radio",
       songs: [],
       favSongs: [],
-      user: null,
-      volume: 1
+      user: null
     };
-  },
-  onPlay: function() {
-    this.setState({"play": true});
-
-    this.props.p_songs.onValue(function(songs) {
-      this.setState({"songs": songs});
-    }.bind(this));
   },
   componentWillMount: function() {
     this.props.p_route.onValue(function(route) {
@@ -45,8 +37,8 @@ var App = module.exports = React.createClass({
       this.setState({"user": user});
     }.bind(this));
 
-    this.props.volBus.onValue(function(volume) {
-      this.setState({"volume": volume});
+    this.props.p_songs.onValue(function(songs) {
+      this.setState({"songs": songs});
     }.bind(this));
   },
   render: function() {
@@ -59,22 +51,19 @@ var App = module.exports = React.createClass({
                   /> :
                 this.state.route === "radio" ?
                   <Radio
-                    play={this.state.play}
                     songs={this.state.songs}
                     favBus={this.props.favBus}
-                    volBus={this.props.volBus}
-                    volume={this.state.volume}
-                    onPlay={this.onPlay}
                   /> :
                 "";
 
     return (
       <div className="app">
         <main className="app-main container-fluid">
-          <Audio src={this.props.url} type="audio/mpeg" volume={this.state.volume} play={this.state.play} />
           {page}
         </main>
         <AppNav
+          src={this.props.url}
+          song={_.head(this.state.songs)}
           route={this.state.route}
           paneIsOpen={this.state.paneIsOpen}
         />
