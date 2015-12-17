@@ -4,6 +4,7 @@ import ReactIntl from "react-intl";
 import Audio from "./audio.jsx";
 
 const IntlMixin = ReactIntl.IntlMixin;
+const FormattedMessage = ReactIntl.FormattedMessage;
 
 export default React.createClass({
   mixins: [IntlMixin],
@@ -23,7 +24,7 @@ export default React.createClass({
   },
   render: function() {
     const src = this.props.src;
-    const song = this.props.song;
+    const nowPlaying = this.props.nowPlaying;
     const volume = this.state.volume;
     const playing = this.state.playing;
 
@@ -35,12 +36,15 @@ export default React.createClass({
       <Audio type="audio/mpeg" src={src} volume={volume/100}></Audio>
     ) : "";
 
+    const display = nowPlaying.type === "song" ?
+                      <SongDisplay song={nowPlaying.song} /> :
+                    nowPlaying.type === "loading" ?
+                      <LoadingDisplay /> :
+                      <UnknownDisplay />;
+
     return (
       <div className="nav-player">
-        <img className="nav-player-icon" src={song.icons.medium} alt="Album icon" />
-        <div className="nav-player-title">{song.title}</div>
-        <div className="nav-player-artist">{song.artist}</div>
-
+        {display}
         <div className="nav-player-controls">
           <button className="nav-player-controls-play" onClick={this.onPlay}>
             <span className={"fa fa-" + (playing ? "stop" : "play")}></span>
@@ -52,6 +56,49 @@ export default React.createClass({
         </div>
 
         {audio}
+      </div>
+    );
+  }
+});
+
+export const SongDisplay = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    const song = this.props.song;
+
+    return (
+      <div className="nav-player-display">
+        <img className="nav-player-icon" src={song.icons.medium} alt="Album icon" />
+        <div className="nav-player-title">{song.title}</div>
+        <div className="nav-player-artist">{song.artist}</div>
+      </div>
+    );
+  }
+});
+
+export const LoadingDisplay = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    return (
+      <div className="nav-player-display nav-player-display-loading">
+        <FormattedMessage message={this.getIntlMessage("loading")} />
+      </div>
+    );
+  }
+});
+
+export const UnknownDisplay = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    return (
+      <div className="nav-player-display nav-player-display-unknown">
+        <div className="nav-player-icon">
+          <span className="fa fa-question"></span>
+        </div>
+        <div className="nav-player-title">
+          <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+        </div>
+        <div className="nav-player-artist">&nbsp;</div>
       </div>
     );
   }

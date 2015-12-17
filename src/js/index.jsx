@@ -78,7 +78,8 @@ export function start(conf) {
         url="/api/songs"
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
-        p_songs={p_state.map(".songs")}
+        p_pastSongs={p_state.map(".pastSongs")}
+        p_nowPlaying={p_state.map(".nowPlaying")}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
         syncBus={syncBus}

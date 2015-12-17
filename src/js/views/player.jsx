@@ -9,20 +9,26 @@ var Controls = require("./player-controls.jsx");
 var Player = module.exports = React.createClass({
   mixins: [IntlMixin],
   render: function() {
-    var songs = this.props.songs;
-    var song = _.head(songs);
-    var history = _.tail(songs);
+    var history = this.props.pastSongs;
+    var nowPlaying = this.props.nowPlaying;
+    var favBus = this.props.favBus;
 
-    var nowPlaying =  _.isEmpty(songs) ?  <Song.loading /> :
-                      song == null ?      <Song.unknown /> :
-                                          <Song song={song} />;
+    var nowPlayingDisplay = nowPlaying.type === "song" ?
+                              <Song song={nowPlaying.song} /> :
+                            nowPlaying.type === "loading" ?
+                              <Song.loading /> :
+                              <Song.unknown />;
+
+    var controlsDisplay = nowPlaying.type === "song" ?
+                            <Controls song={nowPlaying.song} favBus={favBus} /> :
+                            "";
 
     return (
       <div className="player row">
         <div className="col-lg-10 col-lg-offset-1 col-md-12">
-          {nowPlaying}
-          <Controls song={song} favBus={this.props.favBus} />
-          <SongList songs={history} favBus={this.props.favBus} />
+          {nowPlayingDisplay}
+          {controlsDisplay}
+          <SongList songs={history} favBus={favBus} />
         </div>
       </div>
     );

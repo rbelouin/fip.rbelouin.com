@@ -13,11 +13,9 @@ export default React.createClass({
   },
   render: function() {
     const src = this.props.src;
-    const song = this.props.song;
+    const nowPlaying = this.props.nowPlaying;
     const isOpen = this.props.paneIsOpen;
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
-
-    const player = song ? <Player src={src} song={song} /> : "";
 
     return (
       <nav className={"app-nav " + navClass}>
@@ -29,7 +27,7 @@ export default React.createClass({
             <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
           </li>
         </ul>
-        {player}
+        <Player src={src} nowPlaying={nowPlaying} />
       </nav>
     );
   }

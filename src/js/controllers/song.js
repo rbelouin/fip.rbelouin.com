@@ -15,11 +15,7 @@ export function searchOnSpotify(Spotify, song) {
 export function getFipSongList(Fip, Spotify, location) {
   return Fip.fetchFipSongs("ws://" + location.host + "/api/ws/songs")
     .flatMapLatest(_.partial(searchOnSpotify, Spotify))
-    .flatMapError(data => {
-      const code = data && data.error && data.error.code;
-      return code === 100 ? Bacon.once(null) : Bacon.never();
-    })
-    .scan([], (songs, song) => [song].concat(_.compact(songs)));
+    .scan([], (songs, song) => [song].concat(songs));
 }
 
 export function getSpotifyPrint(Spotify, token) {
@@ -128,9 +124,18 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
     p_favSongs
   );
 
+  const p_pastSongs = p_songs.map(_.tail);
+
+  const p_nowPlaying = p_songs
+    .map(songs => _.isEmpty(songs) ? {type: "loading"} : {type: "song", song: _.head(songs)})
+    .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(error)))
+    .toProperty();
+
   return Bacon.combineTemplate({
     user: p_print.map(print => print && print.user),
     favSongs: p_favSongs,
+    pastSongs: p_pastSongs,
+    nowPlaying: p_nowPlaying,
     songs: p_songs
   });
 }

@@ -15,7 +15,8 @@ var App = module.exports = React.createClass({
     return {
       paneIsOpen: false,
       route: "radio",
-      songs: [],
+      pastSongs: [],
+      nowPlaying: {type: "loading"},
       favSongs: [],
       user: null
     };
@@ -37,8 +38,12 @@ var App = module.exports = React.createClass({
       this.setState({"user": user});
     }.bind(this));
 
-    this.props.p_songs.onValue(function(songs) {
-      this.setState({"songs": songs});
+    this.props.p_pastSongs.onValue(function(songs) {
+      this.setState({"pastSongs": songs});
+    }.bind(this));
+
+    this.props.p_nowPlaying.onValue(function(nowPlaying) {
+      this.setState({"nowPlaying": nowPlaying});
     }.bind(this));
   },
   render: function() {
@@ -51,7 +56,8 @@ var App = module.exports = React.createClass({
                   /> :
                 this.state.route === "radio" ?
                   <Radio
-                    songs={this.state.songs}
+                    nowPlaying={this.state.nowPlaying}
+                    pastSongs={this.state.pastSongs}
                     favBus={this.props.favBus}
                   /> :
                 "";
@@ -63,7 +69,7 @@ var App = module.exports = React.createClass({
         </main>
         <AppNav
           src={this.props.url}
-          song={_.head(this.state.songs)}
+          nowPlaying={this.state.nowPlaying}
           route={this.state.route}
           paneIsOpen={this.state.paneIsOpen}
         />

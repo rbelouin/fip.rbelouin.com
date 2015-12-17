@@ -9,7 +9,8 @@ var Radio = module.exports = React.createClass({
   render: function() {
     return (
       <Player
-        songs={this.props.songs}
+        pastSongs={this.props.pastSongs}
+        nowPlaying={this.props.nowPlaying}
         favBus={this.props.favBus}
       />
     );
