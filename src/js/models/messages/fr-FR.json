@@ -13,6 +13,7 @@
     "error-mpeg": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer un flux audio/mpeg sans plugin. Veuillez utiliser un autre navigateur, ou voir {player}",
     "official-player": "le lecteur officiel",
     "add-to-favorites": "Ajouter aux favoris",
+    "remove-from-favorites": "Retirer des favoris",
     "added-to-favorites": "Ajouté !",
     "fip-radio": "Radio",
     "favorites": "Chansons favorites",

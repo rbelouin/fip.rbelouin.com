@@ -1,65 +1,3 @@
-table.table.song-list {
-  border-collapse: separate;
-  border-spacing: 0 2px;
-  font-family: Oxygen, sans-serif;
-  table-layout: fixed;
-
-  td, th {
-    border: none;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    &:nth-child(1) {width: 38px;}
-    &:nth-child(2) {width: 38px;}
-    &:nth-child(6) {width: 70px;}
-  }
-
-  th {
-    font-size: 16px;
-    font-weight: lighter;
-    text-transform: uppercase;
-  }
-
-  td {
-    background-color: #303030;
-
-    &:nth-child(1),
-    &:nth-child(2) {
-      font-size: 16px;
-      vertical-align: middle;
-    }
-
-    &:first-child {
-      color: #bbbbbb;
-    }
-    &.song-list-favorite:first-child {
-      color: @fip-pink;
-    }
-
-    &:nth-child(2) {
-      color: transparent;
-
-      & a {
-        color: inherit;
-
-        &:hover, &:focus, &:active {
-          text-decoration: none;
-        }
-      }
-    }
-    &.song-list-spotify:nth-child(2) {
-      color: #84bd00;
-    }
-  }
-
-  @media (max-width: 470px) {
-    & {
-      display: none;
-    }
-  }
-}
-
 ul.song-list {
   padding: 0;
 
@@ -83,10 +21,95 @@ ul.song-list {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    .song-list-item-controls {
+      display: none;
+      margin-top: 5px;
+
+      .song-list-item-controls-favorite,
+      .song-list-item-controls-spotify {
+        color: white;
+        display: block;
+        font-weight: bold;
+        line-height: 34px;
+        text-align: center;
+        text-transform: uppercase;
+
+        .fa {
+          float: left;
+          font-size: 20px;
+          line-height: 34px;
+          margin-left: 10px;
+        }
+      }
+
+      .song-list-item-controls-favorite {
+        background-color: #666666;
+        margin-bottom: 5px;
+      }
+
+      .song-list-item-controls-spotify {
+        background-color: #84bd00;
+
+        &:active, &:focus, &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .song-list-item-controls.song-list-item-controls-shown {
+      display: block;
+    }
   }
 
   li.song-list-item.song-list-item-favorited {
     border-left: 3px solid @fip-pink;
     padding-left: 7px;
+  }
+}
+
+@media(min-width: 768px) {
+  ul.song-list {
+    li.song-list-item {
+      .song-list-item-controls {
+        display: block;
+
+        .song-list-item-controls-favorite,
+        .song-list-item-controls-spotify {
+          background: none;
+          color: #bbbbbb;
+          display: inline-block;
+          font-size: 14px;
+          font-weight: normal;
+          line-height: 20px;
+          margin: 5px 20px 0 0;
+          text-transform: none;
+
+          .fa {
+            float: none;
+            font-size: 14px;
+            line-height: 20px;
+            margin: 0 5px 0 0;
+          }
+
+          &:hover {
+            color: white;
+            cursor: pointer;
+          }
+        }
+
+        .song-list-item-controls-favorite:hover {
+          .fa {
+            color: @fip-pink;
+          }
+        }
+
+        .song-list-item-controls-spotify:hover {
+          .fa {
+            color: #84bd00;
+          }
+        }
+      }
+    }
   }
 }

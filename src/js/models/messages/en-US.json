@@ -13,6 +13,7 @@
     "error-mpeg": "Your browser is not compatible with this player because it cannot play audio/mpeg streams without any plugin. Please use another browser, or see {player}",
     "official-player": "the official FIP player",
     "add-to-favorites": "Add to favorites",
+    "remove-from-favorites": "Remove from favorites",
     "added-to-favorites": "Added!",
     "fip-radio": "Radio",
     "favorites": "Favorite songs",
