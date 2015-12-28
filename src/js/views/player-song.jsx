@@ -75,37 +75,3 @@ Song.unknown = React.createClass({
     );
   }
 });
-
-Song.tr = React.createClass({
-  render: function() {
-    var song = this.props.song;
-
-    return (
-      <tr>
-        <td className={song.favorite ? "song-list-favorite" : ""}>
-          <span className="fa fa-heart" onClick={this.props.toggleFavorite}></span>
-        </td>
-        <td className={song.spotify ? "song-list-spotify" : ""}>
-          <a href={song.spotify} target="_blank" className="fa fa-spotify"></a>
-        </td>
-        <td>{song.title}</td>
-        <td>{song.artist}</td>
-        <td>{song.album}</td>
-        <td>{song.year}</td>
-        <td>{song.label}</td>
-      </tr>
-    );
-  }
-});
-
-Song.li = React.createClass({
-  render: function() {
-    var song = this.props.song;
-
-    return (
-      <li>
-        <Song song={song} />
-      </li>
-    );
-  }
-});

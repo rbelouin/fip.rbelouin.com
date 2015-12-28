@@ -61,21 +61,32 @@ table.table.song-list {
 }
 
 ul.song-list {
-  margin: 0 0 20px 0;
   padding: 0;
 
-  li {
+  li.song-list-item {
+    background-color: #303030;
     list-style: none;
-    margin-top: 20px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
 
-    .player-song-icon {
-      display: none;
+    .song-list-item-title {
+      font-size: 18px;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .song-list-item-info {
+      font-size: 14px;
+      font-weight: lighter;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
-  @media (min-width: 471px) {
-    & {
-      display: none;
-    }
+  li.song-list-item.song-list-item-favorited {
+    border-left: 3px solid @fip-pink;
+    padding-left: 7px;
   }
 }
