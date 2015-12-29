@@ -17,6 +17,10 @@ export default React.createClass({
     const isOpen = this.props.paneIsOpen;
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
+    const player = !this.props.playerOnBottom ? (
+      <Player src={src} nowPlaying={nowPlaying} />
+    ) : "";
+
     return (
       <nav className={"app-nav " + navClass}>
         <ul>
@@ -27,7 +31,7 @@ export default React.createClass({
             <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
           </li>
         </ul>
-        <Player src={src} nowPlaying={nowPlaying} />
+        {player}
       </nav>
     );
   }

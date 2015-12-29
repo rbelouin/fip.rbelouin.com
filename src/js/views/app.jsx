@@ -8,12 +8,14 @@ var Radio = require("./radio.jsx");
 var Favorites = require("./favorites.jsx");
 
 import AppNav from "./app-nav.jsx";
+import Player from "./nav-player.jsx";
 
 var App = module.exports = React.createClass({
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
       paneIsOpen: false,
+      playerOnBottom: false,
       route: "radio",
       pastSongs: [],
       nowPlaying: {type: "loading"},
@@ -28,6 +30,10 @@ var App = module.exports = React.createClass({
 
     this.props.p_paneIsOpen.onValue(function(paneIsOpen) {
       this.setState({"paneIsOpen": paneIsOpen});
+    }.bind(this));
+
+    this.props.p_playerOnBottom.onValue(function(playerOnBottom) {
+      this.setState({"playerOnBottom": playerOnBottom});
     }.bind(this));
 
     this.props.p_favSongs.onValue(function(songs) {
@@ -62,16 +68,26 @@ var App = module.exports = React.createClass({
                   /> :
                 "";
 
+    var player = this.state.playerOnBottom ? (
+      <Player
+        src={this.props.url}
+        nowPlaying={this.state.nowPlaying}
+        onBottom={true}
+      />
+    ) : "";
+
     return (
       <div className="app">
         <main className="app-main container-fluid">
           {page}
         </main>
+        {player}
         <AppNav
           src={this.props.url}
           nowPlaying={this.state.nowPlaying}
           route={this.state.route}
           paneIsOpen={this.state.paneIsOpen}
+          playerOnBottom={this.state.playerOnBottom}
         />
       </div>
     );

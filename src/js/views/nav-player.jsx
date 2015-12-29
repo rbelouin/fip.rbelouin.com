@@ -42,8 +42,12 @@ export default React.createClass({
                       <LoadingDisplay /> :
                       <UnknownDisplay />;
 
+    const className = ["nav-player"]
+      .concat(this.props.onBottom ? ["nav-player-bottom"] : [])
+      .join(" ");
+
     return (
-      <div className="nav-player">
+      <div className={className}>
         {display}
         <div className="nav-player-controls">
           <button className="nav-player-controls-play" onClick={this.onPlay}>
@@ -69,8 +73,10 @@ export const SongDisplay = React.createClass({
     return (
       <div className="nav-player-display">
         <img className="nav-player-icon" src={song.icons.medium} alt="Album icon" />
-        <div className="nav-player-title">{song.title}</div>
-        <div className="nav-player-artist">{song.artist}</div>
+        <div className="nav-player-info">
+          <div className="nav-player-title">{song.title}</div>
+          <div className="nav-player-artist">{song.artist}</div>
+        </div>
       </div>
     );
   }
@@ -95,10 +101,12 @@ export const UnknownDisplay = React.createClass({
         <div className="nav-player-icon">
           <span className="fa fa-question"></span>
         </div>
-        <div className="nav-player-title">
-          <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+        <div className="nav-player-info">
+          <div className="nav-player-title">
+            <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+          </div>
+          <div className="nav-player-artist">&nbsp;</div>
         </div>
-        <div className="nav-player-artist">&nbsp;</div>
       </div>
     );
   }
