@@ -34,7 +34,7 @@ var Controls = module.exports = React.createClass({
     ) : "";
 
     return (
-      <div className="player-controls">
+      <div className="fipradio-controls">
         {favoriteButton}
         {spotifyButton}
       </div>

@@ -22,6 +22,7 @@
     "unsync-from-spotify": "Unsync from Spotify",
     "connected-as": "Connected as: {name}",
     "open-in-spotify": "Open in Spotify",
-    "title-not-available": "Title not available"
+    "title-not-available": "Title not available",
+    "now-broadcasting": "Now broadcasting:"
   }
 }

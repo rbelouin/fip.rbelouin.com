@@ -22,6 +22,7 @@
     "unsync-from-spotify": "Désynchroniser",
     "connected-as": "Connecté en tant que : {name}",
     "open-in-spotify": "Ouvrir dans Spotify",
-    "title-not-available": "Titre non disponible"
+    "title-not-available": "Titre non disponible",
+    "now-broadcasting": "En cours de diffusion :"
   }
 }
