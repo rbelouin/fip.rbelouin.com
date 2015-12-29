@@ -20,6 +20,17 @@ ul.song-list {
       overflow-x: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      .song-list-item-album::before {
+        content: " - ";
+      }
+
+      .song-list-item-year::before {
+        content: " (";
+      }
+      .song-list-item-year::after {
+        content: ")";
+      }
     }
 
     .song-list-item-controls {
