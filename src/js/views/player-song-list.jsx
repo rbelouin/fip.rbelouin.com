@@ -15,7 +15,7 @@ var SongListItem = React.createClass({
       .join(" ");
 
     var year = song.year ? (
-      (<span className="song-list-item-year">{song.year}</span>)
+      <span className="song-list-item-year">{song.year}</span>
     ) : "";
 
     var favorite = (
@@ -45,7 +45,6 @@ var SongListItem = React.createClass({
         <div className="song-list-item-title">{song.title}</div>
         <div className="song-list-item-info">
           <span className="song-list-item-artist">{song.artist}</span>
-          &nbsp;-&nbsp;
           <span className="song-list-item-album">{song.album}</span>
           {year}
         </div>
