@@ -87,11 +87,23 @@ export function start(conf) {
                                 return !isOpen;
                               });
 
+    const p_playerOnBottom = Bacon
+      .fromBinder(sink => {
+        const mediaQuery = matchMedia("(max-width: 991px)");
+
+        mediaQuery.addListener(sink);
+        sink(mediaQuery);
+
+        return () => mediaQuery.removeListener(sink);
+      })
+      .map(".matches");
+
     React.render(
       <App
         url="/api/songs"
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
+        p_playerOnBottom={p_playerOnBottom}
         p_pastSongs={p_state.map(".pastSongs")}
         p_nowPlaying={p_state.map(".nowPlaying")}
         p_favSongs={p_state.map(".favSongs")}

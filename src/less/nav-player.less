@@ -103,3 +103,66 @@
     }
   }
 }
+
+.nav-player.nav-player-bottom {
+  background-color: #303030;
+  box-shadow: 0 -1px #272727;
+  height: 70px;
+  padding: 10px;
+
+  .nav-player-display {
+    display: inline-block;
+    width: ~"calc(100% - 70px)";
+
+    .nav-player-icon {
+      display: inline-block;
+      height: 50px;
+      vertical-align: middle;
+      width: 50px;
+    }
+
+    .nav-player-info {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 5px 0;
+      vertical-align: middle;
+      width: ~"calc(100% - 80px)";
+
+      .nav-player-title,
+      .nav-player-artist {
+        text-align: left;
+        margin: 0;
+      }
+    }
+  }
+  .nav-player-display.nav-player-display-loading {
+    padding: 0;
+  }
+  .nav-player-display.nav-player-display-unknown {
+    .nav-player-icon {
+      background: @fip-pink;
+      font-size: 40px;
+      line-height: 50px;
+      text-align: center;
+
+      .fa {
+        margin-left: -4px;
+      }
+    }
+  }
+
+  .nav-player-controls {
+    display: inline-block;
+    margin: 0 10px;
+
+    .nav-player-controls-play {
+      border-radius: 25px;
+      height: 50px;
+      width: 50px;
+    }
+
+    .nav-player-controls-volume {
+      display: none;
+    }
+  }
+}
