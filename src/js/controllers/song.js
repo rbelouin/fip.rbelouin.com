@@ -1,10 +1,6 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-import Fip from "../models/fip.js";
-import Spotify from "../models/spotify.js";
-import Storage from "../models/storage.js";
-
 export function searchOnSpotify(Spotify, song) {
   return Spotify.search(song).map(result => _.extend({}, song, {
     spotify: result ? result.href : null,
@@ -135,12 +131,11 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
     user: p_print.map(print => print && print.user),
     favSongs: p_favSongs,
     pastSongs: p_pastSongs,
-    nowPlaying: p_nowPlaying,
-    songs: p_songs
+    nowPlaying: p_nowPlaying
   });
 }
 
-export default {
+export default (Storage, Spotify, Fip, location) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
   getFipSongList: _.partial(getFipSongList, Fip, Spotify, window.location),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
@@ -151,4 +146,4 @@ export default {
   getFavSongsStream,
   mergeFavsAndSongs,
   getState: _.partial(getState, Storage, Spotify, Fip, window.location)
-}
+})

@@ -25,7 +25,7 @@ export function send(fetch, {url, method, headers, body}) {
   return s_body.toProperty();
 }
 
-export default {
+export default (fetch) => ({
   parseResponse,
-  send: _.partial(send, window.fetch)
-};
+  send: _.partial(send, fetch)
+})

@@ -1,8 +1,6 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-import WebSocket from "./websocket.js";
-
 export function fetchFipSongs(connectForever, url) {
   const stream = connectForever(url);
 
@@ -12,6 +10,6 @@ export function fetchFipSongs(connectForever, url) {
     .toProperty();
 }
 
-export default {
+export default (WebSocket) => ({
   fetchFipSongs: _.partial(fetchFipSongs, WebSocket.connectForever)
-}
+})

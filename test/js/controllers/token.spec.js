@@ -343,10 +343,10 @@ test("The Token controller should request a token everytime a user wants to sync
     token: null,
     get: function(item) {
       t.equal(item, "token");
-      return Storage[item];
+      return Storage1[item];
     },
     set: function(item, value) {
-      Storage[item] = value;
+      Storage1[item] = value;
     }
   };
 
@@ -387,10 +387,10 @@ test("The Token controller should request a token everytime a user wants to sync
     token: null,
     get: function(item) {
       t.equal(item, "token");
-      return Storage[item];
+      return Storage2[item];
     },
     set: function(item, value) {
-      Storage[item] = value;
+      Storage2[item] = value;
     }
   };
 

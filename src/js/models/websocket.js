@@ -38,7 +38,7 @@ export function connectForever(WS, url) {
   }));
 }
 
-export default {
+export default (WebSocket) => ({
   connect: _.partial(connect, WebSocket),
   connectForever: _.partial(connectForever, WebSocket)
-}
+})
