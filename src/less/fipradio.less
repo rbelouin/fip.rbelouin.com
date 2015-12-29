@@ -1,0 +1,149 @@
+.fipradio {
+  .fipradio-nowplaying {
+    background-color: #222222;
+    margin: 10px 0 10px;
+
+    .fipradio-nowplaying-cover {
+      display: inline-block;
+      height: 60px;
+      vertical-align: top;
+    }
+
+    .fipradio-nowplaying-info {
+      display: inline-block;
+      padding: 10px 0 10px 10px;
+      vertical-align: top;
+      width: ~"calc(100% - 70px)";
+
+      .fipradio-nowplaying-title {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .fipradio-nowplaying-artist,
+      .fipradio-nowplaying-details {
+        font-size: 14px;
+        font-weight: lighter;
+        line-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .fipradio-nowplaying-details {
+        color: #bbbbbb;
+        display: none;
+      }
+    }
+  }
+
+  .fipradio-controls {
+    margin-top: 5px;
+
+    .fipradio-controls-favorite,
+    .fipradio-controls-spotify {
+      color: white;
+      display: block;
+      font-weight: bold;
+      line-height: 34px;
+      text-align: center;
+      text-transform: uppercase;
+
+      .fa {
+        float: left;
+        font-size: 20px;
+        line-height: 34px;
+        margin-left: 10px;
+      }
+    }
+
+    .fipradio-controls-favorite {
+      background-color: #666666;
+      margin-bottom: 5px;
+    }
+
+    .fipradio-controls-spotify {
+      background-color: #84bd00;
+
+      &:active, &:focus, &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  hr {
+    border-color: #303030;
+  }
+}
+
+@media (min-width: 768px) {
+  .fipradio {
+    .fipradio-nowplaying {
+      margin-bottom: 0;
+      padding: 10px;
+
+      .fipradio-nowplaying-cover {
+        height: 80px;
+      }
+
+      .fipradio-nowplaying-info {
+        width: ~"calc(100% - 90px)";
+
+        .fipradio-nowplaying-details {
+          display: block;
+        }
+      }
+    }
+
+    .fipradio-controls {
+      background-color: #222222;
+      margin: 0;
+      padding: 5px 10px;
+
+      .fipradio-controls-favorite,
+      .fipradio-controls-spotify {
+        color: #bbbbbb;
+        display: inline-block;
+        font-weight: lighter;
+        line-height: 20px;
+        text-align: left;
+        text-transform: none;
+
+        .fa {
+          float: none;
+          font-size: 14px;
+          line-height: 20px;
+          margin: 0 5px 0 0;
+        }
+
+        &:hover {
+          color: white;
+          cursor: pointer;
+        }
+      }
+
+      .fipradio-controls-favorite {
+        background-color: transparent;
+        margin: 0 20px 0 0;
+      }
+      .fipradio-controls-favorite:hover {
+        .fa {
+          color: @fip-pink;
+        }
+      }
+
+      .fipradio-controls-spotify {
+        background-color: transparent;
+      }
+      .fipradio-controls-spotify:hover {
+        .fa {
+          color: #84bd00;
+        }
+      }
+    }
+  }
+}

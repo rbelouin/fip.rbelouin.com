@@ -2,8 +2,6 @@ import _ from "lodash";
 import qs from "querystring";
 import Bacon from "baconjs";
 
-import Http from "./http.js";
-
 export const host = "https://api.spotify.com/v1";
 
 export function getAuthorization(token) {
@@ -158,13 +156,13 @@ export function sync(send, token, userId, playlistId) {
   };
 }
 
-export default {
+export default (Http, location) => ({
   host,
   getAuthorization,
   fetchAndFollow: _.partial(fetchAndFollow, Http.send),
   search: _.partial(search, Http.send),
-  requestToken: _.partial(requestToken, window.location),
-  refreshToken: _.partial(refreshToken, window.location),
+  requestToken: _.partial(requestToken, location),
+  refreshToken: _.partial(refreshToken, location),
   getUser: _.partial(getUser, Http.send),
   getPlaylists: _.partial(getPlaylists, Http.send),
   createPlaylist: _.partial(createPlaylist, Http.send),
@@ -172,4 +170,4 @@ export default {
   getPlaylistTracks: _.partial(getPlaylistTracks, Http.send),
   setPlaylistTracks: _.partial(setPlaylistTracks, Http.send),
   sync: _.partial(sync, Http.send)
-}
+})

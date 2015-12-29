@@ -1,17 +1,21 @@
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
+import React from "react";
+import ReactIntl from "react-intl";
 
-var A = require("./link.jsx");
+import A from "./link.jsx";
+import Player from "./nav-player.jsx";
 
-var App = module.exports = React.createClass({
+const IntlMixin = ReactIntl.IntlMixin;
+
+export default React.createClass({
   mixins: [IntlMixin],
   isActive: function(route) {
     return this.props.route === route ? "active" : "";
   },
   render: function() {
-    var paneIsOpen = this.props.paneIsOpen;
-    var navClass = paneIsOpen ? "app-nav-open" : "app-nav-close";
+    const src = this.props.src;
+    const nowPlaying = this.props.nowPlaying;
+    const isOpen = this.props.paneIsOpen;
+    const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     return (
       <nav className={"app-nav " + navClass}>
@@ -23,6 +27,7 @@ var App = module.exports = React.createClass({
             <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
           </li>
         </ul>
+        <Player src={src} nowPlaying={nowPlaying} />
       </nav>
     );
   }

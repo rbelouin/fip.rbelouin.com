@@ -2,9 +2,6 @@ import _ from "lodash";
 import qs from "querystring";
 import Bacon from "baconjs";
 
-import Storage from "../models/storage.js";
-import Spotify from "../models/spotify.js";
-
 export function getTokenFromQS(location) {
   const params = qs.parse(location.search.slice(1));
 
@@ -91,7 +88,7 @@ export function getTokenProperty(Storage, Spotify, location, history, s_sync) {
   }).toProperty(token);
 }
 
-export default {
+export default (Storage, Spotify, location) => ({
   getTokenFromQS: _.partial(getTokenFromQS, window.location),
   getTokenFromLS: _.partial(getTokenFromLS, Storage),
   getToken: _.partial(getToken, Storage, window.location),
@@ -109,4 +106,4 @@ export default {
     Spotify,
     window.location
   )
-};
+})

@@ -716,7 +716,10 @@ test("The Song controller should provide a state property", function(t) {
 
       t.deepEqual(ev.value(), [{
         user: Spotify.user,
-        songs: [],
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -735,12 +738,16 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        songs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -759,7 +766,39 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        songs: [{
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: [],
+        favSongs: [{
+          id: "ONE",
+          spotify: null,
+          spotifyId: null,
+          favorite: true
+        },{
+          id: "3",
+          spotify: "3",
+          spotifyId: "3",
+          favorite: true
+        }]
+      }, {
+        user: Spotify.user,
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
           id: "FOUR",
           spotify: "4",
           spotifyId: "4",
@@ -778,36 +817,16 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        songs: [{
-          id: "FIVE",
-          spotify: "5",
-          spotifyId: "5",
-          favorite: false
-        },{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        songs: [{
-          id: "FIVE",
-          spotify: "5",
-          spotifyId: "5",
-          favorite: false
-        },{
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
           id: "FOUR",
           spotify: "4",
           spotifyId: "4",
@@ -988,7 +1007,10 @@ test("The Song controller should provide a state property (even when if token is
 
       t.deepEqual(ev.value(), [{
         user: null,
-        songs: [],
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1002,12 +1024,16 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        songs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1021,7 +1047,34 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        songs: [{
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: [],
+        favSongs: [{
+          id: "ONE",
+          spotify: null,
+          spotifyId: null,
+          favorite: true
+        }]
+      }, {
+        user: null,
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
           id: "FOUR",
           spotify: "4",
           spotifyId: "4",
@@ -1035,31 +1088,16 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        songs: [{
-          id: "FIVE",
-          spotify: "5",
-          spotifyId: "5",
-          favorite: false
-        },{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        }]
-      }, {
-        user: null,
-        songs: [{
-          id: "FIVE",
-          spotify: "5",
-          spotifyId: "5",
-          favorite: false
-        },{
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
           id: "FOUR",
           spotify: "4",
           spotifyId: "4",

@@ -9,7 +9,7 @@ var SongDetails = React.createClass({
     var song = this.props.song;
 
     return song.label ? (
-      <div className="song-details">
+      <div className="fipradio-nowplaying-details">
         <FormattedMessage
           message={this.getIntlMessage("song-details")}
           album={<span className="song-album">{song.album}</span>}
@@ -18,7 +18,7 @@ var SongDetails = React.createClass({
         />
       </div>
     ) : (
-      <div className="song-details">
+      <div className="fipradio-nowplaying-details">
         <FormattedMessage
           message={this.getIntlMessage("song-details-no-label")}
           album={<span className="song-album">{song.album}</span>}
@@ -33,13 +33,14 @@ var Song = module.exports = React.createClass({
   mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
+    var cover = song.icons.medium || song.icons.small;
 
     return (
-      <div className="song">
-        <img className="song-icon" alt="icon" src={song.icons.medium} />
-        <div className="song-info">
-          <div className="song-title">{song.title}</div>
-          <div className="song-artist">{song.artist}</div>
+      <div className="fipradio-nowplaying">
+        <img className="fipradio-nowplaying-cover" alt="cover" src={cover} />
+        <div className="fipradio-nowplaying-info">
+          <div className="fipradio-nowplaying-title">{song.title}</div>
+          <div className="fipradio-nowplaying-artist">{song.artist}</div>
           <SongDetails song={song} />
         </div>
       </div>
@@ -72,40 +73,6 @@ Song.unknown = React.createClass({
           </div>
         </div>
       </div>
-    );
-  }
-});
-
-Song.tr = React.createClass({
-  render: function() {
-    var song = this.props.song;
-
-    return (
-      <tr>
-        <td className={song.favorite ? "song-list-favorite" : ""}>
-          <span className="fa fa-heart" onClick={this.props.toggleFavorite}></span>
-        </td>
-        <td className={song.spotify ? "song-list-spotify" : ""}>
-          <a href={song.spotify} target="_blank" className="fa fa-spotify"></a>
-        </td>
-        <td>{song.title}</td>
-        <td>{song.artist}</td>
-        <td>{song.album}</td>
-        <td>{song.year}</td>
-        <td>{song.label}</td>
-      </tr>
-    );
-  }
-});
-
-Song.li = React.createClass({
-  render: function() {
-    var song = this.props.song;
-
-    return (
-      <li>
-        <Song song={song} />
-      </li>
     );
   }
 });

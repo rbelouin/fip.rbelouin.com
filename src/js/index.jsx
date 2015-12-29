@@ -9,8 +9,13 @@ import {IntlMixin} from "react-intl";
 const Bacon = window.Bacon = require("baconjs");
 require("bacon-routes");
 
-import TokenController from "./controllers/token.js";
-import SongController from "./controllers/song.js";
+import getHttp from "./models/http.js";
+import getWebSocket from "./models/websocket.js";
+import getStorage from "./models/storage.js";
+import getSpotify from "./models/spotify.js";
+import getFip from "./models/fip.js";
+import getTokenController from "./controllers/token.js";
+import getSongController from "./controllers/song.js";
 
 // TODO: remove this code after a while (2016)
 function _legacyMoveToken() {
@@ -34,6 +39,15 @@ function _legacyMoveToken() {
 
 export function start(conf) {
   _legacyMoveToken();
+
+  /* Bind the unsafe dependencies to the models */
+  const Http = getHttp(fetch);
+  const WS = getWebSocket(WebSocket);
+  const Storage = getStorage(localStorage);
+  const Spotify = getSpotify(Http, location);
+  const Fip = getFip(WS);
+  const TokenController = getTokenController(Storage, Spotify, location);
+  const SongController = getSongController(Storage, Spotify, Fip, location);
 
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
@@ -78,7 +92,8 @@ export function start(conf) {
         url="/api/songs"
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
-        p_songs={p_state.map(".songs")}
+        p_pastSongs={p_state.map(".pastSongs")}
+        p_nowPlaying={p_state.map(".nowPlaying")}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
         syncBus={syncBus}

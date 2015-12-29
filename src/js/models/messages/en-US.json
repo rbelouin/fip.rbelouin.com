@@ -12,8 +12,8 @@
     "error-audio": "Your browser is not compatible with this player because it cannot play music without Adobe Flash installed. Please use another browser, or see {player}",
     "error-mpeg": "Your browser is not compatible with this player because it cannot play audio/mpeg streams without any plugin. Please use another browser, or see {player}",
     "official-player": "the official FIP player",
-    "intro-baseline": "You are one click away from listening to an awesome radio",
     "add-to-favorites": "Add to favorites",
+    "remove-from-favorites": "Remove from favorites",
     "added-to-favorites": "Added!",
     "fip-radio": "Radio",
     "favorites": "Favorite songs",
@@ -22,6 +22,7 @@
     "unsync-from-spotify": "Unsync from Spotify",
     "connected-as": "Connected as: {name}",
     "open-in-spotify": "Open in Spotify",
-    "title-not-available": "Title not available"
+    "title-not-available": "Title not available",
+    "now-broadcasting": "Now broadcasting:"
   }
 }

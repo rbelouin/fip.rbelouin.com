@@ -23,14 +23,12 @@
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
     "browserify": "^11.2.0",
-    "casperjs": "^1.1.0-beta3",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
-    "slimerjs": "^0.9.6",
+    "tap-difflet": "^0.4.0",
     "tape": "^4.2.1",
-    "testling": "^1.7.1",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
@@ -47,19 +45,12 @@
     "build": "gulp build",
     "install": "gulp build",
     "start": "node ./prod/js/server.js",
-    "test": " Xvfb :1 -screen 0 1440x900x24 & DISPLAY=:1.0 testling -x 'casperjs --engine=slimerjs test/casper.js' && pkill Xvfb || pkill Xvfb",
+    "test": "browserify test/js/**/*.spec.* | node | tap-difflet",
     "watch": "gulp watch"
   },
   "browserify": {
     "transform": [
       "babelify"
-    ]
-  },
-  "testling": {
-    "files": [
-      "./node_modules/intl/dist/Intl.min.js",
-      "./node_modules/whatwg-fetch/fetch.js",
-      "./test/**/*.spec.*"
     ]
   }
 }

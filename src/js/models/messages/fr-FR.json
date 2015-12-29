@@ -12,8 +12,8 @@
     "error-audio": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer de la musique sans le plugin Adoble Flash. Veuillez utiliser un autre navigateur, ou voir {player}",
     "error-mpeg": "Votre navigateur n'est pas compatible avec ce lecteur car il n'est pas capable de jouer un flux audio/mpeg sans plugin. Veuillez utiliser un autre navigateur, ou voir {player}",
     "official-player": "le lecteur officiel",
-    "intro-baseline": "Vous êtes à un clic d'écouter une radio qui déchire",
     "add-to-favorites": "Ajouter aux favoris",
+    "remove-from-favorites": "Retirer des favoris",
     "added-to-favorites": "Ajouté !",
     "fip-radio": "Radio",
     "favorites": "Chansons favorites",
@@ -22,6 +22,7 @@
     "unsync-from-spotify": "Désynchroniser",
     "connected-as": "Connecté en tant que : {name}",
     "open-in-spotify": "Ouvrir dans Spotify",
-    "title-not-available": "Titre non disponible"
+    "title-not-available": "Titre non disponible",
+    "now-broadcasting": "En cours de diffusion :"
   }
 }

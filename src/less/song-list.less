@@ -1,81 +1,115 @@
-table.table.song-list {
-  border-collapse: separate;
-  border-spacing: 0 2px;
-  font-family: Oxygen, sans-serif;
-  table-layout: fixed;
+ul.song-list {
+  padding: 0;
 
-  td, th {
-    border: none;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    &:nth-child(1) {width: 38px;}
-    &:nth-child(2) {width: 38px;}
-    &:nth-child(6) {width: 70px;}
-  }
-
-  th {
-    font-size: 16px;
-    font-weight: lighter;
-    text-transform: uppercase;
-  }
-
-  td {
+  li.song-list-item {
     background-color: #303030;
+    list-style: none;
+    margin-bottom: 5px;
+    padding: 5px 10px;
 
-    &:nth-child(1),
-    &:nth-child(2) {
-      font-size: 16px;
-      vertical-align: middle;
+    .song-list-item-title {
+      font-size: 18px;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    &:first-child {
-      color: #bbbbbb;
+    .song-list-item-info {
+      font-size: 14px;
+      font-weight: lighter;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    &.song-list-favorite:first-child {
-      color: @fip-pink;
-    }
 
-    &:nth-child(2) {
-      color: transparent;
+    .song-list-item-controls {
+      display: none;
+      margin-top: 5px;
 
-      & a {
-        color: inherit;
+      .song-list-item-controls-favorite,
+      .song-list-item-controls-spotify {
+        color: white;
+        display: block;
+        font-weight: bold;
+        line-height: 34px;
+        text-align: center;
+        text-transform: uppercase;
 
-        &:hover, &:focus, &:active {
+        .fa {
+          float: left;
+          font-size: 20px;
+          line-height: 34px;
+          margin-left: 10px;
+        }
+      }
+
+      .song-list-item-controls-favorite {
+        background-color: #666666;
+        margin-bottom: 5px;
+      }
+
+      .song-list-item-controls-spotify {
+        background-color: #84bd00;
+
+        &:active, &:focus, &:hover {
           text-decoration: none;
         }
       }
     }
-    &.song-list-spotify:nth-child(2) {
-      color: #84bd00;
+
+    .song-list-item-controls.song-list-item-controls-shown {
+      display: block;
     }
   }
 
-  @media (max-width: 470px) {
-    & {
-      display: none;
-    }
+  li.song-list-item.song-list-item-favorited {
+    border-left: 3px solid @fip-pink;
+    padding-left: 7px;
   }
 }
 
-ul.song-list {
-  margin: 0 0 20px 0;
-  padding: 0;
+@media(min-width: 768px) {
+  ul.song-list {
+    li.song-list-item {
+      .song-list-item-controls {
+        display: block;
 
-  li {
-    list-style: none;
-    margin-top: 20px;
+        .song-list-item-controls-favorite,
+        .song-list-item-controls-spotify {
+          background: none;
+          color: #bbbbbb;
+          display: inline-block;
+          font-size: 14px;
+          font-weight: normal;
+          line-height: 20px;
+          margin: 5px 20px 0 0;
+          text-transform: none;
 
-    .player-song-icon {
-      display: none;
-    }
-  }
+          .fa {
+            float: none;
+            font-size: 14px;
+            line-height: 20px;
+            margin: 0 5px 0 0;
+          }
 
-  @media (min-width: 471px) {
-    & {
-      display: none;
+          &:hover {
+            color: white;
+            cursor: pointer;
+          }
+        }
+
+        .song-list-item-controls-favorite:hover {
+          .fa {
+            color: @fip-pink;
+          }
+        }
+
+        .song-list-item-controls-spotify:hover {
+          .fa {
+            color: #84bd00;
+          }
+        }
+      }
     }
   }
 }

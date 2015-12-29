@@ -1,10 +1,6 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-import Fip from "../models/fip.js";
-import Spotify from "../models/spotify.js";
-import Storage from "../models/storage.js";
-
 export function searchOnSpotify(Spotify, song) {
   return Spotify.search(song).map(result => _.extend({}, song, {
     spotify: result ? result.href : null,
@@ -15,11 +11,7 @@ export function searchOnSpotify(Spotify, song) {
 export function getFipSongList(Fip, Spotify, location) {
   return Fip.fetchFipSongs("ws://" + location.host + "/api/ws/songs")
     .flatMapLatest(_.partial(searchOnSpotify, Spotify))
-    .flatMapError(data => {
-      const code = data && data.error && data.error.code;
-      return code === 100 ? Bacon.once(null) : Bacon.never();
-    })
-    .scan([], (songs, song) => [song].concat(_.compact(songs)));
+    .scan([], (songs, song) => [song].concat(songs));
 }
 
 export function getSpotifyPrint(Spotify, token) {
@@ -128,14 +120,22 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
     p_favSongs
   );
 
+  const p_pastSongs = p_songs.map(_.tail);
+
+  const p_nowPlaying = p_songs
+    .map(songs => _.isEmpty(songs) ? {type: "loading"} : {type: "song", song: _.head(songs)})
+    .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(error)))
+    .toProperty();
+
   return Bacon.combineTemplate({
     user: p_print.map(print => print && print.user),
     favSongs: p_favSongs,
-    songs: p_songs
+    pastSongs: p_pastSongs,
+    nowPlaying: p_nowPlaying
   });
 }
 
-export default {
+export default (Storage, Spotify, Fip, location) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
   getFipSongList: _.partial(getFipSongList, Fip, Spotify, window.location),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
@@ -146,4 +146,4 @@ export default {
   getFavSongsStream,
   mergeFavsAndSongs,
   getState: _.partial(getState, Storage, Spotify, Fip, window.location)
-}
+})
