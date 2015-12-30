@@ -44,6 +44,7 @@
   .fipradio-controls {
     margin-top: 5px;
 
+    .fipradio-controls-play,
     .fipradio-controls-favorite,
     .fipradio-controls-spotify {
       color: white;
@@ -59,6 +60,11 @@
         line-height: 34px;
         margin-left: 10px;
       }
+    }
+
+    .fipradio-controls-play {
+      background-color: @fip-pink;
+      margin-bottom: 5px;
     }
 
     .fipradio-controls-favorite {
@@ -104,6 +110,7 @@
       margin: 0;
       padding: 5px 10px;
 
+      .fipradio-controls-play,
       .fipradio-controls-favorite,
       .fipradio-controls-spotify {
         color: #bbbbbb;
@@ -126,10 +133,12 @@
         }
       }
 
+      .fipradio-controls-play,
       .fipradio-controls-favorite {
         background-color: transparent;
         margin: 0 20px 0 0;
       }
+      .fipradio-controls-play:hover,
       .fipradio-controls-favorite:hover {
         .fa {
           color: @fip-pink;

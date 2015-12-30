@@ -55,6 +55,8 @@ export function start(conf) {
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
+  const spotifyBus = new Bacon.Bus();
+  const playBus = new Bacon.Bus();
 
   const p_token = TokenController.getTokenProperty(Bacon.history, syncBus);
   const p_state = p_token.flatMapLatest(token => {
@@ -98,6 +100,23 @@ export function start(conf) {
       })
       .map(".matches");
 
+    const p_source = spotifyBus.map("spotify")
+      .merge(playBus.filter(isPlaying => isPlaying).map("radio"))
+      .toProperty("radio");
+
+    const p_nowPlaying = p_state.map(".nowPlaying");
+
+    const p_spotifySong = spotifyBus.map(songId => ({
+      type: "spotify",
+      songId: songId
+    })).toProperty();
+
+    const p_playerData = Bacon.mergeAll(
+      p_spotifySong.toEventStream(),
+      p_nowPlaying.toEventStream().filter(p_source.map(s => s === "radio")),
+      p_nowPlaying.sampledBy(p_source.filter(s => s === "radio"))
+    ).toProperty();
+
     React.render(
       <App
         url="/api/songs"
@@ -105,12 +124,15 @@ export function start(conf) {
         p_paneIsOpen={p_paneIsOpen}
         p_playerOnBottom={p_playerOnBottom}
         p_pastSongs={p_state.map(".pastSongs")}
-        p_nowPlaying={p_state.map(".nowPlaying")}
+        p_nowPlaying={p_nowPlaying}
+        p_playerData={p_playerData}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
         syncBus={syncBus}
         favBus={favBus}
         volBus={volBus}
+        spotifyBus={spotifyBus}
+        playBus={playBus}
         {...intl}
       />,
       document.querySelector("#app")

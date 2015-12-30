@@ -22,7 +22,10 @@
     "unsync-from-spotify": "Désynchroniser",
     "connected-as": "Connecté en tant que : {name}",
     "open-in-spotify": "Ouvrir dans Spotify",
+    "play-with-spotify": "Lire avec Spotify",
     "title-not-available": "Titre non disponible",
-    "now-broadcasting": "En cours de diffusion :"
+    "now-broadcasting": "En cours de diffusion :",
+    "play-the-radio": "Écouter la radio",
+    "stop-the-radio": "Éteindre la radio"
   }
 }

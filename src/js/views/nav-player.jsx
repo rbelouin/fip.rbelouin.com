@@ -10,7 +10,6 @@ export default React.createClass({
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
-      playing: false,
       volume: 50
     };
   },
@@ -19,20 +18,20 @@ export default React.createClass({
     this.setState({volume});
   },
   onPlay: function(ev) {
-    const playing = !this.state.playing;
-    this.setState({playing});
+    const isPlaying = !this.props.isPlaying;
+    this.props.playBus.push(isPlaying);
   },
   render: function() {
     const src = this.props.src;
     const nowPlaying = this.props.nowPlaying;
+    const isPlaying = this.props.isPlaying;
     const volume = this.state.volume;
-    const playing = this.state.playing;
 
     const icon =  volume === 0  ? "off" :
                   volume < 50   ? "down" :
                                   "up";
 
-    const audio = src && playing ? (
+    const audio = src && isPlaying ? (
       <Audio type="audio/mpeg" src={src} volume={volume/100}></Audio>
     ) : "";
 
@@ -47,7 +46,7 @@ export default React.createClass({
     const controls = nowPlaying.type != "spotify" ? (
       <div className="nav-player-controls">
         <button className="nav-player-controls-play" onClick={this.onPlay}>
-          <span className={"fa fa-" + (playing ? "stop" : "play")}></span>
+          <span className={"fa fa-" + (isPlaying ? "stop" : "play")}></span>
         </button>
         <div className="nav-player-controls-volume">
           <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
