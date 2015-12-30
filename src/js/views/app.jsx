@@ -19,6 +19,8 @@ var App = module.exports = React.createClass({
       route: "radio",
       pastSongs: [],
       nowPlaying: {type: "loading"},
+      isPlaying: false,
+      playerData: {type: "loading"},
       favSongs: [],
       user: null
     };
@@ -51,6 +53,16 @@ var App = module.exports = React.createClass({
     this.props.p_nowPlaying.onValue(function(nowPlaying) {
       this.setState({"nowPlaying": nowPlaying});
     }.bind(this));
+
+    this.props.p_playerData.onValue(function(playerData) {
+      this.setState({"playerData": playerData});
+    }.bind(this));
+
+    this.props.playBus
+      .merge(this.props.spotifyBus.map(false))
+      .onValue(function(isPlaying) {
+        this.setState({"isPlaying": isPlaying});
+      }.bind(this));
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
@@ -58,20 +70,26 @@ var App = module.exports = React.createClass({
                     favSongs={this.state.favSongs}
                     favBus={this.props.favBus}
                     syncBus={this.props.syncBus}
+                    spotifyBus={this.props.spotifyBus}
                     user={this.state.user}
                   /> :
                 this.state.route === "radio" ?
                   <Radio
                     nowPlaying={this.state.nowPlaying}
+                    isPlaying={this.state.isPlaying}
                     pastSongs={this.state.pastSongs}
                     favBus={this.props.favBus}
+                    spotifyBus={this.props.spotifyBus}
+                    playBus={this.props.playBus}
                   /> :
                 "";
 
     var player = this.state.playerOnBottom ? (
       <Player
         src={this.props.url}
-        nowPlaying={this.state.nowPlaying}
+        playBus={this.props.playBus}
+        isPlaying={this.state.isPlaying}
+        nowPlaying={this.state.playerData}
         onBottom={true}
       />
     ) : "";
@@ -84,7 +102,9 @@ var App = module.exports = React.createClass({
         {player}
         <AppNav
           src={this.props.url}
-          nowPlaying={this.state.nowPlaying}
+          playBus={this.props.playBus}
+          isPlaying={this.state.isPlaying}
+          nowPlaying={this.state.playerData}
           route={this.state.route}
           paneIsOpen={this.state.paneIsOpen}
           playerOnBottom={this.state.playerOnBottom}

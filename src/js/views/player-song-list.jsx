@@ -28,12 +28,12 @@ var SongListItem = React.createClass({
     );
 
     var spotify = song.spotify ? (
-      <a target="_blank" href={song.spotify} className="song-list-item-controls-spotify">
-        <span className="fa fa-spotify"></span>
+      <div className="song-list-item-controls-spotify" onClick={this.props.onSpotifyPlay}>
+        <span className="fa fa-play"></span>
         <FormattedMessage
-          message={this.getIntlMessage("open-in-spotify")}
+          message={this.getIntlMessage("play-with-spotify")}
         />
-      </a>
+      </div>
     ) : "";
 
     var controlsClassName = ["song-list-item-controls"]
@@ -75,6 +75,11 @@ var SongList = module.exports = React.createClass({
 
     this.setState({selectedSongId});
   },
+  onSpotifyPlay: function(song) {
+    if(song.spotifyId) {
+      this.props.spotifyBus.push(song.spotifyId);
+    }
+  },
   render: function() {
     var songNodes = this.props.songs.map(function(song) {
       return <SongListItem
@@ -83,6 +88,7 @@ var SongList = module.exports = React.createClass({
         active={song.id === this.state.selectedSongId}
         onClick={_.partial(this.onSelect, song).bind(this)}
         onFavorite={_.partial(this.onFavorite, song).bind(this)}
+        onSpotifyPlay={_.partial(this.onSpotifyPlay, song).bind(this)}
       />;
     }, this);
 

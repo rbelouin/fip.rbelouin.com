@@ -14,11 +14,13 @@ export default React.createClass({
   render: function() {
     const src = this.props.src;
     const nowPlaying = this.props.nowPlaying;
+    const isPlaying = this.props.isPlaying;
     const isOpen = this.props.paneIsOpen;
+    const playBus = this.props.playBus;
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     const player = !this.props.playerOnBottom ? (
-      <Player src={src} nowPlaying={nowPlaying} />
+      <Player src={src} nowPlaying={nowPlaying} isPlaying={isPlaying} playBus={playBus} />
     ) : "";
 
     return (

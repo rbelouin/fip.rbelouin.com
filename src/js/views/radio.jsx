@@ -10,6 +10,10 @@ var Controls = require("./player-controls.jsx");
 
 var Radio = module.exports = React.createClass({
   mixins: [IntlMixin],
+  onPlay: function() {
+    const isPlaying = !this.props.isPlaying;
+    this.props.playBus.push(isPlaying);
+  },
   onFavorite: function(song) {
     this.props.favBus.push({
       type: song.favorite ? "remove" : "add",
@@ -19,13 +23,24 @@ var Radio = module.exports = React.createClass({
   render: function() {
     var history = this.props.pastSongs;
     var nowPlaying = this.props.nowPlaying;
+    var isPlaying = this.props.isPlaying;
     var favBus = this.props.favBus;
+    var spotifyBus = this.props.spotifyBus;
 
     var nowPlayingDisplay = nowPlaying.type === "song" ?
                               <Song song={nowPlaying.song} /> :
                             nowPlaying.type === "loading" ?
                               <Song.loading /> :
                               <Song.unknown />;
+
+    var play = (
+      <div className="fipradio-controls-play" onClick={this.onPlay}>
+        <span className={isPlaying ? "fa fa-stop" : "fa fa-play"}></span>
+        <FormattedMessage
+          message={this.getIntlMessage(isPlaying ? "stop-the-radio" : "play-the-radio")}
+        />
+      </div>
+    );
 
     var favorite = nowPlaying.type === "song" ? (
       <div className="fipradio-controls-favorite" onClick={_.partial(this.onFavorite, nowPlaying.song)}>
@@ -47,6 +62,7 @@ var Radio = module.exports = React.createClass({
 
     var controlsDisplay = nowPlaying.type === "song" ? (
       <div className="fipradio-controls">
+        {play}
         {favorite}
         {spotify}
       </div>
@@ -64,7 +80,7 @@ var Radio = module.exports = React.createClass({
 
         <hr />
 
-        <SongList songs={history} favBus={favBus} />
+        <SongList songs={history} favBus={favBus} spotifyBus={spotifyBus} />
       </div>
     );
   }
