@@ -40,7 +40,21 @@ export default React.createClass({
                       <SongDisplay song={nowPlaying.song} /> :
                     nowPlaying.type === "loading" ?
                       <LoadingDisplay /> :
+                    nowPlaying.type === "spotify" ?
+                      <SpotifyDisplay songId={nowPlaying.songId} /> :
                       <UnknownDisplay />;
+
+    const controls = nowPlaying.type != "spotify" ? (
+      <div className="nav-player-controls">
+        <button className="nav-player-controls-play" onClick={this.onPlay}>
+          <span className={"fa fa-" + (playing ? "stop" : "play")}></span>
+        </button>
+        <div className="nav-player-controls-volume">
+          <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
+          <input className="nav-player-controls-volume-picker" type="range" name="volume" onInput={this.onInput} min="0" max="100" />
+        </div>
+      </div>
+    ) : "";
 
     const className = ["nav-player"]
       .concat(this.props.onBottom ? ["nav-player-bottom"] : [])
@@ -49,16 +63,7 @@ export default React.createClass({
     return (
       <div className={className}>
         {display}
-        <div className="nav-player-controls">
-          <button className="nav-player-controls-play" onClick={this.onPlay}>
-            <span className={"fa fa-" + (playing ? "stop" : "play")}></span>
-          </button>
-          <div className="nav-player-controls-volume">
-            <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
-            <input className="nav-player-controls-volume-picker" type="range" name="volume" onInput={this.onInput} min="0" max="100" />
-          </div>
-        </div>
-
+        {controls}
         {audio}
       </div>
     );
@@ -107,6 +112,20 @@ export const UnknownDisplay = React.createClass({
           </div>
           <div className="nav-player-artist">&nbsp;</div>
         </div>
+      </div>
+    );
+  }
+});
+
+export const SpotifyDisplay = React.createClass({
+  mixins: [IntlMixin],
+  render: function() {
+    const songId = this.props.songId;
+    const url = `https://embed.spotify.com/?uri=spotify:track:${songId}`;
+
+    return (
+      <div className="nav-player-display nav-player-display-spotify">
+        <iframe src={url} width="210" height="80" frameborder="0" allowtransparency="true"></iframe>
       </div>
     );
   }
