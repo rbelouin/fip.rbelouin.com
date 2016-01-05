@@ -3,27 +3,11 @@ var path = require("path");
 var express = require("express");
 var Bacon = require("baconjs");
 
-var routes = require("./routes.json");
+var config = require("./config.json");
 
 var app = express();
 
-app.use(function(req, res, next) {
-  if(req.path.indexOf("/api") === 0) {
-    require("http").get("http://fip.rbelouin.local:9000" + req.url, function(res2) {
-      for(var name in res2.headers) {
-        res.setHeader(name, res2.headers[name]);
-      }
-
-      res.status(res2.statusCode);
-      res2.pipe(res);
-    });
-  }
-  else {
-    next();
-  }
-});
-
-_.each(routes, function(route, name) {
+_.each(config.routes, function(route, name) {
   app.get(route, function(req, res) {
     res.sendFile(path.resolve(__dirname, "../public/index.html"));
   });
@@ -31,5 +15,5 @@ _.each(routes, function(route, name) {
 
 app.use(express.static(path.resolve(__dirname, "../public")));
 
-app.listen(8080);
-console.log("Server listening on port 8080...");
+app.listen(config.port);
+console.log("Server listening on port " + config.port + "…");
