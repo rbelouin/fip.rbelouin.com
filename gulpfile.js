@@ -2,8 +2,9 @@ var gulp = require("gulp");
 var source = require("vinyl-source-stream");
 var browserify = require("browserify");
 var less = require("gulp-less");
+var env = require("common-env")();
 
-gulp.task("browserify", function() {
+gulp.task("browserify", ["configuration"], function() {
   return browserify([
     "./node_modules/whatwg-fetch/fetch.js",
     "./prod/js/index.js"
@@ -12,6 +13,16 @@ gulp.task("browserify", function() {
     .bundle()
     .pipe(source("bundle.js"))
     .pipe(gulp.dest("./prod/public/js"));
+});
+
+gulp.task("configuration", function() {
+  var defaults = require("./package.json").common_env;
+  var config = env.getOrElseAll(defaults);
+
+  var src = source("config.json");
+  src.end(JSON.stringify(config));
+
+  return src.pipe(gulp.dest("./prod/js"));
 });
 
 gulp.task("copy", function() {

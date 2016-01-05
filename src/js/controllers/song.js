@@ -8,8 +8,8 @@ export function searchOnSpotify(Spotify, song) {
   }));
 }
 
-export function getFipSongList(Fip, Spotify, location) {
-  return Fip.fetchFipSongs("ws://" + location.host + "/api/ws/songs")
+export function getFipSongList(Fip, Spotify, wsHost) {
+  return Fip.fetchFipSongs(wsHost + "/songs")
     .flatMapLatest(_.partial(searchOnSpotify, Spotify))
     .scan([], (songs, song) => [song].concat(songs));
 }
@@ -94,7 +94,7 @@ export function mergeFavsAndSongs(songs, favSongs) {
   }));
 }
 
-export function getState(Storage, Spotify, Fip, location, favBus, token) {
+export function getState(Storage, Spotify, Fip, wsHost, favBus, token) {
   const p_print = !token ? Bacon.constant(null) :
                            getSpotifyPrint(Spotify, token).toProperty();
 
@@ -116,7 +116,7 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
 
   const p_songs = Bacon.combineWith(
     mergeFavsAndSongs,
-    getFipSongList(Fip, Spotify, location),
+    getFipSongList(Fip, Spotify, wsHost),
     p_favSongs
   );
 
@@ -135,9 +135,9 @@ export function getState(Storage, Spotify, Fip, location, favBus, token) {
   });
 }
 
-export default (Storage, Spotify, Fip, location) => ({
+export default (Storage, Spotify, Fip, wsHost) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongList: _.partial(getFipSongList, Fip, Spotify, window.location),
+  getFipSongList: _.partial(getFipSongList, Fip, Spotify, wsHost),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
@@ -145,5 +145,5 @@ export default (Storage, Spotify, Fip, location) => ({
   updateFavSongs,
   getFavSongsStream,
   mergeFavsAndSongs,
-  getState: _.partial(getState, Storage, Spotify, Fip, window.location)
+  getState: _.partial(getState, Storage, Spotify, Fip, wsHost)
 })

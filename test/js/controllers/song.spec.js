@@ -96,11 +96,9 @@ test("The Song controller should be able to get the songs FIP is playing", funct
     }
   };
 
-  const location = {
-    host: "host"
-  };
+  const wsHost = "ws://host/api/ws";
 
-  getFipSongList(Fip, Spotify, location)
+  getFipSongList(Fip, Spotify, wsHost)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());

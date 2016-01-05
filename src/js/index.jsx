@@ -47,7 +47,7 @@ export function start(conf) {
   const Spotify = getSpotify(Http, location);
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
-  const SongController = getSongController(Storage, Spotify, Fip, location);
+  const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host);
 
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
@@ -119,7 +119,7 @@ export function start(conf) {
 
     React.render(
       <App
-        url="/api/songs"
+        url={conf.api.http_host + "/songs"}
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
         p_playerOnBottom={p_playerOnBottom}

@@ -23,6 +23,7 @@
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
     "browserify": "^11.2.0",
+    "common-env": "^5.2.0",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
@@ -52,5 +53,26 @@
     "transform": [
       "babelify"
     ]
+  },
+  "common_env": {
+    "api": {
+      "http_host": "http://fip.rbelouin.com/api",
+      "ws_host": "ws://fip.rbelouin.com/api/ws"
+    },
+    "default_language": "en",
+    "port": 8080,
+    "routes": {
+      "favorites":  "/users/me/songs",
+      "radio":      "/"
+    },
+    "spotify": {
+      "api_host": "https://api.spotify.com/v1"
+    },
+    "storage": {
+      "keys": {
+        "favorites": "favorites",
+        "token": "token"
+      }
+    }
   }
 }
