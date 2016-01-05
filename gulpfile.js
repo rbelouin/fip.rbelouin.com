@@ -4,7 +4,7 @@ var browserify = require("browserify");
 var less = require("gulp-less");
 
 gulp.task("browserify", function() {
-  browserify([
+  return browserify([
     "./node_modules/whatwg-fetch/fetch.js",
     "./prod/js/index.js"
   ])
