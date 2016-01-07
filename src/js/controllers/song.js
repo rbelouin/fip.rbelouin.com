@@ -8,10 +8,19 @@ export function searchOnSpotify(Spotify, song) {
   }));
 }
 
-export function getFipSongList(Fip, Spotify, wsHost) {
-  return Fip.fetchFipSongs(wsHost + "/songs")
-    .flatMapLatest(_.partial(searchOnSpotify, Spotify))
-    .scan([], (songs, song) => [song].concat(songs));
+export function getFipSongLists(Fip, Spotify, wsHost, radios) {
+  const data = Fip.fetchFipRadios(wsHost, radios);
+  const search = _.partial(searchOnSpotify, Spotify);
+
+  return _.mapValues(data, radio => {
+    return radio
+      .flatMapLatest(item => {
+        return item.type === "song" ?
+          search(item.song).map(song => _.extend({}, item, {song})) :
+          Bacon.constant(item);
+      })
+      .scan([], (items, item) => [item].concat(items));
+  });
 }
 
 export function getSpotifyPrint(Spotify, token) {
@@ -86,15 +95,17 @@ export function getFavSongsStream(syncs, favBus) {
   });
 }
 
-export function mergeFavsAndSongs(songs, favSongs) {
+export function mergeFavsAndSongs(items, favSongs) {
   const favSongsById = _.indexBy(favSongs, "id");
 
-  return _.map(songs, song => song && _.extend({}, song, {
-    favorite: _.has(favSongsById, song.id) || _.has(favSongsById, song.spotifyId)
+  return _.map(items, item => item.type != "song" ? item : _.extend({}, item, {
+    song: _.extend({}, item.song, {
+      favorite: _.has(favSongsById, item.song.id) || _.has(favSongsById, item.song.spotifyId)
+    })
   }));
 }
 
-export function getState(Storage, Spotify, Fip, wsHost, favBus, token) {
+export function getState(Storage, Spotify, Fip, wsHost, favBus, radios, token) {
   const p_print = !token ? Bacon.constant(null) :
                            getSpotifyPrint(Spotify, token).toProperty();
 
@@ -114,30 +125,38 @@ export function getState(Storage, Spotify, Fip, wsHost, favBus, token) {
     });
   }).onValue();
 
-  const p_songs = Bacon.combineWith(
-    mergeFavsAndSongs,
-    getFipSongList(Fip, Spotify, wsHost),
-    p_favSongs
-  );
+  const data = getFipSongLists(Fip, Spotify, wsHost, radios);
 
-  const p_pastSongs = p_songs.map(_.tail);
+  const radioSongs = _.mapValues(data, radio => {
+    const p_songs = Bacon.combineWith(
+      mergeFavsAndSongs,
+      radio,
+      p_favSongs
+    );
 
-  const p_nowPlaying = p_songs
-    .map(songs => _.isEmpty(songs) ? {type: "loading"} : {type: "song", song: _.head(songs)})
-    .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(error)))
-    .toProperty();
+    const p_pastSongs = p_songs.map(_.tail);
+
+    const p_nowPlaying = p_songs
+      .map(songs => _.isEmpty(songs) ? {type: "loading"} : _.head(songs))
+      .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(error)))
+      .toProperty();
+
+    return {
+      nowPlaying: p_nowPlaying,
+      pastSongs: p_pastSongs
+    };
+  });
 
   return Bacon.combineTemplate({
     user: p_print.map(print => print && print.user),
     favSongs: p_favSongs,
-    pastSongs: p_pastSongs,
-    nowPlaying: p_nowPlaying
+    radios: radioSongs
   });
 }
 
 export default (Storage, Spotify, Fip, wsHost) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongList: _.partial(getFipSongList, Fip, Spotify, wsHost),
+  getFipSongLists: _.partial(getFipSongList, Fip, Spotify, wsHost),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
@@ -145,5 +164,5 @@ export default (Storage, Spotify, Fip, wsHost) => ({
   updateFavSongs,
   getFavSongsStream,
   mergeFavsAndSongs,
-  getState: _.partial(getState, Storage, Spotify, Fip, wsHost)
+  getState: _.partial(getState, Storage, Spotify, Fip, wsHost, radios)
 })
