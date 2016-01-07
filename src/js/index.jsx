@@ -68,6 +68,10 @@ export function start(conf) {
     routes: conf.routes
   });
 
+  routes.home.onValue(function() {
+    Bacon.history.pushState(null, null, "/radios/fip-radio");
+  });
+
   routes.errors.onValue(function() {
     Bacon.history.pushState(null, null, "/");
   });
@@ -75,6 +79,8 @@ export function start(conf) {
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
   }, Bacon.never());
+
+  const p_radio = routes.radio.map(".params.radio").toProperty();
 
   const App = require("./views/app.jsx");
 
@@ -119,6 +125,7 @@ export function start(conf) {
 
     React.render(
       <App
+        radios={conf.radios}
         url={conf.api.http_host + "/songs"}
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
@@ -128,6 +135,7 @@ export function start(conf) {
         p_playerData={p_playerData}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
+        p_radio={p_radio}
         syncBus={syncBus}
         favBus={favBus}
         volBus={volBus}

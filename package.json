@@ -61,9 +61,32 @@
     },
     "default_language": "en",
     "port": 8080,
+    "radios": [{
+      "name": "fip-radio",
+      "src": "http://audio.scdn.arkena.com/11016/fip-midfi128.mp3"
+    }, {
+      "name": "fip-autour-du-rock",
+      "src": "http://webradiofip1.scdn.arkena.com/webradiofip1.mp3"
+    }, {
+      "name": "fip-autour-du-jazz",
+      "src": "http://webradiofip2.scdn.arkena.com/webradiofip2.mp3"
+    }, {
+      "name": "fip-autour-du-groove",
+      "src": "http://webradiofip3.scdn.arkena.com/webradiofip3.mp3"
+    }, {
+      "name": "fip-autour-du-monde",
+      "src": "http://webradiofip4.scdn.arkena.com/webradiofip4.mp3"
+    }, {
+      "name": "tout-nouveau-tout-fip",
+      "src": "http://webradiofip5.scdn.arkena.com/webradiofip5.mp3"
+    }, {
+      "name": "fip-il-y-45-ans",
+      "src": "http://webradiofip6.scdn.arkena.com/webradiofip6.mp3"
+    }],
     "routes": {
       "favorites":  "/users/me/songs",
-      "radio":      "/"
+      "radio":      "/radios/:radio",
+      "home":       "/"
     },
     "spotify": {
       "api_host": "https://api.spotify.com/v1"

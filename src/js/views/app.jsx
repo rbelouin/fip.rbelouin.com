@@ -17,6 +17,7 @@ var App = module.exports = React.createClass({
       paneIsOpen: false,
       playerOnBottom: false,
       route: "radio",
+      radio: "fip-radio",
       pastSongs: [],
       nowPlaying: {type: "loading"},
       isPlaying: false,
@@ -56,6 +57,10 @@ var App = module.exports = React.createClass({
 
     this.props.p_playerData.onValue(function(playerData) {
       this.setState({"playerData": playerData});
+    }.bind(this));
+
+    this.props.p_radio.onValue(function(radio) {
+      this.setState({"radio": radio});
     }.bind(this));
 
     this.props.playBus
@@ -102,10 +107,12 @@ var App = module.exports = React.createClass({
         {player}
         <AppNav
           src={this.props.url}
+          radios={this.props.radios}
           playBus={this.props.playBus}
           isPlaying={this.state.isPlaying}
           nowPlaying={this.state.playerData}
           route={this.state.route}
+          radio={this.state.radio}
           paneIsOpen={this.state.paneIsOpen}
           playerOnBottom={this.state.playerOnBottom}
         />
