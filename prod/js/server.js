@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var qs = require("querystring");
 var path = require("path");
 var express = require("express");
 var Bacon = require("baconjs");
@@ -6,6 +7,17 @@ var Bacon = require("baconjs");
 var config = require("./config.json");
 
 var app = express();
+
+var apiPrefix = "/api";
+
+app.use(function(req, res, next) {
+  if(req.path.indexOf(apiPrefix) === 0) {
+    res.redirect(config.api.http_host + req.path.slice(apiPrefix.length) + "?" + qs.stringify(req.query));
+  }
+  else {
+    next();
+  }
+});
 
 _.each(config.routes, function(route, name) {
   app.get(route, function(req, res) {
