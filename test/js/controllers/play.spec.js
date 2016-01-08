@@ -3,7 +3,8 @@ import Bacon from "baconjs";
 
 import {
   getCurrentRadio,
-  getBroadcastedSong
+  getBroadcastedSong,
+  getSongBeingPlayed
 } from "../../../src/js/controllers/play.js";
 
 test("The Play controller should extract the radio name from the current path", function(t) {
@@ -43,7 +44,7 @@ test("The Play controller should get the song the current radio is broadcasting"
       t.ok(ev.hasValue());
 
       t.deepEqual(ev.value(), [{
-        type: "loading"
+        type: "loading"
       },{
         type: "song",
         song: {
@@ -71,7 +72,7 @@ test("The Play controller should get the song the current radio is broadcasting"
       nowPlaying: {
         type: "loading"
       },
-      pastSongs: []
+      pastSongs: []
     }
   });
 
@@ -95,7 +96,7 @@ test("The Play controller should get the song the current radio is broadcasting"
       nowPlaying: {
         type: "loading"
       },
-      pastSongs: []
+      pastSongs: []
     }
   });
 
@@ -116,7 +117,7 @@ test("The Play controller should get the song the current radio is broadcasting"
           id: "TWO"
         }
       },
-      pastSongs: []
+      pastSongs: []
     }
   });
 
@@ -137,7 +138,7 @@ test("The Play controller should get the song the current radio is broadcasting"
           id: "THREE"
         }
       },
-      pastSongs: [{
+      pastSongs: [{
         type: "song",
         song: {
           id: "TWO"
@@ -159,5 +160,148 @@ test("The Play controller should get the song the current radio is broadcasting"
   });
 
   s_route.end();
+  s_radios.end();
+});
+
+test("The Play controller should get the song being played", function(t) {
+  const s_playBus = new Bacon.Bus();
+  const s_radios = new Bacon.Bus();
+
+  const p_playBus = s_playBus.toProperty({
+    type: "radio",
+    radio: "radio1"
+  });
+
+  getSongBeingPlayed(s_radios.toProperty(), p_playBus)
+    .fold([], (items, item) => items.concat([item]))
+    .subscribe(function(ev) {
+      t.ok(ev.hasValue());
+
+      t.deepEqual(ev.value(), [{
+        type: "loading"
+      },{
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      },{
+        type: "song",
+        song: {
+          id: "THREE"
+        }
+      },{
+        type: "spotify",
+        song: {
+          id: "TWO"
+        }
+      },{
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      }]);
+
+      t.end();
+      return Bacon.noMore;
+    });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    }
+  });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio1"
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "THREE"
+        }
+      },
+      pastSongs: [{
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      }]
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    }
+  });
+
+  s_playBus.push({
+    type: "spotify",
+    song: {
+      id: "TWO"
+    }
+  });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio2"
+  });
+
+  s_playBus.end();
   s_radios.end();
 });

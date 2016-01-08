@@ -12,14 +12,27 @@ export function getBroadcastedSong(p_route, p_radios) {
     return radios[radio].nowPlaying;
   });
 
-  return p_song.skipDuplicates((s1, s2) => {
-    return s1.type === "song"
-        && s2.type === "song"
-        && s1.song.id === s2.song.id;
-  }).toProperty();
+  return p_song.skipDuplicates(_.isEqual);
+}
+
+export function getSongBeingPlayed(p_radios, p_playBus) {
+  const p_song = Bacon.combineWith(p_radios, p_playBus, function(radios, cmd) {
+    switch(cmd.type) {
+      case "loading":
+      case "spotify":
+        return cmd;
+      case "radio":
+        return radios[cmd.radio].nowPlaying;
+      default:
+        return new Bacon.Error();
+    }
+  });
+
+  return p_song.skipDuplicates(_.isEqual);
 }
 
 export default (p_route) => ({
   getCurrentRadio: _.partial(getCurrentRadio, p_route),
-  getBroadcastedSong: _.partial(getBroadcastedSong, p_route)
+  getBroadcastedSong: _.partial(getBroadcastedSong, p_route),
+  getSongBeingPlayed: getSongBeingPlayed
 })
