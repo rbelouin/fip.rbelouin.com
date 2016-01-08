@@ -790,7 +790,7 @@ test("The Song controller should provide a state property", function(t) {
 
   const favBus = new Bacon.Bus();
 
-  getState(Storage, Spotify, Fip, location, favBus, radios, token)
+  getState(Storage, Spotify, Fip, location, radios, favBus, token)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
@@ -1220,7 +1220,7 @@ test("The Song controller should provide a state property (even when if token is
 
   const favBus = new Bacon.Bus();
 
-  getState(Storage, Spotify, Fip, location, favBus, radios, token)
+  getState(Storage, Spotify, Fip, location, radios, favBus, token)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
