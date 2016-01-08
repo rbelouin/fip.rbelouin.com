@@ -47,7 +47,7 @@ export function start(conf) {
   const Spotify = getSpotify(Http, location);
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
-  const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host);
+  const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
 
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
@@ -62,7 +62,6 @@ export function start(conf) {
   const p_state = p_token.flatMapLatest(token => {
     return SongController.getState(favBus, token);
   }).toProperty();
-
 
   const routes = Bacon.fromRoutes({
     routes: conf.routes
@@ -79,8 +78,6 @@ export function start(conf) {
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
   }, Bacon.never());
-
-  const p_radio = routes.radio.map(".params.radio").toProperty();
 
   const App = require("./views/app.jsx");
 
@@ -110,7 +107,17 @@ export function start(conf) {
       .merge(playBus.filter(isPlaying => isPlaying).map("radio"))
       .toProperty("radio");
 
-    const p_nowPlaying = p_state.map(".nowPlaying");
+    const p_radio = routes.radio.map(".params.radio").toProperty();
+
+    const p_nowPlaying = p_radio.flatMapLatest(radio => {
+      return p_state.map(s => s.radios[radio].nowPlaying)
+    }).toProperty();
+
+    const p_pastSongs = p_radio.flatMapLatest(radio => {
+      return p_state.map(s => {
+        return s.radios[radio].pastSongs.map(items => items.song)
+      })
+    }).toProperty();
 
     const p_spotifySong = spotifyBus.map(songId => ({
       type: "spotify",
@@ -130,7 +137,7 @@ export function start(conf) {
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
         p_playerOnBottom={p_playerOnBottom}
-        p_pastSongs={p_state.map(".pastSongs")}
+        p_pastSongs={p_pastSongs}
         p_nowPlaying={p_nowPlaying}
         p_playerData={p_playerData}
         p_favSongs={p_state.map(".favSongs")}

@@ -105,7 +105,7 @@ export function mergeFavsAndSongs(items, favSongs) {
   }));
 }
 
-export function getState(Storage, Spotify, Fip, wsHost, favBus, radios, token) {
+export function getState(Storage, Spotify, Fip, wsHost, radios, favBus, token) {
   const p_print = !token ? Bacon.constant(null) :
                            getSpotifyPrint(Spotify, token).toProperty();
 
@@ -154,9 +154,9 @@ export function getState(Storage, Spotify, Fip, wsHost, favBus, radios, token) {
   });
 }
 
-export default (Storage, Spotify, Fip, wsHost) => ({
+export default (Storage, Spotify, Fip, wsHost, radios) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongLists: _.partial(getFipSongList, Fip, Spotify, wsHost),
+  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
