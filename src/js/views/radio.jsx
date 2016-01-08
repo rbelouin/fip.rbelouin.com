@@ -11,11 +11,16 @@ var Controls = require("./player-controls.jsx");
 var Radio = module.exports = React.createClass({
   mixins: [IntlMixin],
   onPlay: function() {
-    this.props.playBus.push(this.props.isPlaying ? {
+    var src = this.props.src;
+    var radios = this.props.radios;
+    var radio = _.find(radios, r => r.name === this.props.radio, this);
+    var isPlaying = radio && radio.src === src;
+
+    this.props.playBus.push(isPlaying ? {
       type: "stop"
     } : {
       type: "radio",
-      radio: this.props.radio
+      radio: radio.name
     });
   },
   onFavorite: function(song) {
@@ -27,9 +32,12 @@ var Radio = module.exports = React.createClass({
   render: function() {
     var history = this.props.pastSongs;
     var nowPlaying = this.props.nowPlaying;
-    var isPlaying = this.props.isPlaying;
+    var src = this.props.src;
     var favBus = this.props.favBus;
     var playBus = this.props.playBus;
+    var radios = this.props.radios;
+    var radio = _.find(radios, r => r.name === this.props.radio, this);
+    var isPlaying = radio && radio.src === src;
 
     var nowPlayingDisplay = nowPlaying.type === "song" ?
                               <Song song={nowPlaying.song} /> :
@@ -50,7 +58,7 @@ var Radio = module.exports = React.createClass({
       <div className="fipradio-controls-favorite" onClick={_.partial(this.onFavorite, nowPlaying.song)}>
         <span className="fa fa-heart"></span>
         <FormattedMessage
-          message={this.getIntlMessage(nowPlaying.song.favorite ? "remove-from-favorites" : "add-to-favorites")}
+          message={this.getIntlMessage(nowPlaying.song.favorite ? "remove-from-favorites" : "add-to-favorites")}
         />
       </div>
     ) : "";
@@ -62,7 +70,7 @@ var Radio = module.exports = React.createClass({
           message={this.getIntlMessage("open-in-spotify")}
         />
       </a>
-    ) : "";
+    ) : "";
 
     var controlsDisplay = nowPlaying.type === "song" ? (
       <div className="fipradio-controls">
@@ -70,7 +78,7 @@ var Radio = module.exports = React.createClass({
         {favorite}
         {spotify}
       </div>
-    ) : "";
+    ) : "";
 
     return (
       <div className="fipradio">

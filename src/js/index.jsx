@@ -61,7 +61,7 @@ export function start(conf) {
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
-  const PlayController = getPlayController(routes.radio.toProperty({
+  const PlayController = getPlayController(conf.radios, routes.radio.toProperty({
     params: {
       radio: conf.radios[0].name
     }
@@ -100,7 +100,7 @@ export function start(conf) {
   const p_psong = PlayController.getSongBeingPlayed(p_radios, p_cmds);
 
   // Is the player playing a song?
-  const p_isPlaying = PlayController.getPlayingStatus(playBus);
+  const p_src = PlayController.getCurrentSource(playBus);
 
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
@@ -140,7 +140,7 @@ export function start(conf) {
         p_pastSongs={p_history}
         p_nowPlaying={p_bsong}
         p_playerData={p_psong}
-        p_isPlaying={p_isPlaying}
+        p_src={p_src}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
         p_radio={p_radio}

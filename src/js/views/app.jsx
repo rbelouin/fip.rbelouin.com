@@ -20,7 +20,7 @@ var App = module.exports = React.createClass({
       radio: "fip-radio",
       pastSongs: [],
       nowPlaying: {type: "loading"},
-      isPlaying: false,
+      src: null,
       playerData: {type: "loading"},
       favSongs: [],
       user: null
@@ -63,8 +63,8 @@ var App = module.exports = React.createClass({
       this.setState({"radio": radio});
     }.bind(this));
 
-    this.props.p_isPlaying.onValue(function(isPlaying) {
-      this.setState({"isPlaying": isPlaying});
+    this.props.p_src.onValue(function(src) {
+      this.setState({"src": src});
     }.bind(this));
   },
   render: function() {
@@ -79,9 +79,10 @@ var App = module.exports = React.createClass({
                 this.state.route === "radio" ?
                   <Radio
                     nowPlaying={this.state.nowPlaying}
-                    isPlaying={this.state.isPlaying}
+                    src={this.state.src}
                     pastSongs={this.state.pastSongs}
                     radio={this.state.radio}
+                    radios={this.props.radios}
                     favBus={this.props.favBus}
                     playBus={this.props.playBus}
                   /> :
@@ -89,9 +90,8 @@ var App = module.exports = React.createClass({
 
     var player = this.state.playerOnBottom ? (
       <Player
-        src={this.props.url}
         playBus={this.props.playBus}
-        isPlaying={this.state.isPlaying}
+        src={this.state.src}
         nowPlaying={this.state.playerData}
         radio={this.state.radio}
         onBottom={true}
@@ -108,7 +108,7 @@ var App = module.exports = React.createClass({
           src={this.props.url}
           radios={this.props.radios}
           playBus={this.props.playBus}
-          isPlaying={this.state.isPlaying}
+          src={this.state.src}
           nowPlaying={this.state.playerData}
           route={this.state.route}
           radio={this.state.radio}

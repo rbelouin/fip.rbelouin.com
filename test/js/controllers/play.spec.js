@@ -6,7 +6,7 @@ import {
   getBroadcastedSong,
   getSongHistory,
   getSongBeingPlayed,
-  getPlayingStatus
+  getCurrentSource
 } from "../../../src/js/controllers/play.js";
 
 test("The Play controller should extract the radio name from the current path", function(t) {
@@ -479,21 +479,29 @@ test("The Play controller should get the song being played", function(t) {
   s_radios.end();
 });
 
-test("The Play controller should get the playing status", function(t) {
+test("The Play controller should get the current source", function(t) {
   const s_playBus = new Bacon.Bus();
 
-  getPlayingStatus(s_playBus)
+  const radios = [{
+    name: "radio1",
+    src: "radio1-url"
+  },{
+    name: "radio2",
+    src: "radio2-url"
+  }];
+
+  getCurrentSource(radios, s_playBus)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
       t.deepEqual(ev.value(), [
-        false,
-        true,
-        false,
-        true,
-        false,
-        true
+        null,
+        "radio1-url",
+        null,
+        "radio1-url",
+        null,
+        "radio2-url"
       ]);
 
       t.end();

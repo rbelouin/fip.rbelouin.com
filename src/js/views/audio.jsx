@@ -14,6 +14,11 @@ export default React.createClass({
     const audio = React.findDOMNode(this);
     audio.volume = nextProps.volume;
 
+    if(this.props.src != nextProps.src) {
+      audio.src = nextProps.src;
+      audio.play();
+    }
+
     return true;
   },
   render: function() {

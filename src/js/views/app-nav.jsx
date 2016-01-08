@@ -17,13 +17,12 @@ export default React.createClass({
   render: function() {
     const src = this.props.src;
     const nowPlaying = this.props.nowPlaying;
-    const isPlaying = this.props.isPlaying;
     const isOpen = this.props.paneIsOpen;
     const playBus = this.props.playBus;
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     const player = !this.props.playerOnBottom ? (
-      <Player src={src} nowPlaying={nowPlaying} isPlaying={isPlaying} playBus={playBus} radio={this.props.radio} />
+      <Player src={src} nowPlaying={nowPlaying} src={src} playBus={playBus} radio={this.props.radio} />
     ) : "";
 
     const radios = this.props.radios.map(radio => {

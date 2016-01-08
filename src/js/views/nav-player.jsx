@@ -7,7 +7,7 @@ const IntlMixin = ReactIntl.IntlMixin;
 const FormattedMessage = ReactIntl.FormattedMessage;
 
 export default React.createClass({
-  mixins: [IntlMixin],
+  mixins: [IntlMixin],
   getInitialState: function() {
     return {
       volume: 50
@@ -18,7 +18,7 @@ export default React.createClass({
     this.setState({volume});
   },
   onPlay: function(ev) {
-    this.props.playBus.push(this.props.isPlaying ? {
+    this.props.playBus.push(this.props.src ? {
       type: "stop"
     } : {
       type: "radio",
@@ -28,14 +28,13 @@ export default React.createClass({
   render: function() {
     const src = this.props.src;
     const nowPlaying = this.props.nowPlaying;
-    const isPlaying = this.props.isPlaying;
     const volume = this.state.volume;
 
     const icon =  volume === 0  ? "off" :
-                  volume < 50   ? "down" :
+                  volume < 50   ? "down" :
                                   "up";
 
-    const audio = src && isPlaying ? (
+    const audio = src ? (
       <Audio type="audio/mpeg" src={src} volume={volume/100}></Audio>
     ) : "";
 
@@ -50,7 +49,7 @@ export default React.createClass({
     const controls = nowPlaying.type != "spotify" ? (
       <div className="nav-player-controls">
         <button className="nav-player-controls-play" onClick={this.onPlay}>
-          <span className={"fa fa-" + (isPlaying ? "stop" : "play")}></span>
+          <span className={"fa fa-" + (src ? "stop" : "play")}></span>
         </button>
         <div className="nav-player-controls-volume">
           <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
@@ -74,7 +73,7 @@ export default React.createClass({
 });
 
 export const SongDisplay = React.createClass({
-  mixins: [IntlMixin],
+  mixins: [IntlMixin],
   render: function() {
     const song = this.props.song;
 
@@ -91,7 +90,7 @@ export const SongDisplay = React.createClass({
 });
 
 export const LoadingDisplay = React.createClass({
-  mixins: [IntlMixin],
+  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="nav-player-display nav-player-display-loading">
@@ -102,7 +101,7 @@ export const LoadingDisplay = React.createClass({
 });
 
 export const UnknownDisplay = React.createClass({
-  mixins: [IntlMixin],
+  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="nav-player-display nav-player-display-unknown">

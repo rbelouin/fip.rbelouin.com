@@ -43,16 +43,19 @@ export function getSongBeingPlayed(p_radios, p_playBus) {
   return p_song.skipDuplicates(_.isEqual);
 }
 
-export function getPlayingStatus(s_playBus) {
-  return s_playBus.map(cmd => cmd.type != "stop" && cmd.type != "spotify")
-    .skipDuplicates()
-    .toProperty(false);
+export function getCurrentSource(radios, s_playBus) {
+  return s_playBus
+    .map(cmd => cmd.type === "radio" && _.find(radios, r => {
+      return r.name === cmd.radio;
+    }))
+    .map(radio => radio ? radio.src : null)
+    .toProperty(null);
 }
 
-export default (p_route) => ({
+export default (radios, p_route) => ({
   getCurrentRadio: _.partial(getCurrentRadio, p_route),
   getBroadcastedSong: _.partial(getBroadcastedSong, p_route),
   getSongHistory: _.partial(getSongHistory, p_route),
   getSongBeingPlayed: getSongBeingPlayed,
-  getPlayingStatus: getPlayingStatus
+  getCurrentSource: _.partial(getCurrentSource, radios)
 })
