@@ -16,6 +16,7 @@ import getSpotify from "./models/spotify.js";
 import getFip from "./models/fip.js";
 import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
+import getPlayController from "./controllers/play.js";
 
 // TODO: remove this code after a while (2016)
 function _legacyMoveToken() {
@@ -40,6 +41,18 @@ function _legacyMoveToken() {
 export function start(conf) {
   _legacyMoveToken();
 
+  const routes = Bacon.fromRoutes({
+    routes: conf.routes
+  });
+
+  routes.home.onValue(function() {
+    Bacon.history.pushState(null, null, "/radios/fip-radio");
+  });
+
+  routes.errors.onValue(function() {
+    Bacon.history.pushState(null, null, "/");
+  });
+
   /* Bind the unsafe dependencies to the models */
   const Http = getHttp(fetch);
   const WS = getWebSocket(WebSocket);
@@ -48,6 +61,7 @@ export function start(conf) {
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
+  const PlayController = getPlayController(routes.radio);
 
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
@@ -63,17 +77,7 @@ export function start(conf) {
     return SongController.getState(favBus, token);
   }).toProperty();
 
-  const routes = Bacon.fromRoutes({
-    routes: conf.routes
-  });
-
-  routes.home.onValue(function() {
-    Bacon.history.pushState(null, null, "/radios/fip-radio");
-  });
-
-  routes.errors.onValue(function() {
-    Bacon.history.pushState(null, null, "/");
-  });
+  const p_radio = PlayController.getCurrentRadio();
 
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
@@ -106,8 +110,6 @@ export function start(conf) {
     const p_source = spotifyBus.map("spotify")
       .merge(playBus.filter(isPlaying => isPlaying).map("radio"))
       .toProperty("radio");
-
-    const p_radio = routes.radio.map(".params.radio").toProperty();
 
     const p_nowPlaying = p_radio.flatMapLatest(radio => {
       return p_state.map(s => s.radios[radio].nowPlaying)
