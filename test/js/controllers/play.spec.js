@@ -4,6 +4,7 @@ import Bacon from "baconjs";
 import {
   getCurrentRadio,
   getBroadcastedSong,
+  getSongHistory,
   getSongBeingPlayed
 } from "../../../src/js/controllers/play.js";
 
@@ -156,6 +157,168 @@ test("The Play controller should get the song the current radio is broadcasting"
   s_route.push({
     params: {
       radio: "radio2"
+    }
+  });
+
+  s_route.end();
+  s_radios.end();
+});
+
+test("The Play controller should get the song history of the current radio", function(t) {
+  const s_route = new Bacon.Bus();
+  const s_radios = new Bacon.Bus();
+
+  getSongHistory(s_route.toProperty(), s_radios.toProperty())
+    .fold([], (items, item) => items.concat([item]))
+    .subscribe(function(ev) {
+      t.ok(ev.hasValue());
+
+      t.deepEqual(ev.value(), [
+        [],
+        [{
+          id: "TWO"
+        }],
+        [{
+          id: "ONE"
+        }]
+      ]);
+
+      t.end();
+      return Bacon.noMore;
+    });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio1"
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "THREE"
+        }
+      },
+      pastSongs: [{
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      }]
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio2"
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio2"
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "FOUR"
+        }
+      },
+      pastSongs: [{
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      }]
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "THREE"
+        }
+      },
+      pastSongs: [{
+        type: "song",
+        song: {
+          id: "TWO"
+        }
+      }]
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio1"
     }
   });
 
