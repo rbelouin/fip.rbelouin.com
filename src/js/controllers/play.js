@@ -26,7 +26,9 @@ export function getSongHistory(p_route, p_radios) {
 }
 
 export function getSongBeingPlayed(p_radios, p_playBus) {
-  const p_song = Bacon.combineWith(p_radios, p_playBus, function(radios, cmd) {
+  const p_cmds = p_playBus.filter(cmd => cmd.type != "stop");
+
+  const p_song = Bacon.combineWith(p_radios, p_cmds, function(radios, cmd) {
     switch(cmd.type) {
       case "loading":
       case "spotify":
@@ -41,9 +43,16 @@ export function getSongBeingPlayed(p_radios, p_playBus) {
   return p_song.skipDuplicates(_.isEqual);
 }
 
+export function getPlayingStatus(s_playBus) {
+  return s_playBus.map(cmd => cmd.type != "stop" && cmd.type != "spotify")
+    .skipDuplicates()
+    .toProperty(false);
+}
+
 export default (p_route) => ({
   getCurrentRadio: _.partial(getCurrentRadio, p_route),
   getBroadcastedSong: _.partial(getBroadcastedSong, p_route),
   getSongHistory: _.partial(getSongHistory, p_route),
-  getSongBeingPlayed: getSongBeingPlayed
+  getSongBeingPlayed: getSongBeingPlayed,
+  getPlayingStatus: getPlayingStatus
 })

@@ -5,7 +5,8 @@ import {
   getCurrentRadio,
   getBroadcastedSong,
   getSongHistory,
-  getSongBeingPlayed
+  getSongBeingPlayed,
+  getPlayingStatus
 } from "../../../src/js/controllers/play.js";
 
 test("The Play controller should extract the radio name from the current path", function(t) {
@@ -454,6 +455,15 @@ test("The Play controller should get the song being played", function(t) {
   });
 
   s_playBus.push({
+    type: "stop"
+  });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio1"
+  });
+
+  s_playBus.push({
     type: "spotify",
     song: {
       id: "TWO"
@@ -467,4 +477,54 @@ test("The Play controller should get the song being played", function(t) {
 
   s_playBus.end();
   s_radios.end();
+});
+
+test("The Play controller should get the playing status", function(t) {
+  const s_playBus = new Bacon.Bus();
+
+  getPlayingStatus(s_playBus)
+    .fold([], (items, item) => items.concat([item]))
+    .subscribe(function(ev) {
+      t.ok(ev.hasValue());
+
+      t.deepEqual(ev.value(), [
+        false,
+        true,
+        false,
+        true,
+        false,
+        true
+      ]);
+
+      t.end();
+      return Bacon.noMore;
+    });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio1"
+  });
+
+  s_playBus.push({
+    type: "stop"
+  });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio1"
+  });
+
+  s_playBus.push({
+    type: "spotify",
+    song: {
+      id: "TWO"
+    }
+  });
+
+  s_playBus.push({
+    type: "radio",
+    radio: "radio2"
+  });
+
+  s_playBus.end();
 });
