@@ -63,11 +63,9 @@ var App = module.exports = React.createClass({
       this.setState({"radio": radio});
     }.bind(this));
 
-    this.props.playBus
-      .merge(this.props.spotifyBus.map(false))
-      .onValue(function(isPlaying) {
-        this.setState({"isPlaying": isPlaying});
-      }.bind(this));
+    this.props.p_isPlaying.onValue(function(isPlaying) {
+      this.setState({"isPlaying": isPlaying});
+    }.bind(this));
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
@@ -75,7 +73,7 @@ var App = module.exports = React.createClass({
                     favSongs={this.state.favSongs}
                     favBus={this.props.favBus}
                     syncBus={this.props.syncBus}
-                    spotifyBus={this.props.spotifyBus}
+                    playBus={this.props.playBus}
                     user={this.state.user}
                   /> :
                 this.state.route === "radio" ?
@@ -83,8 +81,8 @@ var App = module.exports = React.createClass({
                     nowPlaying={this.state.nowPlaying}
                     isPlaying={this.state.isPlaying}
                     pastSongs={this.state.pastSongs}
+                    radio={this.state.radio}
                     favBus={this.props.favBus}
-                    spotifyBus={this.props.spotifyBus}
                     playBus={this.props.playBus}
                   /> :
                 "";
@@ -95,6 +93,7 @@ var App = module.exports = React.createClass({
         playBus={this.props.playBus}
         isPlaying={this.state.isPlaying}
         nowPlaying={this.state.playerData}
+        radio={this.state.radio}
         onBottom={true}
       />
     ) : "";

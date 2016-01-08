@@ -18,8 +18,12 @@ export default React.createClass({
     this.setState({volume});
   },
   onPlay: function(ev) {
-    const isPlaying = !this.props.isPlaying;
-    this.props.playBus.push(isPlaying);
+    this.props.playBus.push(this.props.isPlaying ? {
+      type: "stop"
+    } : {
+      type: "radio",
+      radio: this.props.radio
+    });
   },
   render: function() {
     const src = this.props.src;
@@ -40,7 +44,7 @@ export default React.createClass({
                     nowPlaying.type === "loading" ?
                       <LoadingDisplay /> :
                     nowPlaying.type === "spotify" ?
-                      <SpotifyDisplay songId={nowPlaying.songId} /> :
+                      <SpotifyDisplay songId={nowPlaying.song.spotifyId} /> :
                       <UnknownDisplay />;
 
     const controls = nowPlaying.type != "spotify" ? (

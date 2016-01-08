@@ -32,7 +32,7 @@ var Favorites = module.exports = React.createClass({
             </button>
           </div>
         </div>
-        <SongList songs={this.props.favSongs} favBus={this.props.favBus} spotifyBus={this.props.spotifyBus} />
+        <SongList songs={this.props.favSongs} favBus={this.props.favBus} playBus={this.props.playBus} />
       </div>
    );
   }

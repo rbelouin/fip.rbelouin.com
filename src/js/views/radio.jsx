@@ -11,8 +11,12 @@ var Controls = require("./player-controls.jsx");
 var Radio = module.exports = React.createClass({
   mixins: [IntlMixin],
   onPlay: function() {
-    const isPlaying = !this.props.isPlaying;
-    this.props.playBus.push(isPlaying);
+    this.props.playBus.push(this.props.isPlaying ? {
+      type: "stop"
+    } : {
+      type: "radio",
+      radio: this.props.radio
+    });
   },
   onFavorite: function(song) {
     this.props.favBus.push({
@@ -25,7 +29,7 @@ var Radio = module.exports = React.createClass({
     var nowPlaying = this.props.nowPlaying;
     var isPlaying = this.props.isPlaying;
     var favBus = this.props.favBus;
-    var spotifyBus = this.props.spotifyBus;
+    var playBus = this.props.playBus;
 
     var nowPlayingDisplay = nowPlaying.type === "song" ?
                               <Song song={nowPlaying.song} /> :
@@ -80,7 +84,7 @@ var Radio = module.exports = React.createClass({
 
         <hr />
 
-        <SongList songs={history} favBus={favBus} spotifyBus={spotifyBus} />
+        <SongList songs={history} favBus={favBus} playBus={playBus} />
       </div>
     );
   }

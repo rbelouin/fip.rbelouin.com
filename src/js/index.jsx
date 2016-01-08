@@ -61,7 +61,11 @@ export function start(conf) {
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
-  const PlayController = getPlayController(routes.radio);
+  const PlayController = getPlayController(routes.radio.toProperty({
+    params: {
+      radio: conf.radios[0].name
+    }
+  }));
 
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
@@ -69,7 +73,6 @@ export function start(conf) {
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
-  const spotifyBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
 
   const p_token = TokenController.getTokenProperty(Bacon.history, syncBus);
@@ -78,6 +81,26 @@ export function start(conf) {
   }).toProperty();
 
   const p_radio = PlayController.getCurrentRadio();
+  const p_radios = p_state.map(state => state.radios);
+
+  // Song being broadcasted by the radio having the focus
+  const p_bsong = PlayController.getBroadcastedSong(p_radios);
+
+  // Song history of the radio having the focus
+  const p_history = PlayController.getSongHistory(p_radios);
+
+  const p_cmds = p_radio
+    .toEventStream()
+    .first()
+    .map(radio => ({type: "radio", radio: radio}))
+    .merge(playBus)
+    .toProperty();
+
+  // Song being played
+  const p_psong = PlayController.getSongBeingPlayed(p_radios, p_cmds);
+
+  // Is the player playing a song?
+  const p_isPlaying = PlayController.getPlayingStatus(playBus);
 
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
@@ -107,31 +130,6 @@ export function start(conf) {
       })
       .map(".matches");
 
-    const p_source = spotifyBus.map("spotify")
-      .merge(playBus.filter(isPlaying => isPlaying).map("radio"))
-      .toProperty("radio");
-
-    const p_nowPlaying = p_radio.flatMapLatest(radio => {
-      return p_state.map(s => s.radios[radio].nowPlaying)
-    }).toProperty();
-
-    const p_pastSongs = p_radio.flatMapLatest(radio => {
-      return p_state.map(s => {
-        return s.radios[radio].pastSongs.map(items => items.song)
-      })
-    }).toProperty();
-
-    const p_spotifySong = spotifyBus.map(songId => ({
-      type: "spotify",
-      songId: songId
-    })).toProperty();
-
-    const p_playerData = Bacon.mergeAll(
-      p_spotifySong.toEventStream(),
-      p_nowPlaying.toEventStream().filter(p_source.map(s => s === "radio")),
-      p_nowPlaying.sampledBy(p_source.filter(s => s === "radio"))
-    ).toProperty();
-
     React.render(
       <App
         radios={conf.radios}
@@ -139,16 +137,16 @@ export function start(conf) {
         p_route={p_route}
         p_paneIsOpen={p_paneIsOpen}
         p_playerOnBottom={p_playerOnBottom}
-        p_pastSongs={p_pastSongs}
-        p_nowPlaying={p_nowPlaying}
-        p_playerData={p_playerData}
+        p_pastSongs={p_history}
+        p_nowPlaying={p_bsong}
+        p_playerData={p_psong}
+        p_isPlaying={p_isPlaying}
         p_favSongs={p_state.map(".favSongs")}
         p_user={p_state.map(".user")}
         p_radio={p_radio}
         syncBus={syncBus}
         favBus={favBus}
         volBus={volBus}
-        spotifyBus={spotifyBus}
         playBus={playBus}
         {...intl}
       />,

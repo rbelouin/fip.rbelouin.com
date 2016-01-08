@@ -77,7 +77,10 @@ var SongList = module.exports = React.createClass({
   },
   onSpotifyPlay: function(song) {
     if(song.spotifyId) {
-      this.props.spotifyBus.push(song.spotifyId);
+      this.props.playBus.push({
+        type: "spotify",
+        song: song
+      });
     }
   },
   render: function() {
