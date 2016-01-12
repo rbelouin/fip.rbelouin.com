@@ -15,8 +15,9 @@ export function connect(WS, url) {
       }
     };
 
-    socket.onerror = function(error) {
-      sink(new Bacon.Error(error));
+    socket.onerror = function() {
+      sink(new Bacon.End());
+      socket.close();
     };
 
     socket.onclose = function() {
@@ -24,7 +25,7 @@ export function connect(WS, url) {
     };
 
     return function() {
-      socket.close();
+      setTimeout(() => socket.close(), 2000);
     };
   });
 }

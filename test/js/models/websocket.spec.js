@@ -83,8 +83,6 @@ test("WebSocket.connect should forward all messages and errors", function(t) {
           type: "data",
           id: 4
         }
-      },{
-        failure: new Error("Connection Error")
       }]);
 
       t.end();
@@ -93,42 +91,63 @@ test("WebSocket.connect should forward all messages and errors", function(t) {
 
 test("WebSocket.connectForever should reconnect when the connection closes", function(t) {
   const url = "https://localhost:8080";
+  let index = 0;
 
   function FakeWebSocket(_url) {
     this.close = function() {};
 
     setTimeout(function() {
-      this.onmessage({
-        data: JSON.stringify({
-          type: "data",
-          id: 1
-        })
-      });
+      switch(index) {
+        case 0:
+          this.onmessage({
+            data: JSON.stringify({
+              type: "data",
+              id: 1
+            })
+          });
+          this.onerror(new Error("Connection Error"));
+          break;
+        case 1:
+          this.onmessage({
+            data: JSON.stringify({
+              type: "data",
+              id: 1
+            })
+          });
 
-      this.onerror(new Error("Connection Error"));
+          this.onmessage({
+            data: JSON.stringify({
+              type: "error",
+              id: 3
+            })
+          });
 
-      this.onmessage({
-        data: JSON.stringify({
-          type: "error",
-          id: 3
-        })
-      });
+          this.onclose();
+          break;
+        case 2:
+          this.onmessage({
+            data: JSON.stringify({
+              type: "error",
+              id: 3
+            })
+          });
 
-      this.onclose();
-
-      this.onmessage({
-        data: JSON.stringify({
-          type: "data",
-          id: 4
-        })
-      });
+          this.onmessage({
+            data: JSON.stringify({
+              type: "data",
+              id: 4
+            })
+          });
+          break;
+      }
+      index++;
     }.bind(this), 50);
   }
 
   connectForever(FakeWebSocket, url)
     .map(data => ({success: data}))
     .mapError(data => ({failure: data}))
-    .take(7)
+    .take(5)
     .fold([], (acc, item) => acc.concat([item]))
     .onValue(function(items) {
       t.deepEqual(items, [{
@@ -137,7 +156,15 @@ test("WebSocket.connectForever should reconnect when the connection closes", fun
           id: 1
         }
       },{
-        failure: new Error("Connection Error")
+        success: {
+          type: "data",
+          id: 1
+        }
+      },{
+        failure: {
+          type: "error",
+          id: 3
+        }
       },{
         failure: {
           type: "error",
@@ -146,19 +173,7 @@ test("WebSocket.connectForever should reconnect when the connection closes", fun
       },{
         success: {
           type: "data",
-          id: 1
-        }
-      },{
-        failure: new Error("Connection Error")
-      },{
-        failure: {
-          type: "error",
-          id: 3
-        }
-      },{
-        success: {
-          type: "data",
-          id: 1
+          id: 4
         }
       }]);
 
