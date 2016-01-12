@@ -15,7 +15,7 @@
     "add-to-favorites": "Add to favorites",
     "remove-from-favorites": "Remove from favorites",
     "added-to-favorites": "Added!",
-    "fip-radio": "Radio",
+    "radios": "Radios",
     "favorites": "Favorite songs",
     "favorites-alert": "Click on the little hearts to add or remove a song from your favorites. You can either keep this list on your browser, or sync it with Spotify.",
     "sync-with-spotify": "Sync with Spotify",
@@ -26,6 +26,13 @@
     "title-not-available": "Title not available",
     "now-broadcasting": "Now broadcasting:",
     "play-the-radio": "Play the radio",
-    "stop-the-radio": "Stop the radio"
+    "stop-the-radio": "Stop the radio",
+    "fip-radio": "FIP Radio",
+    "fip-autour-du-rock": "About the Rock",
+    "fip-autour-du-jazz": "About the Jazz",
+    "fip-autour-du-groove": "About the Groove",
+    "fip-autour-du-monde": "About the World Music",
+    "tout-nouveau-tout-fip": "New releases",
+    "fip-il-y-45-ans": "45 years ago"
   }
 }

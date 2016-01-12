@@ -4,7 +4,7 @@ import Bacon from "baconjs";
 
 import {
   searchOnSpotify,
-  getFipSongList,
+  getFipSongLists,
   getSpotifyPrint,
   getSyncs,
   getFavoriteSongs,
@@ -84,52 +84,105 @@ test("The Song controller should be able to get the songs FIP is playing", funct
   };
 
   const Fip = {
-    fetchFipSongs: function(url) {
-      t.equal(url, "ws://host/api/ws/songs");
-      return Bacon.fromArray([{
-        id: "ONE"
-      },{
-        id: "TWO"
-      },{
-        id: "THREE"
-      }]);
+    fetchFipRadios: function(url, radios) {
+      t.equal(url, "ws://host/api/ws");
+      t.deepEqual(radios, ["radio1", "radio2"]);
+
+      return {
+        radio1: Bacon.fromArray([{
+          type: "song",
+          song: {
+            id: "ONE"
+          }
+        },{
+          type: "song",
+          song: {
+            id: "TWO"
+          }
+        }]),
+        radio2: Bacon.fromArray([{
+          type: "song",
+          song: {
+            id: "THREE"
+          }
+        },{
+          type: "other",
+          song: {
+            id: "FOUR"
+          }
+        }])
+      };
     }
   };
 
   const wsHost = "ws://host/api/ws";
 
-  getFipSongList(Fip, Spotify, wsHost)
-    .fold([], (items, item) => items.concat([item]))
+  const data = getFipSongLists(Fip, Spotify, wsHost, [
+    "radio1",
+    "radio2"
+  ]);
+
+  const p_radio1 = data.radio1
+    .fold([], (items, item) => items.concat([item]));
+
+  const p_radio2 = data.radio2
+    .fold([], (items, item) => items.concat([item]));
+
+  Bacon.zipAsArray([p_radio1, p_radio2])
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
-      t.deepEqual(ev.value(), [
+
+      const [radio1, radio2] = ev.value();
+
+      t.deepEqual(radio1, [
         [],
         [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null
+          type: "song",
+          song: {
+            id: "ONE",
+            spotify: null,
+            spotifyId: null
+          }
         }],
         [{
-          id: "TWO",
-          spotify: "https://open.spotify.com/2",
-          spotifyId: "2"
+          type: "song",
+          song: {
+            id: "TWO",
+            spotify: "https://open.spotify.com/2",
+            spotifyId: "2"
+          }
         },{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null
+          type: "song",
+          song: {
+            id: "ONE",
+            spotify: null,
+            spotifyId: null
+          }
+        }]
+      ]);
+
+      t.deepEqual(radio2, [
+        [],
+        [{
+          type: "song",
+          song: {
+            id: "THREE",
+            spotify: "https://open.spotify.com/3",
+            spotifyId: "3"
+          }
         }],
         [{
-          id: "THREE",
-          spotify: "https://open.spotify.com/3",
-          spotifyId: "3"
+          type: "other",
+          song: {
+            id: "FOUR"
+          }
         },{
-          id: "TWO",
-          spotify: "https://open.spotify.com/2",
-          spotifyId: "2"
-        },{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null
+          type: "song",
+          song: {
+            id: "THREE",
+            spotify: "https://open.spotify.com/3",
+            spotifyId: "3"
+          }
         }]
       ]);
 
@@ -573,13 +626,25 @@ test("The Song controller should be able to provide a property containing the fa
 
 test("The Song controller should fill the data model of the songs being played with a 'favorite' field", function(t) {
   const songs = [{
-    id: "1"
+    type: "song",
+    song: {
+      id: "1"
+    }
   },{
-    id: "2"
+    type: "song",
+    song: {
+      id: "2"
+    }
   },{
-    id: "3"
+    type: "other",
+    song: {
+      id: "3"
+    }
   },{
-    id: "4"
+    type: "song",
+    song: {
+      id: "4"
+    }
   }];
 
   const favs = [{
@@ -591,17 +656,28 @@ test("The Song controller should fill the data model of the songs being played w
   }];
 
   t.deepEqual(mergeFavsAndSongs(songs, favs), [{
-    id: "1",
-    favorite: true
+    type: "song",
+    song: {
+      id: "1",
+      favorite: true
+    }
   },{
-    id: "2",
-    favorite: false
+    type: "song",
+    song: {
+      id: "2",
+      favorite: false
+    }
   },{
-    id: "3",
-    favorite: false
+    type: "other",
+    song: {
+      id: "3"
+    }
   },{
-    id: "4",
-    favorite: true
+    type: "song",
+    song: {
+      id: "4",
+      favorite: true
+    }
   }]);
 
   t.end();
@@ -697,27 +773,44 @@ test("The Song controller should provide a state property", function(t) {
     }
   };
 
-  const songBus = new Bacon.Bus();
+  const s_radio1 = new Bacon.Bus();
+  const s_radio2 = new Bacon.Bus();
 
+  const radios = ["radio1", "radio2"];
   const Fip = {
-    fetchFipSongs: function() {
-      return songBus;
+    fetchFipRadios: function(url, _radios) {
+      t.deepEqual(_radios, radios);
+
+      return {
+        radio1: s_radio1,
+        radio2: s_radio2
+      };
     }
   };
 
   const favBus = new Bacon.Bus();
 
-  getState(Storage, Spotify, Fip, location, favBus, token)
+  getState(Storage, Spotify, Fip, location, radios, favBus, token)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
       t.deepEqual(ev.value(), [{
         user: Spotify.user,
-        nowPlaying: {
-          type: "loading"
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
+          }
         },
-        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -736,16 +829,26 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -764,16 +867,76 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [],
+        favSongs: [{
+          id: "ONE",
+          spotify: null,
+          spotifyId: null,
+          favorite: true
+        },{
+          id: "TWO",
+          spotify: "2",
+          spotifyId: "2",
+          favorite: true
+        },{
+          id: "3",
+          spotify: "3",
+          spotifyId: "3",
+          favorite: true
+        }]
+      }, {
+        user: Spotify.user,
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          }
+        },
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -787,21 +950,40 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FIVE",
+                spotify: "5",
+                spotifyId: "5",
+                favorite: false
+              }
+            },
+            pastSongs: [{
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            }]
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -815,21 +997,40 @@ test("The Song controller should provide a state property", function(t) {
         }]
       }, {
         user: Spotify.user,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FIVE",
+                spotify: "5",
+                spotifyId: "5",
+                favorite: false
+              }
+            },
+            pastSongs: [{
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: true
+              }
+            }]
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: true
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: true
-        }],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -887,8 +1088,18 @@ test("The Song controller should provide a state property", function(t) {
       return Bacon.noMore;
     });
 
-  songBus.push({
-    id: "FOUR"
+  s_radio1.push({
+    type: "song",
+    song: {
+      id: "FOUR"
+    }
+  });
+
+  s_radio2.push({
+    type: "song",
+    song: {
+      id: "FOUR"
+    }
   });
 
   favBus.push({
@@ -901,8 +1112,11 @@ test("The Song controller should provide a state property", function(t) {
     }
   });
 
-  songBus.push({
-    id: "FIVE"
+  s_radio1.push({
+    type: "song",
+    song: {
+      id: "FIVE"
+    }
   });
 
   favBus.push({
@@ -915,7 +1129,8 @@ test("The Song controller should provide a state property", function(t) {
     }
   });
 
-  songBus.end();
+  s_radio1.end();
+  s_radio2.end();
   favBus.end();
 });
 
@@ -988,27 +1203,44 @@ test("The Song controller should provide a state property (even when if token is
     }
   };
 
-  const songBus = new Bacon.Bus();
+  const s_radio1 = new Bacon.Bus();
+  const s_radio2 = new Bacon.Bus();
 
+  const radios = ["radio1", "radio2"];
   const Fip = {
-    fetchFipSongs: function() {
-      return songBus;
+    fetchFipRadios: function(url, _radios) {
+      t.deepEqual(_radios, radios);
+
+      return {
+        radio1: s_radio1,
+        radio2: s_radio2
+      }
     }
   };
 
   const favBus = new Bacon.Bus();
 
-  getState(Storage, Spotify, Fip, location, favBus, token)
+  getState(Storage, Spotify, Fip, location, radios, favBus, token)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
       t.deepEqual(ev.value(), [{
         user: null,
-        nowPlaying: {
-          type: "loading"
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
+          }
         },
-        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1022,16 +1254,26 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "loading"
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1045,16 +1287,71 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [],
+        favSongs: [{
+          id: "ONE",
+          spotify: null,
+          spotifyId: null,
+          favorite: true
+        },{
+          id: "TWO",
+          spotify: "2",
+          spotifyId: "2",
+          favorite: true
+        }]
+      }, {
+        user: null,
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
+          }
+        },
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1063,21 +1360,40 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FIVE",
+                spotify: "5",
+                spotifyId: "5",
+                favorite: false
+              }
+            },
+            pastSongs: [{
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            }]
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: false
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: false
-        }],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1086,21 +1402,40 @@ test("The Song controller should provide a state property (even when if token is
         }]
       }, {
         user: null,
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
+        radios: {
+          radio1: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FIVE",
+                spotify: "5",
+                spotifyId: "5",
+                favorite: false
+              }
+            },
+            pastSongs: [{
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: true
+              }
+            }]
+          },
+          radio2: {
+            nowPlaying: {
+              type: "song",
+              song: {
+                id: "FOUR",
+                spotify: "4",
+                spotifyId: "4",
+                favorite: true
+              }
+            },
+            pastSongs: []
           }
         },
-        pastSongs: [{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: true
-        }],
         favSongs: [{
           id: "ONE",
           spotify: null,
@@ -1131,8 +1466,18 @@ test("The Song controller should provide a state property (even when if token is
       return Bacon.noMore;
     });
 
-  songBus.push({
-    id: "FOUR"
+  s_radio1.push({
+    type: "song",
+    song: {
+      id: "FOUR"
+    }
+  });
+
+  s_radio2.push({
+    type: "song",
+    song: {
+      id: "FOUR"
+    }
   });
 
   favBus.push({
@@ -1145,8 +1490,11 @@ test("The Song controller should provide a state property (even when if token is
     }
   });
 
-  songBus.push({
-    id: "FIVE"
+  s_radio1.push({
+    type: "song",
+    song: {
+      id: "FIVE"
+    }
   });
 
   favBus.push({
@@ -1159,6 +1507,7 @@ test("The Song controller should provide a state property (even when if token is
     }
   });
 
-  songBus.end();
+  s_radio1.end();
+  s_radio2.end();
   favBus.end();
 });

@@ -17,9 +17,10 @@ var App = module.exports = React.createClass({
       paneIsOpen: false,
       playerOnBottom: false,
       route: "radio",
+      radio: "fip-radio",
       pastSongs: [],
       nowPlaying: {type: "loading"},
-      isPlaying: false,
+      src: null,
       playerData: {type: "loading"},
       favSongs: [],
       user: null
@@ -58,11 +59,13 @@ var App = module.exports = React.createClass({
       this.setState({"playerData": playerData});
     }.bind(this));
 
-    this.props.playBus
-      .merge(this.props.spotifyBus.map(false))
-      .onValue(function(isPlaying) {
-        this.setState({"isPlaying": isPlaying});
-      }.bind(this));
+    this.props.p_radio.onValue(function(radio) {
+      this.setState({"radio": radio});
+    }.bind(this));
+
+    this.props.p_src.onValue(function(src) {
+      this.setState({"src": src});
+    }.bind(this));
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
@@ -70,26 +73,27 @@ var App = module.exports = React.createClass({
                     favSongs={this.state.favSongs}
                     favBus={this.props.favBus}
                     syncBus={this.props.syncBus}
-                    spotifyBus={this.props.spotifyBus}
+                    playBus={this.props.playBus}
                     user={this.state.user}
                   /> :
                 this.state.route === "radio" ?
                   <Radio
                     nowPlaying={this.state.nowPlaying}
-                    isPlaying={this.state.isPlaying}
+                    src={this.state.src}
                     pastSongs={this.state.pastSongs}
+                    radio={this.state.radio}
+                    radios={this.props.radios}
                     favBus={this.props.favBus}
-                    spotifyBus={this.props.spotifyBus}
                     playBus={this.props.playBus}
                   /> :
                 "";
 
     var player = this.state.playerOnBottom ? (
       <Player
-        src={this.props.url}
         playBus={this.props.playBus}
-        isPlaying={this.state.isPlaying}
+        src={this.state.src}
         nowPlaying={this.state.playerData}
+        radio={this.state.radio}
         onBottom={true}
       />
     ) : "";
@@ -102,10 +106,12 @@ var App = module.exports = React.createClass({
         {player}
         <AppNav
           src={this.props.url}
+          radios={this.props.radios}
           playBus={this.props.playBus}
-          isPlaying={this.state.isPlaying}
+          src={this.state.src}
           nowPlaying={this.state.playerData}
           route={this.state.route}
+          radio={this.state.radio}
           paneIsOpen={this.state.paneIsOpen}
           playerOnBottom={this.state.playerOnBottom}
         />

@@ -16,3 +16,25 @@ Although I am in love with the FIP radio, I don't really like its web player. I 
 ### Contribution
 
 Feel free to send PR if you want to contribute!
+
+Requirements:
+
+- Knowledge about FRP (see [http://baconjs.github.io/tutorials.html](http://baconjs.github.io/tutorials.html) for an intro)
+- Basic knowledge about React (see [http://facebook.github.io/react/docs/getting-started.html](http://facebook.github.io/react/docs/getting-started.html) for an intro)
+- node >= 5.0.0
+- npm >= 3.3.0
+
+##### How to build
+
+```sh
+npm install   # Run once, to install dependencies
+npm run build # For a single build
+npm run watch # For a continuous build
+```
+
+##### How to run
+
+```sh
+npm start
+PORT=8000 npm start # Make the server listen on a custom port
+```
