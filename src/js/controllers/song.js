@@ -138,7 +138,7 @@ export function getState(Storage, Spotify, Fip, wsHost, radios, favBus, token) {
 
     const p_nowPlaying = p_songs
       .map(songs => _.isEmpty(songs) ? {type: "loading"} : _.head(songs))
-      .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(error)))
+      .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(data.error)))
       .toProperty();
 
     return {
