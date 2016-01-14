@@ -5,6 +5,9 @@ import React from "react";
 import Intl from "intl";
 import {IntlMixin} from "react-intl";
 
+import Promise from "promise";
+window.Promise = Promise;
+
 // Sadly, bacon-routes does mutate the Bacon object
 const Bacon = window.Bacon = require("baconjs");
 require("bacon-routes");
