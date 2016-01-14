@@ -105,7 +105,6 @@ var App = module.exports = React.createClass({
         </main>
         {player}
         <AppNav
-          src={this.props.url}
           radios={this.props.radios}
           playBus={this.props.playBus}
           src={this.state.src}

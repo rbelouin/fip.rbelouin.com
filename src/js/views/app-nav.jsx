@@ -22,7 +22,7 @@ export default React.createClass({
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     const player = !this.props.playerOnBottom ? (
-      <Player src={src} nowPlaying={nowPlaying} src={src} playBus={playBus} radio={this.props.radio} />
+      <Player src={src} nowPlaying={nowPlaying} playBus={playBus} radio={this.props.radio} />
     ) : "";
 
     const radios = this.props.radios.map(radio => {
