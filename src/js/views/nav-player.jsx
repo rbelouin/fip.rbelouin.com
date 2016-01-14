@@ -13,7 +13,7 @@ export default React.createClass({
       volume: 50
     };
   },
-  onInput: function(ev) {
+  onChange: function(ev) {
     const volume = parseInt(ev.target.value);
     this.setState({volume});
   },
@@ -59,7 +59,7 @@ export default React.createClass({
           <button className="nav-player-controls-volume-mute" onClick={this.onMute}>
             <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
           </button>
-          <input className="nav-player-controls-volume-picker" type="range" name="volume" onInput={this.onInput} min="0" max="100" value={this.state.volume} />
+          <input className="nav-player-controls-volume-picker" type="range" name="volume" onChange={this.onChange} min="0" max="100" value={this.state.volume} />
         </div>
       </div>
     ) : "";
