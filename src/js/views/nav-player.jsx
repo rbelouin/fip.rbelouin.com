@@ -13,7 +13,7 @@ export default React.createClass({
       volume: 50
     };
   },
-  onInput: function(ev) {
+  onChange: function(ev) {
     const volume = parseInt(ev.target.value);
     this.setState({volume});
   },
@@ -24,6 +24,10 @@ export default React.createClass({
       type: "radio",
       radio: this.props.radio
     });
+  },
+  onMute: function(ev) {
+    const volume = this.state.volume ? 0 : 50;
+    this.setState({volume});
   },
   render: function() {
     const src = this.props.src;
@@ -52,8 +56,10 @@ export default React.createClass({
           <span className={"fa fa-" + (src ? "stop" : "play")}></span>
         </button>
         <div className="nav-player-controls-volume">
-          <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
-          <input className="nav-player-controls-volume-picker" type="range" name="volume" onInput={this.onInput} min="0" max="100" />
+          <button className="nav-player-controls-volume-mute" onClick={this.onMute}>
+            <span className={"nav-player-controls-volume-icon glyphicon glyphicon-volume-" + icon}></span>
+          </button>
+          <input className="nav-player-controls-volume-picker" type="range" name="volume" onChange={this.onChange} min="0" max="100" value={this.state.volume} />
         </div>
       </div>
     ) : "";
