@@ -19,6 +19,21 @@ export function watchBrowseEvents(Storage, uuid, intl, w, p_route) {
   });
 }
 
-export default (Storage, uuid, intl, w) => ({
-  watchBrowseEvents: _.partial(watchBrowseEvents, Storage, uuid, intl, w)
+export function sendEvent(send, url, ev) {
+  const req = {
+    method: "POST",
+    url: url,
+    body: JSON.stringify(ev),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
+  const p_res = send(req);
+  p_res.onError(error => console.error(error));
+}
+
+export default (Storage, Http, uuid, intl, w) => ({
+  watchBrowseEvents: _.partial(watchBrowseEvents, Storage, uuid, intl, w),
+  sendEvent: _.partial(sendEvent, Http.send)
 })
