@@ -62,7 +62,7 @@
       "ws_host": "ws://fip.rbelouin.com/api/ws"
     },
     "stats-api": {
-      "http_host": "https://fip-stats.cleverapps.io"
+      "http_host": "https://fip-stats.cleverapps.io/api"
     },
     "default_language": "en",
     "port": 8080,
