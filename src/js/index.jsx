@@ -1,5 +1,6 @@
 import _ from "lodash";
 import qs from "querystring";
+import uuid from "uuid";
 import React from "react";
 
 import Intl from "intl";
@@ -20,30 +21,9 @@ import getFip from "./models/fip.js";
 import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
-
-// TODO: remove this code after a while (2016)
-function _legacyMoveToken() {
-  if(localStorage.access_token
-  && localStorage.refresh_token
-  && localStorage.expires_in
-  && localStorage.token_type) {
-    localStorage.token = JSON.stringify({
-      access_token: localStorage.access_token,
-      refresh_token: localStorage.refresh_token,
-      expires_in: localStorage.expires_in,
-      token_type: localStorage.token_type
-    });
-
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("expires_in");
-    localStorage.removeItem("token_type");
-  }
-}
+import getEventController from "./controllers/event.js";
 
 export function start(conf) {
-  _legacyMoveToken();
-
   const routes = Bacon.fromRoutes({
     routes: conf.routes
   });
@@ -55,6 +35,9 @@ export function start(conf) {
   routes.errors.onValue(function() {
     Bacon.history.pushState(null, null, "/");
   });
+
+  const intl = require("./models/intl.js")
+    .getIntlData(conf.DefaultLanguage);
 
   /* Bind the unsafe dependencies to the models */
   const Http = getHttp(fetch);
@@ -69,9 +52,7 @@ export function start(conf) {
       radio: conf.radios[0].name
     }
   }));
-
-  const intl = require("./models/intl.js")
-    .getIntlData(conf.DefaultLanguage);
+  const EventController = getEventController(Storage, Http, uuid, intl, window);
 
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
@@ -108,6 +89,11 @@ export function start(conf) {
   const p_route = _.foldl(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
   }, Bacon.never());
+
+  EventController.watchBrowseEvents(p_route).onValue(ev => {
+    const url = conf["stats-api"].http_host + "/events";
+    EventController.sendEvent(url, ev);
+  });
 
   const App = require("./views/app.jsx");
 

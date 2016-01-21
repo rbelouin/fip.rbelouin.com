@@ -41,6 +41,7 @@
     "promise": "^7.1.1",
     "react": "^0.13.3",
     "react-intl": "^1.2.0",
+    "uuid": "^2.0.1",
     "whatwg-fetch": "^0.10.1"
   },
   "scripts": {
@@ -59,6 +60,9 @@
     "api": {
       "http_host": "http://fip.rbelouin.com/api",
       "ws_host": "ws://fip.rbelouin.com/api/ws"
+    },
+    "stats-api": {
+      "http_host": "https://fip-stats.cleverapps.io"
     },
     "default_language": "en",
     "port": 8080,
