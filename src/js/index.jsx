@@ -22,6 +22,7 @@ import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
 import getEventController from "./controllers/event.js";
+import getStateController from "./controllers/state.js";
 
 export function start(conf) {
   const routes = Bacon.fromRoutes({
@@ -53,6 +54,7 @@ export function start(conf) {
     }
   }));
   const EventController = getEventController(Storage, Http, uuid, intl, window);
+  const StateController = getStateController(SongController);
 
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
@@ -61,7 +63,7 @@ export function start(conf) {
 
   const p_token = TokenController.getTokenProperty(Bacon.history, syncBus);
   const p_state = p_token.flatMapLatest(token => {
-    return SongController.getState(favBus, token);
+    return StateController.getState(favBus, token);
   }).toProperty();
 
   const p_radio = PlayController.getCurrentRadio();
