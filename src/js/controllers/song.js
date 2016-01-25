@@ -156,7 +156,7 @@ export function getState(Storage, Spotify, Fip, wsHost, radios, favBus, token) {
 
 export default (Storage, Spotify, Fip, wsHost, radios) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost),
+  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost, radios),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
