@@ -105,64 +105,14 @@ export function mergeFavsAndSongs(items, favSongs) {
   }));
 }
 
-export function getState(Storage, Spotify, Fip, wsHost, radios, favBus, token) {
-  const p_print = !token ? Bacon.constant(null) :
-                           getSpotifyPrint(Spotify, token).toProperty();
-
-  const p_syncs = p_print
-    .flatMapLatest(print => getSyncs(Storage, Spotify, print))
-    .toProperty();
-
-  const p_favSongs = p_syncs
-    .flatMapLatest(syncs => {
-      return getFavSongsStream(syncs, favBus).toEventStream();
-    })
-    .toProperty();
-
-  p_syncs.flatMapLatest(syncs => {
-    return p_favSongs.flatMapLatest(songs => {
-      return setFavoriteSongs(syncs, songs);
-    });
-  }).onValue();
-
-  const data = getFipSongLists(Fip, Spotify, wsHost, radios);
-
-  const radioSongs = _.mapValues(data, radio => {
-    const p_songs = Bacon.combineWith(
-      mergeFavsAndSongs,
-      radio,
-      p_favSongs
-    );
-
-    const p_pastSongs = p_songs.map(_.tail);
-
-    const p_nowPlaying = p_songs
-      .map(songs => _.isEmpty(songs) ? {type: "loading"} : _.head(songs))
-      .flatMapError(data => Bacon.once(data && data.error && data.error.code === 100 ? {type: "unknown"} : new Bacon.Error(data.error)))
-      .toProperty();
-
-    return {
-      nowPlaying: p_nowPlaying,
-      pastSongs: p_pastSongs
-    };
-  });
-
-  return Bacon.combineTemplate({
-    user: p_print.map(print => print && print.user),
-    favSongs: p_favSongs,
-    radios: radioSongs
-  });
-}
-
 export default (Storage, Spotify, Fip, wsHost, radios) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost),
+  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost, radios),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
   setFavoriteSongs,
   updateFavSongs,
   getFavSongsStream,
-  mergeFavsAndSongs,
-  getState: _.partial(getState, Storage, Spotify, Fip, wsHost, radios)
+  mergeFavsAndSongs
 })
