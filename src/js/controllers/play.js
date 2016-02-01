@@ -52,10 +52,10 @@ export function getCurrentSource(radios, s_playBus) {
     .toProperty(null);
 }
 
-export default (radios, p_route) => ({
-  getCurrentRadio: _.partial(getCurrentRadio, p_route),
-  getBroadcastedSong: _.partial(getBroadcastedSong, p_route),
-  getSongHistory: _.partial(getSongHistory, p_route),
+export default radios => ({
+  getCurrentRadio: getCurrentRadio,
+  getBroadcastedSong: getBroadcastedSong,
+  getSongHistory: getSongHistory,
   getSongBeingPlayed: getSongBeingPlayed,
   getCurrentSource: _.partial(getCurrentSource, radios)
 })

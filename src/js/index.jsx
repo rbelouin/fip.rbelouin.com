@@ -37,6 +37,16 @@ export function start(conf) {
     Bacon.history.pushState(null, null, "/");
   });
 
+  const p_route = _.foldl(routes, function(p_route, stream, name) {
+    return name === "errors" ? p_route : p_route.merge(stream.map(name));
+  }, Bacon.never());
+
+  const p_radioName = routes.radio.toProperty({
+    params: {
+      radio: conf.radios[0].name
+    }
+  });
+
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
 
@@ -48,11 +58,7 @@ export function start(conf) {
   const Fip = getFip(WS);
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
-  const PlayController = getPlayController(conf.radios, routes.radio.toProperty({
-    params: {
-      radio: conf.radios[0].name
-    }
-  }));
+  const PlayController = getPlayController(conf.radios);
   const EventController = getEventController(Storage, Http, uuid, intl, window);
   const StateController = getStateController(SongController);
 
@@ -66,14 +72,14 @@ export function start(conf) {
     return StateController.getState(favBus, token);
   }).toProperty();
 
-  const p_radio = PlayController.getCurrentRadio();
+  const p_radio = PlayController.getCurrentRadio(p_radioName);
   const p_radios = p_state.map(state => state.radios);
 
   // Song being broadcasted by the radio having the focus
-  const p_bsong = PlayController.getBroadcastedSong(p_radios);
+  const p_bsong = PlayController.getBroadcastedSong(p_radioName, p_radios);
 
   // Song history of the radio having the focus
-  const p_history = PlayController.getSongHistory(p_radios);
+  const p_history = PlayController.getSongHistory(p_radioName, p_radios);
 
   const p_cmds = p_radio
     .toEventStream()
@@ -87,10 +93,6 @@ export function start(conf) {
 
   // Is the player playing a song?
   const p_src = PlayController.getCurrentSource(playBus);
-
-  const p_route = _.foldl(routes, function(p_route, stream, name) {
-    return name === "errors" ? p_route : p_route.merge(stream.map(name));
-  }, Bacon.never());
 
   EventController.watchBrowseEvents(p_route).onValue(ev => {
     const url = conf["stats-api"].http_host + "/events";
