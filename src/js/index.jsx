@@ -22,31 +22,10 @@ import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
 import getEventController from "./controllers/event.js";
+import getRouteController from "./controllers/route.js";
 import getStateController from "./controllers/state.js";
 
 export function start(conf) {
-  const routes = Bacon.fromRoutes({
-    routes: conf.routes
-  });
-
-  routes.home.onValue(function() {
-    Bacon.history.pushState(null, null, "/radios/fip-radio");
-  });
-
-  routes.errors.onValue(function() {
-    Bacon.history.pushState(null, null, "/");
-  });
-
-  const p_route = _.foldl(routes, function(p_route, stream, name) {
-    return name === "errors" ? p_route : p_route.merge(stream.map(name));
-  }, Bacon.never());
-
-  const p_radioName = routes.radio.toProperty({
-    params: {
-      radio: conf.radios[0].name
-    }
-  });
-
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
 
@@ -60,6 +39,7 @@ export function start(conf) {
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
   const PlayController = getPlayController(conf.radios);
   const EventController = getEventController(Storage, Http, uuid, intl, window);
+  const RouteController = getRouteController(Bacon, conf.routes);
   const StateController = getStateController(SongController);
 
   const volBus = new Bacon.Bus();
@@ -72,14 +52,22 @@ export function start(conf) {
     return StateController.getState(favBus, token);
   }).toProperty();
 
-  const p_radio = PlayController.getCurrentRadio(p_radioName);
+  const routes = RouteController.getRoutes();
+
+  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
+  RouteController.redirectRoute(routes, "errors", "/");
+
+  const p_route = RouteController.getCurrentRoute(routes);
+
+  const p_radio = PlayController.getCurrentRadio(routes.radio);
+
   const p_radios = p_state.map(state => state.radios);
 
   // Song being broadcasted by the radio having the focus
-  const p_bsong = PlayController.getBroadcastedSong(p_radioName, p_radios);
+  const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
 
   // Song history of the radio having the focus
-  const p_history = PlayController.getSongHistory(p_radioName, p_radios);
+  const p_history = PlayController.getSongHistory(routes.radio, p_radios);
 
   const p_cmds = p_radio
     .toEventStream()
@@ -146,6 +134,6 @@ export function start(conf) {
       document.querySelector("#app")
     );
 
-    Bacon.history.pushState(null, null, window.location.pathname + window.location.search);
+    RouteController.browseTo(window.location.pathname + window.location.search);
   });
 }
