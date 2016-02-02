@@ -26,6 +26,11 @@ import getRouteController from "./controllers/route.js";
 import getStateController from "./controllers/state.js";
 
 export function start(conf) {
+  const volBus = new Bacon.Bus();
+  const syncBus = new Bacon.Bus();
+  const favBus = new Bacon.Bus();
+  const playBus = new Bacon.Bus();
+
   const intl = require("./models/intl.js")
     .getIntlData(conf.DefaultLanguage);
 
@@ -40,17 +45,13 @@ export function start(conf) {
   const PlayController = getPlayController(conf.radios);
   const EventController = getEventController(Storage, Http, uuid, intl, window);
   const RouteController = getRouteController(Bacon, conf.routes);
-  const StateController = getStateController(SongController);
 
-  const volBus = new Bacon.Bus();
-  const syncBus = new Bacon.Bus();
-  const favBus = new Bacon.Bus();
-  const playBus = new Bacon.Bus();
+  const StateController = getStateController(
+    TokenController,
+    SongController
+  );
 
-  const p_token = TokenController.getTokenProperty(Bacon.history, syncBus);
-  const p_state = p_token.flatMapLatest(token => {
-    return StateController.getState(favBus, token);
-  }).toProperty();
+  const p_state = StateController.getState(Bacon.history, favBus, syncBus);
 
   const routes = RouteController.getRoutes();
 

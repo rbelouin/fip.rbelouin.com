@@ -20,6 +20,11 @@ test("The State controller should provide a state property", function(t) {
     host: "host"
   };
 
+  const history = {
+    pushState: function(x, y, path) {
+    }
+  };
+
   const Storage = {
     songs: [{
       id: "ONE",
@@ -114,10 +119,17 @@ test("The State controller should provide a state property", function(t) {
   };
 
   const favBus = new Bacon.Bus();
+  const syncBus = new Bacon.Bus();
+
+  const TokenController = {
+    getTokenProperty: function(history, syncBus) {
+      return Bacon.constant(token);
+    }
+  };
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  getState(SongController, favBus, token)
+  getState(TokenController, SongController, history, favBus, syncBus)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
@@ -459,6 +471,7 @@ test("The State controller should provide a state property", function(t) {
   s_radio1.end();
   s_radio2.end();
   favBus.end();
+  syncBus.end();
 });
 
 test("The State controller should provide a state property (even when if token is given)", function(t) {
@@ -466,6 +479,11 @@ test("The State controller should provide a state property (even when if token i
 
   const location = {
     host: "host"
+  };
+
+  const history = {
+    pushState: function(x, y, path) {
+    }
   };
 
   const Storage = {
@@ -546,10 +564,17 @@ test("The State controller should provide a state property (even when if token i
   };
 
   const favBus = new Bacon.Bus();
+  const syncBus = new Bacon.Bus();
+
+  const TokenController = {
+    getTokenProperty: function(history, syncBus) {
+      return Bacon.constant(token);
+    }
+  };
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  getState(SongController, favBus, token)
+  getState(TokenController, SongController, history, favBus, syncBus)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
@@ -839,4 +864,5 @@ test("The State controller should provide a state property (even when if token i
   s_radio1.end();
   s_radio2.end();
   favBus.end();
+  syncBus.end();
 });

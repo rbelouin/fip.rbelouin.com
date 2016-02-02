@@ -1,9 +1,11 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-export function getPrint(SongController, token) {
-  return !token ? Bacon.constant(null) :
-                  SongController.getSpotifyPrint(token).toProperty();
+export function getPrint(SongController, p_token) {
+  return p_token.flatMapLatest(token => {
+    return !token ? Bacon.once(null) :
+                    SongController.getSpotifyPrint(token);
+  }).toProperty();
 }
 
 export function getSyncs(SongController, p_print) {
@@ -55,8 +57,9 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   }).onValue();
 }
 
-export function getState(SongController, favBus, token) {
-  const p_print = getPrint(SongController, token);
+export function getState(TokenController, SongController, history, favBus, syncBus) {
+  const p_token = TokenController.getTokenProperty(history, syncBus);
+  const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
   const p_syncs = getSyncs(SongController, p_print);
   const p_favSongs = getFavSongs(SongController, p_syncs, favBus);
@@ -75,6 +78,6 @@ export function getState(SongController, favBus, token) {
   });
 }
 
-export default (SongController) => ({
-  getState: _.partial(getState, SongController)
+export default (TokenController, SongController) => ({
+  getState: _.partial(getState, TokenController, SongController)
 })
