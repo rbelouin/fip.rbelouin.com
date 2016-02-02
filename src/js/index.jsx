@@ -51,7 +51,7 @@ export function start(conf) {
     SongController
   );
 
-  const p_state = StateController.getState(Bacon.history, favBus, syncBus);
+  const state = StateController.getState(Bacon.history, favBus, syncBus);
 
   const routes = RouteController.getRoutes();
 
@@ -62,7 +62,7 @@ export function start(conf) {
 
   const p_radio = PlayController.getCurrentRadio(routes.radio);
 
-  const p_radios = p_state.map(state => state.radios);
+  const p_radios = state.radios;
 
   // Song being broadcasted by the radio having the focus
   const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
@@ -123,8 +123,8 @@ export function start(conf) {
         p_nowPlaying={p_bsong}
         p_playerData={p_psong}
         p_src={p_src}
-        p_favSongs={p_state.map(".favSongs")}
-        p_user={p_state.map(".user")}
+        p_favSongs={state.favSongs}
+        p_user={state.user}
         p_radio={p_radio}
         syncBus={syncBus}
         favBus={favBus}

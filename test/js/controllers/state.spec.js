@@ -129,266 +129,173 @@ test("The State controller should provide a state property", function(t) {
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  getState(TokenController, SongController, history, favBus, syncBus)
-    .fold([], (items, item) => items.concat([item]))
-    .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+  const state = getState(TokenController, SongController, history, favBus, syncBus);
 
-      t.deepEqual(ev.value(), [{
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FIVE",
-                spotify: "5",
-                spotifyId: "5",
-                favorite: false
-              }
-            },
-            pastSongs: [{
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            }]
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        }]
-      }, {
-        user: Spotify.user,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FIVE",
-                spotify: "5",
-                spotifyId: "5",
-                favorite: false
-              }
-            },
-            pastSongs: [{
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: true
-              }
-            }]
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: true
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "3",
-          spotify: "3",
-          spotifyId: "3",
-          favorite: true
-        },{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: true
-        }]
-      }]);
+  const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
+  const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
+  const p_favs = state.favSongs.fold([], (acc, ev) => acc.concat([ev]));
 
-      t.deepEqual(Storage.songs, [{
+  Bacon.combineAsArray([p_user, p_radios, p_favs]).subscribe(ev => {
+    t.ok(ev.hasValue());
+
+    const [user, radios, favSongs] = ev.value();
+
+    t.deepEqual(user, [Spotify.user]);
+
+    t.deepEqual(radios, [{
+      radio1: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        }]
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: true
+          }
+        }]
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: true
+          }
+        },
+        pastSongs: []
+      }
+    }]);
+
+    t.deepEqual(favSongs, [
+      [{
+        id: "ONE",
+        spotify: null,
+        spotifyId: null,
+        favorite: true
+      },{
+        id: "TWO",
+        spotify: "2",
+        spotifyId: "2",
+        favorite: true
+      },{
+        id: "3",
+        spotify: "3",
+        spotifyId: "3",
+        favorite: true
+      }],
+      [{
+        id: "ONE",
+        spotify: null,
+        spotifyId: null,
+        favorite: true
+      },{
+        id: "3",
+        spotify: "3",
+        spotifyId: "3",
+        favorite: true
+      }],
+      [{
         id: "ONE",
         spotify: null,
         spotifyId: null,
@@ -403,29 +310,47 @@ test("The State controller should provide a state property", function(t) {
         spotify: "4",
         spotifyId: "4",
         favorite: true
-      }]);
+      }]
+    ]);
 
-      t.deepEqual(Spotify.songs, [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "3",
-        spotify: "3",
-        spotifyId: "3",
-        favorite: true
-      },{
-        id: "FOUR",
-        spotify: "4",
-        spotifyId: "4",
-        favorite: true
-      }]);
+    t.deepEqual(Storage.songs, [{
+      id: "ONE",
+      spotify: null,
+      spotifyId: null,
+      favorite: true
+    },{
+      id: "3",
+      spotify: "3",
+      spotifyId: "3",
+      favorite: true
+    },{
+      id: "FOUR",
+      spotify: "4",
+      spotifyId: "4",
+      favorite: true
+    }]);
 
-      t.end();
+    t.deepEqual(Spotify.songs, [{
+      id: "ONE",
+      spotify: null,
+      spotifyId: null,
+      favorite: true
+    },{
+      id: "3",
+      spotify: "3",
+      spotifyId: "3",
+      favorite: true
+    },{
+      id: "FOUR",
+      spotify: "4",
+      spotifyId: "4",
+      favorite: true
+    }]);
 
-      return Bacon.noMore;
-    });
+    t.end();
+
+    return Bacon.noMore;
+  });
 
   s_radio1.push({
     type: "song",
@@ -512,6 +437,25 @@ test("The State controller should provide a state property (even when if token i
   };
 
   const Spotify = {
+    user: {
+      id: "42",
+      display_name: "FORTY TWO"
+    },
+    playlist: {
+      id: "43",
+      name: "FORTY THREE"
+    },
+    songs: [{
+      id: "2",
+      spotify: "2",
+      spotifyId: "2",
+      favorite: true
+    },{
+      id: "3",
+      spotify: "3",
+      spotifyId: "3",
+      favorite: true
+    }],
     search: function(song) {
       const res = {
         "ONE": null,
@@ -527,22 +471,19 @@ test("The State controller should provide a state property (even when if token i
       });
     },
     getUser: function(token) {
-      t.fail("getState should not try to get the user");
-      return Bacon.once(new Bacon.Error());
+      return Bacon.constant(token ? Spotify.user : null);
     },
     getOrCreatePlaylist: function(token, userId, name) {
-      t.fail("getState should not try to get the playlist");
-      return Bacon.once(new Bacon.Error());
+      return Bacon.constant(Spotify.playlist);
     },
     sync: function() {
       return {
         get: function() {
-          t.fail("getState should not try to use Spotify.sync");
-          return Bacon.once(new Bacon.Error());
+          return Bacon.constant(Spotify.songs);
         },
         set: function(songs) {
-          t.fail("getState should not try to use Spotify.sync");
-          return Bacon.once(new Bacon.Error());
+          Spotify.songs = songs;
+          return Bacon.constant();
         }
       };
     }
@@ -559,7 +500,7 @@ test("The State controller should provide a state property (even when if token i
       return {
         radio1: s_radio1,
         radio2: s_radio2
-      }
+      };
     }
   };
 
@@ -574,236 +515,163 @@ test("The State controller should provide a state property (even when if token i
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  getState(TokenController, SongController, history, favBus, syncBus)
-    .fold([], (items, item) => items.concat([item]))
-    .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+  const state = getState(TokenController, SongController, history, favBus, syncBus);
 
-      t.deepEqual(ev.value(), [{
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        }]
-      }, {
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "loading"
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        }]
-      }, {
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "TWO",
-          spotify: "2",
-          spotifyId: "2",
-          favorite: true
-        }]
-      }, {
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        }]
-      }, {
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FIVE",
-                spotify: "5",
-                spotifyId: "5",
-                favorite: false
-              }
-            },
-            pastSongs: [{
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            }]
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: false
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        }]
-      }, {
-        user: null,
-        radios: {
-          radio1: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FIVE",
-                spotify: "5",
-                spotifyId: "5",
-                favorite: false
-              }
-            },
-            pastSongs: [{
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: true
-              }
-            }]
-          },
-          radio2: {
-            nowPlaying: {
-              type: "song",
-              song: {
-                id: "FOUR",
-                spotify: "4",
-                spotifyId: "4",
-                favorite: true
-              }
-            },
-            pastSongs: []
-          }
-        },
-        favSongs: [{
-          id: "ONE",
-          spotify: null,
-          spotifyId: null,
-          favorite: true
-        },{
-          id: "FOUR",
-          spotify: "4",
-          spotifyId: "4",
-          favorite: true
-        }]
-      }]);
+  const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
+  const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
+  const p_favs = state.favSongs.fold([], (acc, ev) => acc.concat([ev]));
 
-      t.deepEqual(Storage.songs, [{
+  Bacon.combineAsArray([p_user, p_radios, p_favs]).subscribe(ev => {
+    t.ok(ev.hasValue());
+
+    const [user, radios, favSongs] = ev.value();
+
+    t.deepEqual(user, [null]);
+
+    t.deepEqual(radios, [{
+      radio1: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "loading"
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        }]
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: false
+          }
+        },
+        pastSongs: []
+      }
+    },{
+      radio1: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FIVE",
+            spotify: "5",
+            spotifyId: "5",
+            favorite: false
+          }
+        },
+        pastSongs: [{
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: true
+          }
+        }]
+      },
+      radio2: {
+        nowPlaying: {
+          type: "song",
+          song: {
+            id: "FOUR",
+            spotify: "4",
+            spotifyId: "4",
+            favorite: true
+          }
+        },
+        pastSongs: []
+      }
+    }]);
+
+    t.deepEqual(favSongs, [
+      [{
+        id: "ONE",
+        spotify: null,
+        spotifyId: null,
+        favorite: true
+      },{
+        id: "TWO",
+        spotify: "2",
+        spotifyId: "2",
+        favorite: true
+      }],
+      [{
+        id: "ONE",
+        spotify: null,
+        spotifyId: null,
+        favorite: true
+      }],
+      [{
         id: "ONE",
         spotify: null,
         spotifyId: null,
@@ -813,22 +681,47 @@ test("The State controller should provide a state property (even when if token i
         spotify: "4",
         spotifyId: "4",
         favorite: true
-      }]);
+      }]
+    ]);
 
-      t.end();
+    t.deepEqual(Storage.songs, [{
+      id: "ONE",
+      spotify: null,
+      spotifyId: null,
+      favorite: true
+    },{
+      id: "FOUR",
+      spotify: "4",
+      spotifyId: "4",
+      favorite: true
+    }]);
 
-      return Bacon.noMore;
-    });
+    t.deepEqual(Spotify.songs, [{
+      id: "2",
+      spotify: "2",
+      spotifyId: "2",
+      favorite: true
+    },{
+      id: "3",
+      spotify: "3",
+      spotifyId: "3",
+      favorite: true
+    }]);
+
+    t.end();
+
+    return Bacon.noMore;
+  });
 
   s_radio1.push({
-    type: "song",
+    type: "song",
     song: {
       id: "FOUR"
     }
   });
 
   s_radio2.push({
-    type: "song",
+    type: "song",
     song: {
       id: "FOUR"
     }

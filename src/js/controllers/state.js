@@ -71,11 +71,11 @@ export function getState(TokenController, SongController, history, favBus, syncB
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
 
-  return Bacon.combineTemplate({
-    user: p_user,
+  return {
+    user: p_user,
     favSongs: p_favSongs,
-    radios: radioStates
-  });
+    radios: Bacon.combineTemplate(radioStates).skipDuplicates(_.isEqual)
+  };
 }
 
 export default (TokenController, SongController) => ({
