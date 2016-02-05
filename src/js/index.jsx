@@ -23,6 +23,7 @@ import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
 import getEventController from "./controllers/event.js";
 import getRouteController from "./controllers/route.js";
+import getUIController from "./controllers/ui.js";
 import getStateController from "./controllers/state.js";
 
 export function start(conf) {
@@ -45,10 +46,12 @@ export function start(conf) {
   const PlayController = getPlayController(conf.radios);
   const EventController = getEventController(Storage, Http, uuid, intl, window);
   const RouteController = getRouteController(Bacon, conf.routes);
+  const UIController = getUIController(window);
 
   const StateController = getStateController(
     TokenController,
-    SongController
+    SongController,
+    UIController
   );
 
   const state = StateController.getState(Bacon.history, favBus, syncBus);
@@ -90,35 +93,14 @@ export function start(conf) {
 
   const App = require("./views/app.jsx");
 
-  window.addEventListener("load", function() {
-    const s_click = Bacon.fromEvent(
-      document.querySelector(".navbar .navbar-brand a"),
-      "click"
-    );
-
-    const p_paneIsOpen = s_click.doAction(".preventDefault")
-                              .scan(false, function(isOpen) {
-                                return !isOpen;
-                              });
-
-    const p_playerOnBottom = Bacon
-      .fromBinder(sink => {
-        const mediaQuery = matchMedia("(max-width: 991px)");
-
-        mediaQuery.addListener(sink);
-        sink(mediaQuery);
-
-        return () => mediaQuery.removeListener(sink);
-      })
-      .map(".matches");
-
+  UIController.getLoadEvent().onValue(function() {
     React.render(
       <App
         radios={conf.radios}
         url={conf.api.http_host + "/songs"}
         p_route={p_route}
-        p_paneIsOpen={p_paneIsOpen}
-        p_playerOnBottom={p_playerOnBottom}
+        p_paneIsOpen={state.paneIsOpen}
+        p_playerOnBottom={state.playerOnBottom}
         p_pastSongs={p_history}
         p_nowPlaying={p_bsong}
         p_playerData={p_psong}

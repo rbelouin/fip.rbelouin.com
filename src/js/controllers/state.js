@@ -57,7 +57,7 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   }).onValue();
 }
 
-export function getState(TokenController, SongController, history, favBus, syncBus) {
+export function getState(TokenController, SongController, UIController, history, favBus, syncBus) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
@@ -69,15 +69,21 @@ export function getState(TokenController, SongController, history, favBus, syncB
     return getRadioState(SongController, p_favSongs, p_radioSongs);
   });
 
+  const p_loaded = UIController.getLoadProperty();
+  const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
+  const p_playerOnBottom = UIController.getPlayerPosition();
+
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
 
   return {
     user: p_user,
     favSongs: p_favSongs,
-    radios: Bacon.combineTemplate(radioStates).skipDuplicates(_.isEqual)
+    radios: Bacon.combineTemplate(radioStates).skipDuplicates(_.isEqual),
+    paneIsOpen: p_paneIsOpen,
+    playerOnBottom: p_playerOnBottom
   };
 }
 
-export default (TokenController, SongController) => ({
-  getState: _.partial(getState, TokenController, SongController)
+export default (TokenController, SongController, UIController) => ({
+  getState: _.partial(getState, TokenController, SongController, UIController)
 })

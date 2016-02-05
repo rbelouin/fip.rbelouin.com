@@ -129,7 +129,19 @@ test("The State controller should provide a state property", function(t) {
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  const state = getState(TokenController, SongController, history, favBus, syncBus);
+  const UIController = {
+    getLoadProperty: function() {
+      return Bacon.constant(true);
+    },
+    getPaneStatus: function() {
+      return Bacon.constant(false);
+    },
+    getPlayerPosition: function() {
+      return Bacon.constant(false);
+    }
+  };
+
+  const state = getState(TokenController, SongController, UIController, history, favBus, syncBus);
 
   const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
   const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
@@ -515,7 +527,19 @@ test("The State controller should provide a state property (even when if token i
 
   const SongController = getSongController(Storage, Spotify, Fip, location, radios);
 
-  const state = getState(TokenController, SongController, history, favBus, syncBus);
+  const UIController = {
+    getLoadProperty: function() {
+      return Bacon.constant(true);
+    },
+    getPaneStatus: function() {
+      return Bacon.constant(false);
+    },
+    getPlayerPosition: function() {
+      return Bacon.constant(false);
+    }
+  };
+
+  const state = getState(TokenController, SongController, UIController, history, favBus, syncBus);
 
   const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
   const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
