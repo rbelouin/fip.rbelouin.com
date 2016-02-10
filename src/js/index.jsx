@@ -52,34 +52,25 @@ export function start(conf) {
     TokenController,
     SongController,
     RouteController,
+    PlayController,
     UIController
   );
 
-  const state = StateController.getState(Bacon.history, favBus, syncBus);
+  const state = StateController.getState(Bacon.history, favBus, syncBus, playBus);
   const p_route = state.route;
-
-  const p_radio = PlayController.getCurrentRadio(state.routes.radio);
-
-  const p_radios = state.radios;
+  const p_radio = state.radio;
 
   // Song being broadcasted by the radio having the focus
-  const p_bsong = PlayController.getBroadcastedSong(state.routes.radio, p_radios);
+  const p_bsong = state.bsong;
 
   // Song history of the radio having the focus
-  const p_history = PlayController.getSongHistory(state.routes.radio, p_radios);
-
-  const p_cmds = p_radio
-    .toEventStream()
-    .first()
-    .map(radio => ({type: "radio", radio: radio}))
-    .merge(playBus)
-    .toProperty();
+  const p_history = state.history;
 
   // Song being played
-  const p_psong = PlayController.getSongBeingPlayed(p_radios, p_cmds);
+  const p_psong = state.psong;
 
   // Is the player playing a song?
-  const p_src = PlayController.getCurrentSource(playBus);
+  const p_src = state.src;
 
   EventController.watchBrowseEvents(p_route).onValue(ev => {
     const url = conf["stats-api"].http_host + "/events";

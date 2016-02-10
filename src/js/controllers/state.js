@@ -49,6 +49,17 @@ export function getRadioState(SongController, p_favSongs, p_radioSongs) {
   };
 }
 
+export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus) {
+  const p_cmds = p_radio
+    .toEventStream()
+    .first()
+    .map(radio => ({type: "radio", radio: radio}))
+    .merge(playBus)
+    .toProperty();
+
+  return PlayController.getSongBeingPlayed(p_radios, p_cmds);
+}
+
 export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   p_syncs.flatMapLatest(syncs => {
     return p_favSongs.flatMapLatest(songs => {
@@ -57,7 +68,7 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   }).onValue();
 }
 
-export function getState(TokenController, SongController, RouteController, UIController, history, favBus, syncBus) {
+export function getState(TokenController, SongController, RouteController, PlayController, UIController, history, favBus, syncBus, playBus) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
@@ -69,8 +80,23 @@ export function getState(TokenController, SongController, RouteController, UICon
     return getRadioState(SongController, p_favSongs, p_radioSongs);
   });
 
+  const p_radios = Bacon.combineTemplate(radioStates).skipDuplicates(_.isEqual);
+
   const routes = RouteController.getRoutes();
   const p_route = RouteController.getCurrentRoute(routes);
+
+  const p_radio = PlayController.getCurrentRadio(routes.radio);
+
+  // Song being broadcasted by the radio having the focus
+  const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
+
+  // Song being played
+  const p_psong = getSongBeingPlayed(PlayController, p_radios, p_radio, playBus);
+
+  // Song history of the radio having the focus
+  const p_history = PlayController.getSongHistory(routes.radio, p_radios);
+
+  const p_src = PlayController.getCurrentSource(playBus);
 
   const p_loaded = UIController.getLoadProperty();
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
@@ -84,14 +110,18 @@ export function getState(TokenController, SongController, RouteController, UICon
   return {
     user: p_user,
     favSongs: p_favSongs,
-    radios: Bacon.combineTemplate(radioStates).skipDuplicates(_.isEqual),
     routes: routes,
     route: p_route,
+    radio: p_radio,
+    bsong: p_bsong,
+    psong: p_psong,
+    src: p_src,
+    history: p_history,
     paneIsOpen: p_paneIsOpen,
     playerOnBottom: p_playerOnBottom
   };
 }
 
-export default (TokenController, SongController, RouteController, UIController) => ({
-  getState: _.partial(getState, TokenController, SongController, RouteController, UIController)
+export default (TokenController, SongController, RouteController, PlayController, UIController) => ({
+  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, UIController)
 })
