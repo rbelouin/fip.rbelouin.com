@@ -1,785 +1,301 @@
 import test from "tape";
-import _ from "lodash";
 import Bacon from "baconjs";
 
 import {
   getState
 } from "../../../src/js/controllers/state.js";
 
-import getSongController from "../../../src/js/controllers/song.js";
+import {
+  getFavSongsStream,
+  mergeFavsAndSongs
+} from "../../../src/js/controllers/song.js";
 
-test("The State controller should provide a state property", function(t) {
+import {
+  getCurrentRoute
+} from "../../../src/js/controllers/route.js";
+
+import {
+  getSongBeingPlayed, 
+  getCurrentRadio,
+  getBroadcastedSong,
+  getSongHistory
+} from "../../../src/js/controllers/play.js";
+
+test("getState should return a valid state", function(t) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "expires_in",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
-  const location = {
-    host: "host"
-  };
-
-  const history = {
-    pushState: function(x, y, path) {
-    }
-  };
-
-  const Storage = {
-    songs: [{
-      id: "ONE",
-      spotify: null,
-      spotifyId: null,
-      favorite: true
-    },{
-      id: "TWO",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    }],
-    sync: function() {
-      return {
-        get: function() {
-          return Bacon.constant(Storage.songs);
-        },
-        set: function(songs) {
-          Storage.songs = songs;
-          return Bacon.constant();
-        }
-      };
-    }
-  };
-
-  const Spotify = {
-    user: {
-      id: "42",
-      display_name: "FORTY TWO"
-    },
-    playlist: {
-      id: "43",
-      name: "FORTY THREE"
-    },
-    songs: [{
-      id: "2",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    },{
-      id: "3",
-      spotify: "3",
-      spotifyId: "3",
-      favorite: true
-    }],
-    search: function(song) {
-      const res = {
-        "ONE": null,
-        "TWO": "2",
-        "THREE": "3",
-        "FOUR": "4",
-        "FIVE": "5"
-      };
-
-      return Bacon.constant(!res[song.id] ? null : {
-        href: res[song.id],
-        id: res[song.id]
-      });
-    },
-    getUser: function(token) {
-      return Bacon.constant(token ? Spotify.user : null);
-    },
-    getOrCreatePlaylist: function(token, userId, name) {
-      return Bacon.constant(Spotify.playlist);
-    },
-    sync: function() {
-      return {
-        get: function() {
-          return Bacon.constant(Spotify.songs);
-        },
-        set: function(songs) {
-          Spotify.songs = songs;
-          return Bacon.constant();
-        }
-      };
-    }
-  };
-
-  const s_radio1 = new Bacon.Bus();
-  const s_radio2 = new Bacon.Bus();
-
-  const radios = ["radio1", "radio2"];
-  const Fip = {
-    fetchFipRadios: function(url, _radios) {
-      t.deepEqual(_radios, radios);
-
-      return {
-        radio1: s_radio1,
-        radio2: s_radio2
-      };
-    }
-  };
-
-  const favBus = new Bacon.Bus();
-  const syncBus = new Bacon.Bus();
-
+  // Build a partial TokenController mock
+  // getState only needs the getTokenProperty method
   const TokenController = {
     getTokenProperty: function(history, syncBus) {
       return Bacon.constant(token);
     }
   };
 
-  const SongController = getSongController(Storage, Spotify, Fip, location, radios);
+  const sync = {
+    songs: [{
+      id: "3",
+      spotifyId: "3",
+      favorite: true
+    }],
+    get: function() {
+      return Bacon.constant(sync.songs);
+    },
+    set: function(songs) {
+      sync.songs = songs;
+      return Bacon.constant();
+    }
+  };
 
+  const radios = {
+    radioA: new Bacon.Bus(),
+    radioB: new Bacon.Bus()
+  };
+
+  // Build a partial SongController mock
+  const SongController = {
+    getSpotifyPrint: function(token) {
+      return Bacon.constant({
+        user: {id: "userId"},
+        playlist: {id: "playlistId"},
+        token: token
+      });
+    },
+    getSyncs: function(print) {
+      return [sync];
+    },
+    getFavSongsStream,
+    mergeFavsAndSongs,
+    getFipSongLists: function() {
+      return radios;
+    },
+    setFavoriteSongs: function() {
+      return Bacon.never();
+    }
+  };
+
+  const routes = {
+    radio: new Bacon.Bus(),
+    home: new Bacon.Bus(),
+    errors: new Bacon.Bus()
+  };
+
+  // Build a partial RouteController mock
+  const RouteController = {
+    getRoutes: function() {
+      return routes;
+    },
+    getCurrentRoute,
+    redirectRoute: function() {
+    }
+  };
+
+  // Build a partial PlayController mock
+  const PlayController = {
+    getSongBeingPlayed, 
+    getCurrentRadio,
+    getBroadcastedSong,
+    getSongHistory,
+    getCurrentSource: function(playBus) {
+      return playBus.map(cmd => {
+        return cmd.type === "radio" && radios[cmd.radio] ? cmd.radio : null;
+      });
+    }
+  };
+
+  // Build a partial EventController mock
+  const EventController = {
+    watchBrowseEvents: function() {
+      return Bacon.never();
+    }
+  };
+
+  // Build a partial UIController mock
   const UIController = {
     getLoadProperty: function() {
       return Bacon.constant(true);
     },
-    getPaneStatus: function() {
-      return Bacon.constant(false);
+    getPaneStatus: function(p_loaded) {
+      return Bacon.constant(true);
     },
     getPlayerPosition: function() {
       return Bacon.constant(false);
     }
-  };
-
-  const state = getState(TokenController, SongController, UIController, history, favBus, syncBus);
-
-  const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
-  const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
-  const p_favs = state.favSongs.fold([], (acc, ev) => acc.concat([ev]));
-
-  Bacon.combineAsArray([p_user, p_radios, p_favs]).subscribe(ev => {
-    t.ok(ev.hasValue());
-
-    const [user, radios, favSongs] = ev.value();
-
-    t.deepEqual(user, [Spotify.user]);
-
-    t.deepEqual(radios, [{
-      radio1: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
-          }
-        },
-        pastSongs: [{
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        }]
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
-          }
-        },
-        pastSongs: [{
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: true
-          }
-        }]
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: true
-          }
-        },
-        pastSongs: []
-      }
-    }]);
-
-    t.deepEqual(favSongs, [
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "TWO",
-        spotify: "2",
-        spotifyId: "2",
-        favorite: true
-      },{
-        id: "3",
-        spotify: "3",
-        spotifyId: "3",
-        favorite: true
-      }],
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "3",
-        spotify: "3",
-        spotifyId: "3",
-        favorite: true
-      }],
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "3",
-        spotify: "3",
-        spotifyId: "3",
-        favorite: true
-      },{
-        id: "FOUR",
-        spotify: "4",
-        spotifyId: "4",
-        favorite: true
-      }]
-    ]);
-
-    t.deepEqual(Storage.songs, [{
-      id: "ONE",
-      spotify: null,
-      spotifyId: null,
-      favorite: true
-    },{
-      id: "3",
-      spotify: "3",
-      spotifyId: "3",
-      favorite: true
-    },{
-      id: "FOUR",
-      spotify: "4",
-      spotifyId: "4",
-      favorite: true
-    }]);
-
-    t.deepEqual(Spotify.songs, [{
-      id: "ONE",
-      spotify: null,
-      spotifyId: null,
-      favorite: true
-    },{
-      id: "3",
-      spotify: "3",
-      spotifyId: "3",
-      favorite: true
-    },{
-      id: "FOUR",
-      spotify: "4",
-      spotifyId: "4",
-      favorite: true
-    }]);
-
-    t.end();
-
-    return Bacon.noMore;
-  });
-
-  s_radio1.push({
-    type: "song",
-    song: {
-      id: "FOUR"
-    }
-  });
-
-  s_radio2.push({
-    type: "song",
-    song: {
-      id: "FOUR"
-    }
-  });
-
-  favBus.push({
-    type: "remove",
-    song: {
-      id: "TWO",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    }
-  });
-
-  s_radio1.push({
-    type: "song",
-    song: {
-      id: "FIVE"
-    }
-  });
-
-  favBus.push({
-    type: "add",
-    song: {
-      id: "FOUR",
-      spotify: "4",
-      spotifyId: "4",
-      favorite: false
-    }
-  });
-
-  s_radio1.end();
-  s_radio2.end();
-  favBus.end();
-  syncBus.end();
-});
-
-test("The State controller should provide a state property (even when if token is given)", function(t) {
-  const token = null;
-
-  const location = {
-    host: "host"
   };
 
   const history = {
-    pushState: function(x, y, path) {
-    }
+    pushState: function(){}
   };
 
-  const Storage = {
-    songs: [{
-      id: "ONE",
-      spotify: null,
-      spotifyId: null,
-      favorite: true
-    },{
-      id: "TWO",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    }],
-    sync: function() {
-      return {
-        get: function() {
-          return Bacon.constant(Storage.songs);
-        },
-        set: function(songs) {
-          Storage.songs = songs;
-          return Bacon.constant();
-        }
-      };
-    }
-  };
-
-  const Spotify = {
-    user: {
-      id: "42",
-      display_name: "FORTY TWO"
-    },
-    playlist: {
-      id: "43",
-      name: "FORTY THREE"
-    },
-    songs: [{
-      id: "2",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    },{
-      id: "3",
-      spotify: "3",
-      spotifyId: "3",
-      favorite: true
-    }],
-    search: function(song) {
-      const res = {
-        "ONE": null,
-        "TWO": "2",
-        "THREE": "3",
-        "FOUR": "4",
-        "FIVE": "5"
-      };
-
-      return Bacon.constant(!res[song.id] ? null : {
-        href: res[song.id],
-        id: res[song.id]
-      });
-    },
-    getUser: function(token) {
-      return Bacon.constant(token ? Spotify.user : null);
-    },
-    getOrCreatePlaylist: function(token, userId, name) {
-      return Bacon.constant(Spotify.playlist);
-    },
-    sync: function() {
-      return {
-        get: function() {
-          return Bacon.constant(Spotify.songs);
-        },
-        set: function(songs) {
-          Spotify.songs = songs;
-          return Bacon.constant();
-        }
-      };
-    }
-  };
-
-  const s_radio1 = new Bacon.Bus();
-  const s_radio2 = new Bacon.Bus();
-
-  const radios = ["radio1", "radio2"];
-  const Fip = {
-    fetchFipRadios: function(url, _radios) {
-      t.deepEqual(_radios, radios);
-
-      return {
-        radio1: s_radio1,
-        radio2: s_radio2
-      };
-    }
-  };
+  const eventUrl = "eventUrl";
 
   const favBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
+  const playBus = new Bacon.Bus();
 
-  const TokenController = {
-    getTokenProperty: function(history, syncBus) {
-      return Bacon.constant(token);
-    }
-  };
+  const state = getState(
+    TokenController,
+    SongController,
+    RouteController,
+    PlayController,
+    EventController,
+    UIController,
+    history,
+    eventUrl,
+    favBus,
+    syncBus,
+    playBus
+  );
 
-  const SongController = getSongController(Storage, Spotify, Fip, location, radios);
+  const append = (acc, elem) => acc.concat([elem]);
 
-  const UIController = {
-    getLoadProperty: function() {
-      return Bacon.constant(true);
-    },
-    getPaneStatus: function() {
-      return Bacon.constant(false);
-    },
-    getPlayerPosition: function() {
-      return Bacon.constant(false);
-    }
-  };
+  const stateUser = state.user.fold([], append);
+  const stateFavSongs = state.favSongs.fold([], append);
+  const stateRoute = state.route.fold([], append);
+  const stateRadio = state.radio.fold([], append);
+  const stateBSong = state.bsong.fold([], append);
+  const statePSong = state.psong.fold([], append);
+  const stateSrc = state.src.fold([], append);
+  const stateHistory = state.history.fold([], append);
+  const statePaneIsOpen = state.paneIsOpen.fold([], append);
+  const statePlayerOnBottom = state.playerOnBottom.fold([], append);
 
-  const state = getState(TokenController, SongController, UIController, history, favBus, syncBus);
-
-  const p_user = state.user.fold([], (acc, ev) => acc.concat([ev]));
-  const p_radios = state.radios.fold([], (acc, ev) => acc.concat([ev]));
-  const p_favs = state.favSongs.fold([], (acc, ev) => acc.concat([ev]));
-
-  Bacon.combineAsArray([p_user, p_radios, p_favs]).subscribe(ev => {
+  Bacon.combineAsArray([
+    stateUser,
+    stateFavSongs,
+    stateRoute,
+    stateRadio,
+    stateBSong,
+    statePSong,
+    stateSrc,
+    stateHistory,
+    statePaneIsOpen,
+    statePlayerOnBottom
+  ]).subscribe(ev => {
     t.ok(ev.hasValue());
 
-    const [user, radios, favSongs] = ev.value();
+    const [user, favSongs, route, radio, bsong, psong, src, history, paneIsOpen, playerOnBottom] = ev.value();
 
-    t.deepEqual(user, [null]);
-
-    t.deepEqual(radios, [{
-      radio1: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "loading"
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
-          }
-        },
-        pastSongs: [{
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        }]
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: false
-          }
-        },
-        pastSongs: []
-      }
-    },{
-      radio1: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FIVE",
-            spotify: "5",
-            spotifyId: "5",
-            favorite: false
-          }
-        },
-        pastSongs: [{
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: true
-          }
-        }]
-      },
-      radio2: {
-        nowPlaying: {
-          type: "song",
-          song: {
-            id: "FOUR",
-            spotify: "4",
-            spotifyId: "4",
-            favorite: true
-          }
-        },
-        pastSongs: []
-      }
+    t.deepEqual(user, [{
+      id: "userId"
     }]);
 
-    t.deepEqual(favSongs, [
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "TWO",
-        spotify: "2",
-        spotifyId: "2",
-        favorite: true
-      }],
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      }],
-      [{
-        id: "ONE",
-        spotify: null,
-        spotifyId: null,
-        favorite: true
-      },{
-        id: "FOUR",
-        spotify: "4",
-        spotifyId: "4",
-        favorite: true
-      }]
+    t.deepEqual(favSongs, [[
+      {id: "3", spotifyId: "3", favorite: true}
+    ],[
+      {id: "3", spotifyId: "3", favorite: true},
+      {id: "1", spotifyId: "1", favorite: true}
+    ]]);
+
+    t.deepEqual(route, [
+      "radio",
+      "radio",
+      "radio"
     ]);
 
-    t.deepEqual(Storage.songs, [{
-      id: "ONE",
-      spotify: null,
-      spotifyId: null,
-      favorite: true
+    t.deepEqual(radio, [
+      "radioA",
+      "radioB",
+      "radioA"
+    ]);
+
+    t.deepEqual(bsong, [{
+      type: "song",
+      song: {id: "1", spotifyId: "1", favorite: false}
     },{
-      id: "FOUR",
-      spotify: "4",
-      spotifyId: "4",
-      favorite: true
+      type: "song",
+      song: {id: "2", spotifyId: "2", favorite: false}
+    },{
+      type: "song",
+      song: {id: "3", spotifyId: "3", favorite: true}
     }]);
 
-    t.deepEqual(Spotify.songs, [{
-      id: "2",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
+    t.deepEqual(psong, [{
+      type: "song",
+      song: {id: "1", spotifyId: "1", favorite: false}
     },{
-      id: "3",
-      spotify: "3",
-      spotifyId: "3",
-      favorite: true
+      type: "song",
+      song: {id: "2", spotifyId: "2", favorite: false}
     }]);
+
+    t.deepEqual(src, [
+      "radioB"
+    ]);
+
+    t.deepEqual(history, [[
+    ],[
+      {id: "1", spotifyId: "1", favorite: false}
+    ],[
+      {id: "1", spotifyId: "1", favorite: true}
+    ]]);
+
+    t.deepEqual(paneIsOpen, [true]);
+
+    t.deepEqual(playerOnBottom, [false]);
 
     t.end();
-
     return Bacon.noMore;
   });
 
-  s_radio1.push({
-    type: "song",
-    song: {
-      id: "FOUR"
+  routes.radio.push({
+    params: {
+      radio: "radioA"
     }
   });
 
-  s_radio2.push({
-    type: "song",
-    song: {
-      id: "FOUR"
-    }
-  });
-
-  favBus.push({
-    type: "remove",
-    song: {
-      id: "TWO",
-      spotify: "2",
-      spotifyId: "2",
-      favorite: true
-    }
-  });
-
-  s_radio1.push({
+  radios.radioA.push([{
     type: "song",
-    song: {
-      id: "FIVE"
+    song: {id: "1", spotifyId: "1"}
+  }]);
+
+  radios.radioB.push([{
+    type: "song",
+    song: {id: "2", spotifyId: "2"}
+  }]);
+
+  routes.radio.push({
+    params: {
+      radio: "radioB"
+    }
+  });
+
+  playBus.push({
+    type: "radio",
+    radio: "radioB"
+  });
+
+  radios.radioA.push([{
+    type: "song",
+    song: {id: "3", spotifyId: "3"}
+  },{
+    type: "song",
+    song: {id: "1", spotifyId: "1"}
+  }]);
+
+  routes.radio.push({
+    params: {
+      radio: "radioA"
     }
   });
 
   favBus.push({
     type: "add",
-    song: {
-      id: "FOUR",
-      spotify: "4",
-      spotifyId: "4",
-      favorite: false
-    }
+    song: {id: "1", spotifyId: "1"}
   });
 
-  s_radio1.end();
-  s_radio2.end();
+  radios.radioA.end();
+  radios.radioB.end();
+
+  routes.radio.end();
+  routes.home.end();
+  routes.errors.end();
+
   favBus.end();
   syncBus.end();
+  playBus.end();
 });

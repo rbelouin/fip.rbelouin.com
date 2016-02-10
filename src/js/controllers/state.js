@@ -114,7 +114,6 @@ export function getState(TokenController, SongController, RouteController, PlayC
   return {
     user: p_user,
     favSongs: p_favSongs,
-    routes: routes,
     route: p_route,
     radio: p_radio,
     bsong: p_bsong,
