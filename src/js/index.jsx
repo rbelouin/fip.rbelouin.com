@@ -27,6 +27,8 @@ import getUIController from "./controllers/ui.js";
 import getStateController from "./controllers/state.js";
 
 export function start(conf) {
+  const eventUrl = conf["stats-api"].http_host + "/events";
+
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
@@ -53,10 +55,11 @@ export function start(conf) {
     SongController,
     RouteController,
     PlayController,
+    EventController,
     UIController
   );
 
-  const state = StateController.getState(Bacon.history, favBus, syncBus, playBus);
+  const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus);
   const p_route = state.route;
   const p_radio = state.radio;
 
@@ -71,11 +74,6 @@ export function start(conf) {
 
   // Is the player playing a song?
   const p_src = state.src;
-
-  EventController.watchBrowseEvents(p_route).onValue(ev => {
-    const url = conf["stats-api"].http_host + "/events";
-    EventController.sendEvent(url, ev);
-  });
 
   const App = require("./views/app.jsx");
 
