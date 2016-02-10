@@ -51,27 +51,22 @@ export function start(conf) {
   const StateController = getStateController(
     TokenController,
     SongController,
+    RouteController,
     UIController
   );
 
   const state = StateController.getState(Bacon.history, favBus, syncBus);
+  const p_route = state.route;
 
-  const routes = RouteController.getRoutes();
-
-  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
-  RouteController.redirectRoute(routes, "errors", "/");
-
-  const p_route = RouteController.getCurrentRoute(routes);
-
-  const p_radio = PlayController.getCurrentRadio(routes.radio);
+  const p_radio = PlayController.getCurrentRadio(state.routes.radio);
 
   const p_radios = state.radios;
 
   // Song being broadcasted by the radio having the focus
-  const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
+  const p_bsong = PlayController.getBroadcastedSong(state.routes.radio, p_radios);
 
   // Song history of the radio having the focus
-  const p_history = PlayController.getSongHistory(routes.radio, p_radios);
+  const p_history = PlayController.getSongHistory(state.routes.radio, p_radios);
 
   const p_cmds = p_radio
     .toEventStream()
