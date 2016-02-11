@@ -26,6 +26,7 @@
     "common-env": "^5.2.0",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
+    "gulp-eslint": "^1.1.1",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
     "tap-difflet": "^0.4.0",
@@ -60,6 +61,18 @@
     "transform": [
       "babelify"
     ]
+  },
+  "eslintConfig": {
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "blockBindings": true,
+      "destructuring": true,
+      "jsx": true,
+      "objectLiteralShorthandMethods": true,
+      "objectLiteralShorthandProperties": true,
+      "modules": true,
+      "templateStrings": true
+    }
   },
   "common_env": {
     "api": {
