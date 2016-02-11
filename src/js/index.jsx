@@ -43,6 +43,8 @@ export function start(conf) {
   const Storage = getStorage(localStorage);
   const Spotify = getSpotify(Http, location);
   const Fip = getFip(WS);
+
+  /* Bind the models to the controllers */
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
   const PlayController = getPlayController(conf.radios);
@@ -50,6 +52,7 @@ export function start(conf) {
   const RouteController = getRouteController(Bacon, conf.routes);
   const UIController = getUIController(window);
 
+  /* Use all the controllers to build a state we will forward to the App component */
   const StateController = getStateController(
     TokenController,
     SongController,
@@ -60,20 +63,6 @@ export function start(conf) {
   );
 
   const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus);
-  const p_route = state.route;
-  const p_radio = state.radio;
-
-  // Song being broadcasted by the radio having the focus
-  const p_bsong = state.bsong;
-
-  // Song history of the radio having the focus
-  const p_history = state.history;
-
-  // Song being played
-  const p_psong = state.psong;
-
-  // Is the player playing a song?
-  const p_src = state.src;
 
   const App = require("./views/app.jsx");
 
@@ -81,17 +70,7 @@ export function start(conf) {
     React.render(
       <App
         radios={conf.radios}
-        url={conf.api.http_host + "/songs"}
-        p_route={p_route}
-        p_paneIsOpen={state.paneIsOpen}
-        p_playerOnBottom={state.playerOnBottom}
-        p_pastSongs={p_history}
-        p_nowPlaying={p_bsong}
-        p_playerData={p_psong}
-        p_src={p_src}
-        p_favSongs={state.favSongs}
-        p_user={state.user}
-        p_radio={p_radio}
+        state={state}
         syncBus={syncBus}
         favBus={favBus}
         volBus={volBus}
