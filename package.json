@@ -51,6 +51,10 @@
     "test": "browserify test/js/**/*.spec.* | node | tap-difflet",
     "watch": "gulp watch"
   },
+  "babel": {
+    "plugins": ["transform-react-jsx"],
+    "presets": ["es2015"]
+  },
   "browserify": {
     "transform": [
       "babelify"
