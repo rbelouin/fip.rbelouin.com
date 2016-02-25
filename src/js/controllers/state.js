@@ -102,6 +102,9 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
   const p_playerOnBottom = UIController.getPlayerPosition();
 
+  // Check for the load event immediately
+  p_loaded.onValue();
+
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
 
   RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
