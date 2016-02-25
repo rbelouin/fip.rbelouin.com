@@ -11,7 +11,7 @@ export function getLoadProperty(win) {
 
 // true => open
 // false => closed
-export function getPaneStatus(p_loaded) {
+export function getPaneStatus(win, p_loaded) {
   const s_load = p_loaded.toEventStream()
     .skipWhile(loaded => !loaded)
     .first();
@@ -45,6 +45,6 @@ export function getPlayerPosition() {
 export default (win) => ({
   getLoadEvent: _.partial(getLoadEvent, win),
   getLoadProperty: _.partial(getLoadProperty, win),
-  getPaneStatus,
+  getPaneStatus: _.partial(getPaneStatus, win),
   getPlayerPosition
 })
