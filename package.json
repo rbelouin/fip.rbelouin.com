@@ -14,7 +14,7 @@
   "author": "Rodolphe Belouin <me@rbelouin.com>",
   "license": "MIT",
   "engines": {
-    "node": 4
+    "node": 6
   },
   "devDependencies": {
     "babel-plugin-transform-react-jsx": "^6.0.18",
