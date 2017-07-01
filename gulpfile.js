@@ -1,20 +1,8 @@
 var gulp = require("gulp");
 var source = require("vinyl-source-stream");
-var browserify = require("browserify");
 var eslint = require("gulp-eslint");
 var less = require("gulp-less");
 var env = require("common-env")();
-
-gulp.task("browserify", ["configuration"], function() {
-  return browserify([
-    "./node_modules/whatwg-fetch/fetch.js",
-    "./prod/js/index.js"
-  ])
-    .transform("babelify")
-    .bundle()
-    .pipe(source("bundle.js"))
-    .pipe(gulp.dest("./prod/public/js"));
-});
 
 gulp.task("configuration", function() {
   var defaults = require("./package.json").common_env;
@@ -60,8 +48,7 @@ gulp.task("less", function() {
 });
 
 gulp.task("watch", ["build"], function() {
-  gulp.watch(["./src/js/**/*"], ["browserify"]);
   gulp.watch(["./src/less/**/*"], ["less"]);
 });
 
-gulp.task("build", ["lint", "browserify", "copy", "less"]);
+gulp.task("build", ["lint", "configuration", "copy", "less"]);
