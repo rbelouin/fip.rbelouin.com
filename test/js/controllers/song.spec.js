@@ -16,7 +16,7 @@ import {
 
 test("The Song controller should be able to search a song on spotify and add the ID to the song instance", function(t) {
   const Spotify = {
-    search: function(song) {
+    search: function(song, token) {
       const responses = {
         "TWO": {
           id: "2",
@@ -28,7 +28,7 @@ test("The Song controller should be able to search a song on spotify and add the
         }
       };
 
-      return Bacon.constant(responses[song.id] || null);
+      return Bacon.constant(token && responses[song.id] ? responses[song.id] : null);
     }
   };
 
@@ -66,7 +66,7 @@ test("The Song controller should be able to search a song on spotify and add the
 
 test("The Song controller should be able to get the songs FIP is playing", function(t) {
   const Spotify = {
-    search: function(song) {
+    search: function(song, token) {
       const responses = {
         "TWO": {
           id: "2",
@@ -116,10 +116,17 @@ test("The Song controller should be able to get the songs FIP is playing", funct
 
   const wsHost = "ws://host/api/ws";
 
+  const p_token = Bacon.constant({
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "expires_in",
+    token_type: "type"
+  });
+
   const data = getFipSongLists(Fip, Spotify, wsHost, [
     "radio1",
     "radio2"
-  ]);
+  ], p_token);
 
   const p_radio1 = data.radio1
     .fold([], (items, item) => items.concat([item]));

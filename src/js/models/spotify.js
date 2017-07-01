@@ -25,12 +25,15 @@ export function fetchAndFollow(send, token, url) {
   });
 }
 
-export function search(send, {title, artist, album}) {
+export function search(send, {title, artist, album}, token) {
   const query = `track:${title}+artist:${artist}+album:${album}`;
 
   const p_result = send({
     method: "GET",
-    url: host + "/search?type=track&q=" + query
+    url: host + "/search?type=track&q=" + query,
+    headers: {
+      "Authorization": getAuthorization(token)
+    }
   });
 
   return p_result.map(function(result) {

@@ -75,7 +75,7 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_syncs = getSyncs(SongController, p_print);
   const p_favSongs = getFavSongs(SongController, p_syncs, favBus);
 
-  const songLists = SongController.getFipSongLists();
+  const songLists = SongController.getFipSongLists(p_token);
   const radioStates = _.mapValues(songLists, p_radioSongs => {
     return getRadioState(SongController, p_favSongs, p_radioSongs);
   });

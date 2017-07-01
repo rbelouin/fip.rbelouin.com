@@ -95,6 +95,13 @@ test("Spotify.search should return a song list", function(t) {
     album: "Album"
   };
 
+  const token = {
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
+    token_type: "type"
+  };
+
   const response = {
     tracks: {
       items: [{
@@ -114,12 +121,14 @@ test("Spotify.search should return a song list", function(t) {
   function send({method, url, headers}) {
     t.equal(url, host + "/search?type=track&q=track:Title+artist:Artist+album:Album", "The URL should be correct");
     t.equal(method, "GET", "The method should be GET");
-    t.deepEqual(headers || new Map(), new Map());
+    t.deepEqual(headers || new Map(), {
+      "Authorization": getAuthorization(token)
+    });
 
     return Bacon.constant(response);
   }
 
-  search(send, song).subscribe(function(ev) {
+  search(send, song, token).subscribe(function(ev) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
     t.deepEqual(ev.value(), {
       id: "abc1",
