@@ -1,25 +1,28 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-export function searchOnSpotify(Spotify, song) {
-  return Spotify.search(song).map(result => _.extend({}, song, {
+export function searchOnSpotify(Spotify, song, token) {
+  const p_result = token ? Spotify.search(song, token) : Bacon.constant(null);
+
+  return p_result.map(result => _.extend({}, song, {
     spotify: result ? result.href : null,
     spotifyId: result ? result.id : null
   }));
 }
 
-export function getFipSongLists(Fip, Spotify, wsHost, radios) {
+export function getFipSongLists(Fip, Spotify, wsHost, radios, p_token) {
   const data = Fip.fetchFipRadios(wsHost, radios);
   const search = _.partial(searchOnSpotify, Spotify);
 
   return _.mapValues(data, radio => {
-    return radio
-      .flatMapLatest(item => {
+    return radio.flatMapLatest(item => {
+      return p_token.flatMapLatest(token => {
         return item.type === "song" ?
-          search(item.song).map(song => _.extend({}, item, {song})) :
+          search(item.song, token).map(song => _.extend({}, item, {song})) :
           Bacon.constant(item);
-      })
-      .scan([], (items, item) => [item].concat(items));
+      });
+    })
+    .scan([], (items, item) => [item].concat(items));
   });
 }
 
