@@ -22,7 +22,7 @@ export function getFipSongLists(Fip, Spotify, wsHost, radios, p_token) {
           Bacon.constant(item);
       });
     })
-    .scan([], (items, item) => [item].concat(items));
+      .scan([], (items, item) => [item].concat(items));
   });
 }
 
@@ -40,15 +40,15 @@ export function getSpotifyPrint(Spotify, token) {
     .toProperty();
 
   return Bacon.combineTemplate({
-    user: p_user,
-    playlist: p_playlist,
+    user: p_user,
+    playlist: p_playlist,
     token: token
   });
 }
 
 export function getSyncs(Storage, Spotify, print) {
   const storageSync = Storage.sync("favorites");
-  const spotifySync = !print ? null : Spotify.sync(
+  const spotifySync = !print ? null : Spotify.sync(
     print.token,
     print.user.id,
     print.playlist.id
@@ -77,15 +77,16 @@ export function setFavoriteSongs(syncs, songs) {
 
 export function updateFavSongs(songs, ev) {
   switch(ev.type) {
-    case "add":
+    case "add": {
       const song = _.extend({}, ev.song, {favorite: true});
       const exists = _.any(songs, s => s.id === song.id);
 
-      return songs.concat(exists ? [] : [song]);
+      return songs.concat(exists ? [] : [song]);
+    }
     case "remove":
       return _.reject(songs, song => song.id === ev.song.id);
     default:
-      console.error("Unknown type: " + ev.type);
+      console.error("Unknown type: " + ev.type); // eslint-disable-line no-console
       return songs;
   }
 }
@@ -118,4 +119,4 @@ export default (Storage, Spotify, Fip, wsHost, radios) => ({
   updateFavSongs,
   getFavSongsStream,
   mergeFavsAndSongs
-})
+});

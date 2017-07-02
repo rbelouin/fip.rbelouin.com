@@ -1,14 +1,23 @@
-var _ = require("lodash");
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
-var FormattedMessage = ReactIntl.FormattedMessage;
+import _ from "lodash";
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {array, object, string} from "prop-types";
 
-var Song = require("./player-song.jsx");
-var SongList = require("./player-song-list.jsx");
-var Controls = require("./player-controls.jsx");
+import Song from "./player-song.jsx";
+import SongList from "./player-song-list.jsx";
 
-var Radio = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "Radio",
+  propTypes: {
+    src: string,
+    radios: array.isRequired,
+    radio: string.isRequired,
+    favBus: object.isRequired,
+    playBus: object.isRequired,
+    pastSongs: array.isRequired,
+    nowPlaying: object.isRequired
+  },
   mixins: [IntlMixin],
   onPlay: function() {
     var src = this.props.src;
@@ -40,16 +49,16 @@ var Radio = module.exports = React.createClass({
     var isPlaying = radio && radio.src === src;
 
     var nowPlayingDisplay = nowPlaying.type === "song" ?
-                              <Song song={nowPlaying.song} /> :
-                            nowPlaying.type === "loading" ?
-                              <Song.loading /> :
-                              <Song.unknown />;
+      <Song song={nowPlaying.song} /> :
+      nowPlaying.type === "loading" ?
+        <Song.loading /> :
+        <Song.unknown />;
 
     var play = (
       <div className="fipradio-controls-play" onClick={this.onPlay}>
         <span className={isPlaying ? "fa fa-stop" : "fa fa-play"}></span>
         <FormattedMessage
-          message={this.getIntlMessage(isPlaying ? "stop-the-radio" : "play-the-radio")}
+          id={isPlaying ? "stop-the-radio" : "play-the-radio"}
         />
       </div>
     );
@@ -58,7 +67,7 @@ var Radio = module.exports = React.createClass({
       <div className="fipradio-controls-favorite" onClick={_.partial(this.onFavorite, nowPlaying.song)}>
         <span className="fa fa-heart"></span>
         <FormattedMessage
-          message={this.getIntlMessage(nowPlaying.song.favorite ? "remove-from-favorites" : "add-to-favorites")}
+          id={nowPlaying.song.favorite ? "remove-from-favorites" : "add-to-favorites"}
         />
       </div>
     ) : "";
@@ -67,7 +76,7 @@ var Radio = module.exports = React.createClass({
       <a target="_blank" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
         <span className="fa fa-spotify"></span>
         <FormattedMessage
-          message={this.getIntlMessage("open-in-spotify")}
+          id="open-in-spotify"
         />
       </a>
     ) : "";
@@ -84,7 +93,7 @@ var Radio = module.exports = React.createClass({
       <div className="fipradio">
         <div>
           <FormattedMessage
-            message={this.getIntlMessage("now-broadcasting")}
+            id="now-broadcasting"
           />
         </div>
         {nowPlayingDisplay}

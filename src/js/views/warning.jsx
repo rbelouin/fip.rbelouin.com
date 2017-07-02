@@ -1,9 +1,13 @@
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
-var FormattedMessage = ReactIntl.FormattedMessage;
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {element} from "prop-types";
 
-var Warning = exports.Warning = React.createClass({
+export const Warning = createReactClass({
+  displayName: "Warning",
+  propTypes: {
+    children: element
+  },
   render: function() {
     return (
       <div className="alert alert-warning">
@@ -13,40 +17,38 @@ var Warning = exports.Warning = React.createClass({
   }
 });
 
-var NoAudioWarning = exports.NoAudioWarning = React.createClass({
+export const NoAudioWarning = createReactClass({
+  displayName: "NoAudioWarning",
   mixins: [IntlMixin],
   render: function() {
     return (
       <Warning>
         <FormattedMessage
-          message={this.getIntlMessage("error-audio")}
-          player={
-            <a href="http://fipradio.fr/player">
-              <FormattedMessage message={
-                this.getIntlMessage("official-player")
-              } />
+          id="error-audio"
+          values={{
+            player: <a href="http://fipradio.fr/player">
+              <FormattedMessage id="official-player" />
             </a>
-          }
+          }}
         />
       </Warning>
     );
   }
 });
 
-var NoMPEGWarning = exports.NoMPEGWarning = React.createClass({
+export const NoMPEGWarning = createReactClass({
+  displayName: "NoMPEGWarning",
   mixins: [IntlMixin],
   render: function() {
     return (
       <Warning>
         <FormattedMessage
-          message={this.getIntlMessage("error-mpeg")}
-          player={
-            <a href="http://fipradio.fr/player">
-              <FormattedMessage message={
-                this.getIntlMessage("official-player")
-              } />
+          id="error-mpeg"
+          values={{
+            player: <a href="http://fipradio.fr/player">
+              <FormattedMessage id="official-player" />
             </a>
-          }
+          }}
         />
       </Warning>
     );

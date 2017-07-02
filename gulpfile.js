@@ -1,6 +1,5 @@
 var gulp = require("gulp");
 var source = require("vinyl-source-stream");
-var eslint = require("gulp-eslint");
 var less = require("gulp-less");
 var env = require("common-env")();
 
@@ -12,13 +11,6 @@ gulp.task("configuration", function() {
   src.end(JSON.stringify(config));
 
   return src.pipe(gulp.dest("./prod/js"));
-});
-
-gulp.task("lint", function() {
-  return gulp.src(["src/js/**/*.{js,jsx}"])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
 });
 
 gulp.task("copy", function() {
@@ -51,4 +43,4 @@ gulp.task("watch", ["build"], function() {
   gulp.watch(["./src/less/**/*"], ["less"]);
 });
 
-gulp.task("build", ["lint", "configuration", "copy", "less"]);
+gulp.task("build", ["configuration", "copy", "less"]);

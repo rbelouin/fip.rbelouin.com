@@ -7,8 +7,8 @@ export function parseResponse(res) {
   const isJson = mimeType === "application/json";
 
   return  res.ok && isJson ? Bacon.fromPromise(res.json()) :
-          res.ok ? Bacon.once(res) :
-          Bacon.once(new Bacon.Error(res));
+    res.ok ? Bacon.once(res) :
+      Bacon.once(new Bacon.Error(res));
 }
 
 export function send(fetch, {url, method, headers, body}) {
@@ -27,5 +27,5 @@ export function send(fetch, {url, method, headers, body}) {
 
 export default (fetch) => ({
   parseResponse,
-  send: _.partial(send, fetch)
-})
+  send: _.partial(send, fetch)
+});

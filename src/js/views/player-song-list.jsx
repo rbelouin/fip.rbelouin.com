@@ -1,17 +1,24 @@
-var _ = require("lodash");
-var Bacon = require("baconjs");
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
-var FormattedMessage = ReactIntl.FormattedMessage;
+import _ from "lodash";
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {array, bool, func, object} from "prop-types";
 
-var SongListItem = React.createClass({
+export const SongListItem = createReactClass({
+  displayName: "SongListItem",
+  propTypes: {
+    song: object.isRequired,
+    active: bool.isRequired,
+    onFavorite: func.isRequired,
+    onSpotifyPlay: func.isRequired,
+    onClick: func.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
 
     var className = ["song-list-item"]
-      .concat(song.favorite ? "song-list-item-favorited" : "")
+      .concat(song.favorite ? "song-list-item-favorited" : "")
       .join(" ");
 
     var year = song.year ? (
@@ -22,7 +29,7 @@ var SongListItem = React.createClass({
       <div className="song-list-item-controls-favorite" onClick={this.props.onFavorite}>
         <span className="fa fa-heart"></span>
         <FormattedMessage
-          message={this.getIntlMessage(song.favorite ? "remove-from-favorites" : "add-to-favorites")}
+          id={song.favorite ? "remove-from-favorites" : "add-to-favorites"}
         />
       </div>
     );
@@ -31,13 +38,13 @@ var SongListItem = React.createClass({
       <div className="song-list-item-controls-spotify" onClick={this.props.onSpotifyPlay}>
         <span className="fa fa-play"></span>
         <FormattedMessage
-          message={this.getIntlMessage("play-with-spotify")}
+          id="play-with-spotify"
         />
       </div>
-    ) : "";
+    ) : "";
 
     var controlsClassName = ["song-list-item-controls"]
-      .concat(this.props.active ? "song-list-item-controls-shown" : "")
+      .concat(this.props.active ? "song-list-item-controls-shown" : "")
       .join(" ");
 
     return (
@@ -57,11 +64,17 @@ var SongListItem = React.createClass({
   }
 });
 
-var SongList = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "SongList",
+  propTypes: {
+    songs: array.isRequired,
+    favBus: object.isRequired,
+    playBus: object.isRequired
+  },
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
-      selectedSongId: null
+      selectedSongId: null
     };
   },
   onFavorite: function(song) {

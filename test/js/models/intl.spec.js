@@ -1,5 +1,5 @@
-var test = require("tape");
-var intl = require("../../../src/js/models/intl.js");
+import test from "tape";
+import intl from "../../../src/js/models/intl.js";
 
 test("intl.getIntlData should choose the right language", function(t) {
   intl.languages = ["en-US", "en"];

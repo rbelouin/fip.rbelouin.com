@@ -30,7 +30,7 @@ export function search(send, {title, artist, album}, token) {
 
   const p_result = send({
     method: "GET",
-    url: host + "/search?type=track&q=" + query,
+    url: host + "/search?type=track&q=" + query,
     headers: {
       "Authorization": getAuthorization(token)
     }
@@ -137,7 +137,7 @@ export function setPlaylistTracks(send, token, userId, playlistId, trackIds) {
 
   return send({
     method: "PUT",
-    url: url,
+    url: url,
     headers: {
       "Authorization": getAuthorization(token),
       "Content-Type": "application/json"
@@ -165,7 +165,7 @@ export default (Http, location) => ({
   fetchAndFollow: _.partial(fetchAndFollow, Http.send),
   search: _.partial(search, Http.send),
   requestToken: _.partial(requestToken, location),
-  refreshToken: _.partial(refreshToken, location),
+  refreshToken: _.partial(refreshToken, location),
   getUser: _.partial(getUser, Http.send),
   getPlaylists: _.partial(getPlaylists, Http.send),
   createPlaylist: _.partial(createPlaylist, Http.send),
@@ -173,4 +173,4 @@ export default (Http, location) => ({
   getPlaylistTracks: _.partial(getPlaylistTracks, Http.send),
   setPlaylistTracks: _.partial(setPlaylistTracks, Http.send),
   sync: _.partial(sync, Http.send)
-})
+});

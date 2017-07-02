@@ -1,13 +1,19 @@
-var Bacon = require("baconjs");
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
-var FormattedMessage = ReactIntl.FormattedMessage;
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {array, object} from "prop-types";
 
-var SongList = require("./player-song-list.jsx");
-var Warning = require("./warning.jsx");
+import SongList from "./player-song-list.jsx";
 
-var Favorites = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "Favorites",
+  propTypes: {
+    favBus: object.isRequired,
+    playBus: object.isRequired,
+    syncBus: object.isRequired,
+    user: object.isRequired,
+    favSongs: array.isRequired,
+  },
   mixins: [IntlMixin],
   onClick: function() {
     this.props.syncBus.push(this.props.user === null);
@@ -16,17 +22,22 @@ var Favorites = module.exports = React.createClass({
     return (
       <div className="favorites">
         <div className="alert alert-info">
-          <p>{this.getIntlMessage("favorites-alert")}</p>
+          <p>
+            <FormattedMessage id="favorites-alert" />
+          </p>
+
           <div className="sync-controls">
             {
               this.props.user ?
                 <FormattedMessage
-                  message={this.getIntlMessage("connected-as")}
-                  name={this.props.user.display_name}
+                  id="connected-as"
+                  values={{
+                    name: this.props.user.display_name
+                  }}
                 />
-              : ""
+                : ""
             }
-            <button type="button" className={(this.props.user ? "" : "sync ") + "btn"}  onClick={this.onClick}>
+            <button type="button" className={(this.props.user ? "" : "sync ") + "btn"}  onClick={this.onClick}>
               <span className="fa fa-spotify"></span>
               {this.props.user ? "Unsync" : "Sync"}
             </button>
@@ -34,6 +45,6 @@ var Favorites = module.exports = React.createClass({
         </div>
         <SongList songs={this.props.favSongs} favBus={this.props.favBus} playBus={this.props.playBus} />
       </div>
-   );
+    );
   }
 });

@@ -1,16 +1,24 @@
-var _ = require("lodash");
-var Bacon = require("baconjs");
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
+import _ from "lodash";
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin} from "react-intl";
+import {array, object} from "prop-types";
 
-var Radio = require("./radio.jsx");
-var Favorites = require("./favorites.jsx");
+import Radio from "./radio.jsx";
+import Favorites from "./favorites.jsx";
 
 import AppNav from "./app-nav.jsx";
 import Player from "./nav-player.jsx";
 
-var App = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "App",
+  propTypes: {
+    state: object.isRequired,
+    favBus: object.isRequired,
+    syncBus: object.isRequired,
+    playBus: object.isRequired,
+    radios: array.isRequired
+  },
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
@@ -18,8 +26,8 @@ var App = module.exports = React.createClass({
       playerOnBottom: false,
       route: "radio",
       radio: "fip-radio",
-      history: [],
-      bsong: {type: "loading"},
+      history: [],
+      bsong: {type: "loading"},
       psong: {type: "loading"},
       src: null,
       favSongs: [],
@@ -38,24 +46,24 @@ var App = module.exports = React.createClass({
   },
   render: function() {
     var page =  this.state.route === "favorites" ?
-                  <Favorites
-                    favSongs={this.state.favSongs}
-                    favBus={this.props.favBus}
-                    syncBus={this.props.syncBus}
-                    playBus={this.props.playBus}
-                    user={this.state.user}
-                  /> :
-                this.state.route === "radio" ?
-                  <Radio
-                    nowPlaying={this.state.bsong}
-                    src={this.state.src}
-                    pastSongs={this.state.history}
-                    radio={this.state.radio}
-                    radios={this.props.radios}
-                    favBus={this.props.favBus}
-                    playBus={this.props.playBus}
-                  /> :
-                "";
+      <Favorites
+        favSongs={this.state.favSongs}
+        favBus={this.props.favBus}
+        syncBus={this.props.syncBus}
+        playBus={this.props.playBus}
+        user={this.state.user}
+      /> :
+      this.state.route === "radio" ?
+        <Radio
+          nowPlaying={this.state.bsong}
+          src={this.state.src}
+          pastSongs={this.state.history}
+          radio={this.state.radio}
+          radios={this.props.radios}
+          favBus={this.props.favBus}
+          playBus={this.props.playBus}
+        /> :
+        "";
 
     var player = this.state.playerOnBottom ? (
       <Player

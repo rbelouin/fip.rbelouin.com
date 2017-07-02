@@ -1,5 +1,4 @@
 import _ from "lodash";
-import Bacon from "baconjs";
 
 export function watchBrowseEvents(Storage, uuid, intl, w, p_route) {
   return p_route.map(function() {
@@ -30,10 +29,10 @@ export function sendEvent(send, url, ev) {
   };
 
   const p_res = send(req);
-  p_res.onError(error => console.error(error));
+  p_res.onError(error => console.error(error)); //eslint-disable-line no-console
 }
 
 export default (Storage, Http, uuid, intl, w) => ({
   watchBrowseEvents: _.partial(watchBrowseEvents, Storage, uuid, intl, w),
   sendEvent: _.partial(sendEvent, Http.send)
-})
+});

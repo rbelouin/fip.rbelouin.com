@@ -24,10 +24,12 @@
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
     "common-env": "^5.2.0",
+    "eslint": "^4.1.1",
+    "eslint-loader": "^1.8.0",
+    "eslint-plugin-react": "^7.1.0",
     "express": "^4.13.3",
     "glob": "^7.1.2",
     "gulp": "^3.9.0",
-    "gulp-eslint": "^1.1.1",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
     "tap-webpack-plugin": "^2.0.0",
@@ -38,12 +40,15 @@
   "dependencies": {
     "bacon-routes": "^1.0.0",
     "baconjs": "^0.7.74",
+    "create-react-class": "^15.6.0",
     "font-awesome": "^4.4.0",
-    "intl": "^1.0.0",
+    "intl": "^1.2.5",
     "lodash": "^3.10.1",
     "promise": "^7.1.1",
-    "react": "^0.13.3",
-    "react-intl": "^1.2.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-intl": "^2.3.0",
     "uuid": "^2.0.1",
     "whatwg-fetch": "^0.10.1"
   },
@@ -64,23 +69,6 @@
     "ignore": [
       "node_modules"
     ]
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
-  },
-  "eslintConfig": {
-    "ecmaFeatures": {
-      "arrowFunctions": true,
-      "blockBindings": true,
-      "destructuring": true,
-      "jsx": true,
-      "objectLiteralShorthandMethods": true,
-      "objectLiteralShorthandProperties": true,
-      "modules": true,
-      "templateStrings": true
-    }
   },
   "common_env": {
     "api": {

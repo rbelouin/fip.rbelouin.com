@@ -1,13 +1,18 @@
-var _ = require("lodash");
-var React = require("react");
-var Bacon = require("baconjs");
+import _ from "lodash";
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin} from "react-intl";
+import {object} from "prop-types";
 
-var IntlMixin = require("react-intl").IntlMixin;
+import FavoriteButton from "./favorite-button.jsx";
+import SpotifyButton from "./spotify-button.jsx";
 
-var FavoriteButton = require("./favorite-button.jsx");
-var SpotifyButton = require("./spotify-button.jsx");
-
-var Controls = module.exports = React.createClass({
+export const Controls = createReactClass({
+  displayName: "Controls",
+  propTypes: {
+    favBus: object.isRequired,
+    song: object.isRequired
+  },
   mixins: [IntlMixin],
   toggleFavorite: function(song) {
     this.props.favBus.push({

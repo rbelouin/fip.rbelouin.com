@@ -1,12 +1,23 @@
 import React from "react";
-import ReactIntl from "react-intl";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {array, bool, object, string} from "prop-types";
 
 import A from "./link.jsx";
 import Player from "./nav-player.jsx";
 
-const IntlMixin = ReactIntl.IntlMixin;
-
-export default React.createClass({
+export default createReactClass({
+  displayName: "AppNav",
+  propTypes: {
+    route: string.isRequired,
+    radio: string.isRequired,
+    radios: array.isRequired,
+    src: string,
+    nowPlaying: object.isRequired,
+    paneIsOpen: bool.isRequired,
+    playBus: object.isRequired,
+    playerOnBottom: bool.isRequired
+  },
   mixins: [IntlMixin],
   isActive: function(route) {
     return this.props.route === route ? "active" : "";
@@ -22,16 +33,17 @@ export default React.createClass({
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     const player = !this.props.playerOnBottom ? (
-      <Player src={src} nowPlaying={nowPlaying} playBus={playBus} radio={this.props.radio} />
+      <Player src={src} nowPlaying={nowPlaying} playBus={playBus} radio={this.props.radio} onBottom={false} />
     ) : "";
 
     const radios = this.props.radios.map(radio => {
       const href = `/radios/${radio.name}`;
-      const name = this.getIntlMessage(radio.name);
 
       return (
-        <li className={this.isRadioActive(radio.name)}>
-          <A href={href}>{name}</A>
+        <li key={href} className={this.isRadioActive(radio.name)}>
+          <A href={href}>
+            <FormattedMessage id={radio.name} />
+          </A>
         </li>
       );
     });
@@ -40,13 +52,17 @@ export default React.createClass({
       <nav className={"app-nav " + navClass}>
         <ul>
           <li className={"app-nav-group " + this.isActive("radio")}>
-            <div>{this.getIntlMessage("radios")}</div>
+            <div>
+              <FormattedMessage id="radios" />
+            </div>
             <ul>
               {radios}
             </ul>
           </li>
           <li className={this.isActive("favorites")}>
-            <A href="/users/me/songs">{this.getIntlMessage("favorites")}</A>
+            <A href="/users/me/songs">
+              <FormattedMessage id="favorites" />
+            </A>
           </li>
         </ul>
         {player}

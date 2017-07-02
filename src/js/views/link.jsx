@@ -1,7 +1,14 @@
-var React = require("react");
-var Bacon = require("baconjs");
+import React from "react";
+import createReactClass from "create-react-class";
+import Bacon from "baconjs";
+import {element, string} from "prop-types";
 
-var link = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "A",
+  propTypes: {
+    href: string.isRequired,
+    children: element.isRequired
+  },
   onClick: function(e) {
     e.preventDefault();
     Bacon.history.pushState(null, null, this.props.href);

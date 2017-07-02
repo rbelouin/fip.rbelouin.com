@@ -21,7 +21,7 @@ export function sync(storage, name) {
 }
 
 export default (localStorage) => ({
-  get: _.partial(get, localStorage),
-  set: _.partial(set, localStorage),
-  sync: _.partial(sync, localStorage)
-})
+  get: _.partial(get, localStorage),
+  set: _.partial(set, localStorage),
+  sync: _.partial(sync, localStorage)
+});
