@@ -33,14 +33,12 @@
     "favicons-webpack-plugin": "0.0.7",
     "file-loader": "^0.11.2",
     "glob": "^7.1.2",
-    "gulp": "^3.9.0",
     "html-webpack-plugin": "^2.29.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
     "lodash": "^3.10.1",
     "tap-webpack-plugin": "^2.0.0",
     "tape": "^4.2.1",
-    "vinyl-source-stream": "^1.1.0",
     "webpack": "^2.6.1"
   },
   "dependencies": {
@@ -59,8 +57,8 @@
     "whatwg-fetch": "^0.10.1"
   },
   "scripts": {
-    "build": "gulp build && webpack",
-    "install": "gulp build && webpack",
+    "build": "webpack",
+    "install": "webpack",
     "start": "node ./prod/js/server.js",
     "test": "webpack",
     "watch": "webpack --watch"
