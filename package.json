@@ -23,7 +23,6 @@
     "babel-preset-es2015": "^6.1.2",
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
-    "common-env": "^5.2.0",
     "css-loader": "^0.28.4",
     "eslint": "^4.1.1",
     "eslint-loader": "^1.8.0",
@@ -73,60 +72,5 @@
     "ignore": [
       "node_modules"
     ]
-  },
-  "common_env": {
-    "api": {
-      "http_host": "http://fip.rbelouin.com/api",
-      "ws_host": "ws://fip.rbelouin.com/api/ws"
-    },
-    "stats-api": {
-      "http_host": "https://fip-stats.cleverapps.io/api"
-    },
-    "default_language": "en",
-    "port": 8080,
-    "radios": [
-      {
-        "name": "fip-radio",
-        "src": "http://direct.fipradio.fr/live/fip-midfi.mp3"
-      },
-      {
-        "name": "fip-autour-du-rock",
-        "src": "http://direct.fipradio.fr/live/fip-webradio1.mp3"
-      },
-      {
-        "name": "fip-autour-du-jazz",
-        "src": "http://direct.fipradio.fr/live/fip-webradio2.mp3"
-      },
-      {
-        "name": "fip-autour-du-groove",
-        "src": "http://direct.fipradio.fr/live/fip-webradio3.mp3"
-      },
-      {
-        "name": "fip-autour-du-monde",
-        "src": "http://direct.fipradio.fr/live/fip-webradio4.mp3"
-      },
-      {
-        "name": "tout-nouveau-tout-fip",
-        "src": "http://direct.fipradio.fr/live/fip-webradio5.mp3"
-      },
-      {
-        "name": "fip-il-y-45-ans",
-        "src": "http://direct.fipradio.fr/live/fip-webradio6.mp3"
-      }
-    ],
-    "routes": {
-      "favorites": "/users/me/songs",
-      "radio": "/radios/:radio",
-      "home": "/"
-    },
-    "spotify": {
-      "api_host": "https://api.spotify.com/v1"
-    },
-    "storage": {
-      "keys": {
-        "favorites": "favorites",
-        "token": "token"
-      }
-    }
   }
 }
