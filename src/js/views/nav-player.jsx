@@ -1,12 +1,19 @@
 import React from "react";
-import ReactIntl from "react-intl";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {bool, object, string} from "prop-types";
 
 import Audio from "./audio.jsx";
 
-const IntlMixin = ReactIntl.IntlMixin;
-const FormattedMessage = ReactIntl.FormattedMessage;
-
-export default React.createClass({
+export default createReactClass({
+  displayName: "NavPlayer",
+  propTypes: {
+    playBus: object.isRequired,
+    src: string,
+    radio: string.isRequired,
+    nowPlaying: object.isRequired,
+    onBottom: bool.isRequired
+  },
   mixins: [IntlMixin],
   getInitialState: function() {
     return {
@@ -17,7 +24,7 @@ export default React.createClass({
     const volume = parseInt(ev.target.value);
     this.setState({volume});
   },
-  onPlay: function(ev) {
+  onPlay: function() {
     this.props.playBus.push(this.props.src ? {
       type: "stop"
     } : {
@@ -25,7 +32,7 @@ export default React.createClass({
       radio: this.props.radio
     });
   },
-  onMute: function(ev) {
+  onMute: function() {
     const volume = this.state.volume ? 0 : 50;
     this.setState({volume});
   },
@@ -34,21 +41,20 @@ export default React.createClass({
     const nowPlaying = this.props.nowPlaying;
     const volume = this.state.volume;
 
-    const icon =  volume === 0  ? "off" :
-                  volume < 50   ? "down" :
-                                  "up";
+    const icon =  volume === 0 ? "off" :
+      volume < 50 ? "down" : "up";
 
     const audio = src ? (
       <Audio type="audio/mpeg" src={src} volume={volume/100}></Audio>
     ) : "";
 
     const display = nowPlaying.type === "song" ?
-                      <SongDisplay song={nowPlaying.song} /> :
-                    nowPlaying.type === "loading" ?
-                      <LoadingDisplay /> :
-                    nowPlaying.type === "spotify" ?
-                      <SpotifyDisplay songId={nowPlaying.song.spotifyId} /> :
-                      <UnknownDisplay />;
+      <SongDisplay song={nowPlaying.song} /> :
+      nowPlaying.type === "loading" ?
+        <LoadingDisplay /> :
+        nowPlaying.type === "spotify" ?
+          <SpotifyDisplay songId={nowPlaying.song.spotifyId} /> :
+          <UnknownDisplay />;
 
     const controls = nowPlaying.type != "spotify" ? (
       <div className="nav-player-controls">
@@ -78,7 +84,10 @@ export default React.createClass({
   }
 });
 
-export const SongDisplay = React.createClass({
+export const SongDisplay = createReactClass({
+  propTypes: {
+    song: object.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     const song = this.props.song;
@@ -95,18 +104,18 @@ export const SongDisplay = React.createClass({
   }
 });
 
-export const LoadingDisplay = React.createClass({
+export const LoadingDisplay = createReactClass({
   mixins: [IntlMixin],
   render: function() {
     return (
       <div className="nav-player-display nav-player-display-loading">
-        <FormattedMessage message={this.getIntlMessage("loading")} />
+        <FormattedMessage id="loading" />
       </div>
     );
   }
 });
 
-export const UnknownDisplay = React.createClass({
+export const UnknownDisplay = createReactClass({
   mixins: [IntlMixin],
   render: function() {
     return (
@@ -116,7 +125,7 @@ export const UnknownDisplay = React.createClass({
         </div>
         <div className="nav-player-info">
           <div className="nav-player-title">
-            <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+            <FormattedMessage id="title-not-available" />
           </div>
           <div className="nav-player-artist">&nbsp;</div>
         </div>
@@ -125,7 +134,10 @@ export const UnknownDisplay = React.createClass({
   }
 });
 
-export const SpotifyDisplay = React.createClass({
+export const SpotifyDisplay = createReactClass({
+  propTypes: {
+    songId: string.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     const songId = this.props.songId;
@@ -133,7 +145,7 @@ export const SpotifyDisplay = React.createClass({
 
     return (
       <div className="nav-player-display nav-player-display-spotify">
-        <iframe src={url} width="210" height="80" frameborder="0" allowtransparency="true"></iframe>
+        <iframe src={url} width="210" height="80" frameBorder={0} allowTransparency={true}></iframe>
       </div>
     );
   }

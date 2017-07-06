@@ -1,9 +1,12 @@
-var React = require("react");
-var ReactIntl = require("react-intl");
-var IntlMixin = ReactIntl.IntlMixin;
-var FormattedMessage = ReactIntl.FormattedMessage;
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {object} from "prop-types";
 
-var SongDetails = React.createClass({
+export const SongDetails = createReactClass({
+  propTypes: {
+    song: object.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
@@ -11,25 +14,32 @@ var SongDetails = React.createClass({
     return song.label ? (
       <div className="fipradio-nowplaying-details">
         <FormattedMessage
-          message={this.getIntlMessage("song-details")}
-          album={<span className="song-album">{song.album}</span>}
-          year={<span className="song-year">{song.year}</span>}
-          label={<span className="song-label">{song.label}</span>}
+          id="song-details"
+          values={{
+            album: <span className="song-album">{song.album}</span>,
+            year: <span className="song-year">{song.year}</span>,
+            label: <span className="song-label">{song.label}</span>
+          }}
         />
       </div>
     ) : (
       <div className="fipradio-nowplaying-details">
         <FormattedMessage
-          message={this.getIntlMessage("song-details-no-label")}
-          album={<span className="song-album">{song.album}</span>}
-          year={<span className="song-year">{song.year}</span>}
+          id="song-details-no-label"
+          values={{
+            album: <span className="song-album">{song.album}</span>,
+            year: <span className="song-year">{song.year}</span>
+          }}
         />
       </div>
     );
   }
 });
 
-var Song = module.exports = React.createClass({
+const Song = createReactClass({
+  propTypes: {
+    song: object.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
@@ -48,18 +58,18 @@ var Song = module.exports = React.createClass({
   }
 });
 
-Song.loading = React.createClass({
+Song.loading = createReactClass({
   mixins: [IntlMixin],
   render: function() {
     return (
       <div className="song">
-        <FormattedMessage message={this.getIntlMessage("loading")} />
+        <FormattedMessage id="loading" />
       </div>
     );
   }
 });
 
-Song.unknown = React.createClass({
+Song.unknown = createReactClass({
   mixins: [IntlMixin],
   render: function() {
     return (
@@ -69,10 +79,12 @@ Song.unknown = React.createClass({
         </div>
         <div className="song-info">
           <div className="song-title">
-            <FormattedMessage message={this.getIntlMessage("title-not-available")} />
+            <FormattedMessage id="title-not-available" />
           </div>
         </div>
       </div>
     );
   }
 });
+
+export default Song;

@@ -17,62 +17,58 @@
     "node": 6
   },
   "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
     "babel-plugin-transform-react-jsx": "^6.0.18",
     "babel-preset-es2015": "^6.1.2",
-    "babelify": "^7.2.0",
     "baconjs": "^0.7.74",
     "bootstrap": "^3.3.5",
-    "browserify": "^11.2.0",
     "common-env": "^5.2.0",
+    "eslint": "^4.1.1",
+    "eslint-loader": "^1.8.0",
+    "eslint-plugin-react": "^7.1.0",
     "express": "^4.13.3",
+    "glob": "^7.1.2",
     "gulp": "^3.9.0",
-    "gulp-eslint": "^1.1.1",
     "gulp-less": "^3.0.3",
     "lodash": "^3.10.1",
-    "tap-difflet": "^0.4.0",
+    "tap-webpack-plugin": "^2.0.0",
     "tape": "^4.2.1",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^3.0.0"
   },
   "dependencies": {
     "bacon-routes": "^1.0.0",
     "baconjs": "^0.7.74",
+    "create-react-class": "^15.6.0",
     "font-awesome": "^4.4.0",
-    "intl": "^1.0.0",
+    "intl": "^1.2.5",
     "lodash": "^3.10.1",
     "promise": "^7.1.1",
-    "react": "^0.13.3",
-    "react-intl": "^1.2.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-intl": "^2.3.0",
     "uuid": "^2.0.1",
     "whatwg-fetch": "^0.10.1"
   },
   "scripts": {
-    "build": "gulp build",
-    "install": "gulp build",
+    "build": "gulp build && webpack",
+    "install": "gulp build && webpack",
     "start": "node ./prod/js/server.js",
-    "test": "browserify test/js/**/*.spec.* | node | tap-difflet",
-    "watch": "gulp watch"
+    "test": "webpack",
+    "watch": "webpack --watch"
   },
   "babel": {
-    "plugins": ["transform-react-jsx"],
-    "presets": ["es2015"],
-    "ignore": ["node_modules"]
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
+    "plugins": [
+      "transform-react-jsx"
+    ],
+    "presets": [
+      "es2015"
+    ],
+    "ignore": [
+      "node_modules"
     ]
-  },
-  "eslintConfig": {
-    "ecmaFeatures": {
-      "arrowFunctions": true,
-      "blockBindings": true,
-      "destructuring": true,
-      "jsx": true,
-      "objectLiteralShorthandMethods": true,
-      "objectLiteralShorthandProperties": true,
-      "modules": true,
-      "templateStrings": true
-    }
   },
   "common_env": {
     "api": {
@@ -84,32 +80,40 @@
     },
     "default_language": "en",
     "port": 8080,
-    "radios": [{
-      "name": "fip-radio",
-      "src": "http://direct.fipradio.fr/live/fip-midfi.mp3"
-    }, {
-      "name": "fip-autour-du-rock",
-      "src": "http://direct.fipradio.fr/live/fip-webradio1.mp3"
-    }, {
-      "name": "fip-autour-du-jazz",
-      "src": "http://direct.fipradio.fr/live/fip-webradio2.mp3"
-    }, {
-      "name": "fip-autour-du-groove",
-      "src": "http://direct.fipradio.fr/live/fip-webradio3.mp3"
-    }, {
-      "name": "fip-autour-du-monde",
-      "src": "http://direct.fipradio.fr/live/fip-webradio4.mp3"
-    }, {
-      "name": "tout-nouveau-tout-fip",
-      "src": "http://direct.fipradio.fr/live/fip-webradio5.mp3"
-    }, {
-      "name": "fip-il-y-45-ans",
-      "src": "http://direct.fipradio.fr/live/fip-webradio6.mp3"
-    }],
+    "radios": [
+      {
+        "name": "fip-radio",
+        "src": "http://direct.fipradio.fr/live/fip-midfi.mp3"
+      },
+      {
+        "name": "fip-autour-du-rock",
+        "src": "http://direct.fipradio.fr/live/fip-webradio1.mp3"
+      },
+      {
+        "name": "fip-autour-du-jazz",
+        "src": "http://direct.fipradio.fr/live/fip-webradio2.mp3"
+      },
+      {
+        "name": "fip-autour-du-groove",
+        "src": "http://direct.fipradio.fr/live/fip-webradio3.mp3"
+      },
+      {
+        "name": "fip-autour-du-monde",
+        "src": "http://direct.fipradio.fr/live/fip-webradio4.mp3"
+      },
+      {
+        "name": "tout-nouveau-tout-fip",
+        "src": "http://direct.fipradio.fr/live/fip-webradio5.mp3"
+      },
+      {
+        "name": "fip-il-y-45-ans",
+        "src": "http://direct.fipradio.fr/live/fip-webradio6.mp3"
+      }
+    ],
     "routes": {
-      "favorites":  "/users/me/songs",
-      "radio":      "/radios/:radio",
-      "home":       "/"
+      "favorites": "/users/me/songs",
+      "radio": "/radios/:radio",
+      "home": "/"
     },
     "spotify": {
       "api_host": "https://api.spotify.com/v1"

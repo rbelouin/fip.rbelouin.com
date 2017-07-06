@@ -1,17 +1,24 @@
 import React from "react";
-import ReactIntl from "react-intl";
+import createReactClass from "create-react-class";
+import {findDOMNode} from "react-dom";
+import {IntlMixin} from "react-intl";
+import {number, string} from "prop-types";
 
-const IntlMixin = ReactIntl.IntlMixin;
-
-export default React.createClass({
+export default createReactClass({
+  displayName: "Audio",
+  propTypes: {
+    src: string.isRequired,
+    type: string.isRequired,
+    volume: number.isRequired
+  },
   mixins: [IntlMixin],
   componentDidMount: function() {
-    const audio = React.findDOMNode(this);
+    const audio = findDOMNode(this);
     audio.volume = this.props.volume;
     audio.play();
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    const audio = React.findDOMNode(this);
+  shouldComponentUpdate: function(nextProps) {
+    const audio = findDOMNode(this);
     audio.volume = nextProps.volume;
 
     if(this.props.src != nextProps.src) {

@@ -58,4 +58,4 @@ export default radios => ({
   getSongHistory: getSongHistory,
   getSongBeingPlayed: getSongBeingPlayed,
   getCurrentSource: _.partial(getCurrentSource, radios)
-})
+});

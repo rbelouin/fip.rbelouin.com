@@ -1,9 +1,13 @@
-var _ = require("lodash");
-var intl = module.exports;
+import _ from "lodash";
+import frMessages from "./messages/fr-FR.json";
+import enMessages from "./messages/en-US.json";
+
+const intl = {};
+export default intl;
 
 intl.langs = {};
-intl.langs.fr = require("./messages/fr-FR.json");
-intl.langs.en = require("./messages/en-US.json");
+intl.langs.fr = frMessages;
+intl.langs.en = enMessages;
 
 intl.languages = typeof navigator != "undefined" && navigator.languages || ["en-US", "en"];
 

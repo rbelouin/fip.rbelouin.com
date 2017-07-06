@@ -1,5 +1,4 @@
-var {start} = require("../../src/js/index.jsx");
-
-var config = require("./config.json");
+import {start} from "../../src/js/index.jsx";
+import config from "./config.json";
 
 start(config);

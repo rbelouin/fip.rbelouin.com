@@ -1,10 +1,14 @@
-var _ = require("lodash");
-var React = require("react");
-var Bacon = require("baconjs");
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {bool, func} from "prop-types";
 
-var IntlMixin = require("react-intl").IntlMixin;
-
-var FavoriteButton = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "FavoriteButton",
+  propTypes: {
+    favorite: bool.isRequired,
+    onClick: func.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     var favorite = this.props.favorite;
@@ -17,7 +21,7 @@ var FavoriteButton = module.exports = React.createClass({
         className={"player-controls-favorite" + className}
       >
         <span className="player-controls-favorite-icon glyphicon glyphicon-heart"></span>
-        {this.getIntlMessage((favorite ? "added" : "add") + "-to-favorites")}
+        <FormattedMessage id={(favorite ? "added" : "add") + "-to-favorites"} />
       </button>
     );
   }

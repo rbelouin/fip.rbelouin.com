@@ -4,7 +4,7 @@ import Bacon from "baconjs";
 export function getPrint(SongController, p_token) {
   return p_token.flatMapLatest(token => {
     return !token ? Bacon.once(null) :
-                    SongController.getSpotifyPrint(token);
+      SongController.getSpotifyPrint(token);
   }).toProperty();
 }
 
@@ -33,18 +33,18 @@ export function getRadioState(SongController, p_favSongs, p_radioSongs) {
   const p_pastSongs = p_songs.map(_.tail);
 
   const p_nowPlaying = p_songs
-    .map(songs => _.isEmpty(songs) ? {type: "loading"} : _.head(songs))
+    .map(songs => _.isEmpty(songs) ? {type: "loading"} : _.head(songs))
     .flatMapError(data => {
       const code = data && data.error && data.error.code;
 
-      return Bacon.once(code === 100 ? {
+      return Bacon.once(code === 100 ? {
         type: "unknown"
-      } : new Bacon.Error(data.error));
+      } : new Bacon.Error(data.error));
     })
     .toProperty();
 
   return {
-    nowPlaying: p_nowPlaying,
+    nowPlaying: p_nowPlaying,
     pastSongs: p_pastSongs
   };
 }
@@ -130,4 +130,4 @@ export function getState(TokenController, SongController, RouteController, PlayC
 
 export default (TokenController, SongController, RouteController, PlayController, EventController, UIController) => ({
   getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController)
-})
+});

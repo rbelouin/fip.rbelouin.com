@@ -30,4 +30,4 @@ export function fetchFipRadios(connectForever, url, radios) {
 export default (WebSocket) => ({
   fetchFipSongs: _.partial(fetchFipSongs, WebSocket.connectForever),
   fetchFipRadios: _.partial(fetchFipRadios, WebSocket.connectForever)
-})
+});

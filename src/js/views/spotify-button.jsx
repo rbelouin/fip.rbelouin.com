@@ -1,7 +1,13 @@
-var React = require("react");
-var IntlMixin = require("react-intl").IntlMixin;
+import React from "react";
+import createReactClass from "create-react-class";
+import {IntlMixin, FormattedMessage} from "react-intl";
+import {object} from "prop-types";
 
-var SpotifyButton = module.exports = React.createClass({
+export default createReactClass({
+  displayName: "SpotifyButton",
+  propTypes: {
+    song: object.isRequired
+  },
   mixins: [IntlMixin],
   render: function() {
     return (
@@ -11,7 +17,7 @@ var SpotifyButton = module.exports = React.createClass({
         className="player-controls-spotify"
       >
         <span className="player-controls-spotify-icon fa fa-spotify"></span>
-        {this.getIntlMessage("open-in-spotify")}
+        <FormattedMessage id="open-in-spotify" />
       </a>
     );
   }

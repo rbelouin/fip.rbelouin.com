@@ -21,7 +21,7 @@ export function connect(WS, url) {
     };
 
     socket.onclose = function() {
-      sink(new Bacon.End())
+      sink(new Bacon.End());
     };
 
     return function() {
@@ -40,6 +40,6 @@ export function connectForever(WS, url) {
 }
 
 export default (WebSocket) => ({
-  connect: _.partial(connect, WebSocket),
+  connect: _.partial(connect, WebSocket),
   connectForever: _.partial(connectForever, WebSocket)
-})
+});

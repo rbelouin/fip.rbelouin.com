@@ -23,7 +23,7 @@ export function getPaneStatus(win, p_loaded) {
     );
   });
 
-  return s_click.doAction(".preventDefault").scan(false, (acc, elem) => {
+  return s_click.doAction(".preventDefault").scan(false, (acc) => {
     return !acc;
   });
 }
@@ -39,7 +39,7 @@ export function getPlayerPosition() {
 
     return () => mediaQuery.removeListener(sink);
   })
-  .map(".matches");
+    .map(".matches");
 }
 
 export default (win) => ({
@@ -47,4 +47,4 @@ export default (win) => ({
   getLoadProperty: _.partial(getLoadProperty, win),
   getPaneStatus: _.partial(getPaneStatus, win),
   getPlayerPosition
-})
+});
