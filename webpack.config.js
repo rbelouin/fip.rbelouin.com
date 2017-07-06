@@ -1,15 +1,20 @@
 const glob = require("glob");
 const path = require("path");
+
 const TapWebpackPlugin = require("tap-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
 
 module.exports = [{
   entry: [
     "./node_modules/whatwg-fetch/fetch.js",
-    "./prod/js/index.js"
+    "./prod/js/index.js",
+    "./src/less/all.less",
   ],
   output: {
-    path: path.resolve("./prod/public/js/"),
-    filename: "bundle.js"
+    path: path.resolve("./prod/public/"),
+    publicPath: "/",
+    filename: "js/bundle.js"
   },
   module: {
     rules: [{
@@ -19,46 +24,39 @@ module.exports = [{
         "babel-loader",
         "eslint-loader"
       ]
-    }]
-  }
-},{
-  entry: "./src/less/all.less",
-  output: {
-    path: path.resolve("./prod/public/js/"),
-    filename: "style.bundle.js"
-  },
-  module: {
-    rules: [{
+    },{
       test: /\.less$/,
-      use: [{
-        loader: "file-loader",
-        query: {
-          outputPath: "../css/",
-          name: "[name].css"
-        }
-      },{
-        loader: "extract-loader"
-      },{
-        loader: "css-loader"
-      },{
-        loader: "less-loader",
-        options: {
-          paths: [
-            path.resolve("./node_modules/bootstrap/less/"),
-            path.resolve("./node_modules/font-awesome/less/")
-          ]
-        }
-      }]
+      use: ExtractTextWebpackPlugin.extract({
+        use: [{
+          loader: "css-loader"
+        },{
+          loader: "less-loader",
+          options: {
+            paths: [
+              path.resolve("./node_modules/bootstrap/less/"),
+              path.resolve("./node_modules/font-awesome/less/")
+            ]
+          }
+        }]
+      })
     },{
       test: /\.(eot|woff|woff2|ttf|svg)$/,
       use: [{
         loader: "file-loader",
         query: {
-          outputPath: "../fonts/"
+          outputPath: "fonts/"
         }
       }]
     }]
-  }
+  },
+  plugins: [
+    new ExtractTextWebpackPlugin("css/all.css"),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "./src/html/index.html",
+      inject: "head"
+    })
+  ]
 },{
   target: "node",
   entry: () => new Promise((resolve, reject) => {
