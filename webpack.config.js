@@ -4,6 +4,7 @@ const path = require("path");
 const TapWebpackPlugin = require("tap-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = [{
   entry: [
@@ -51,6 +52,10 @@ module.exports = [{
   },
   plugins: [
     new ExtractTextWebpackPlugin("css/all.css"),
+    new FaviconsWebpackPlugin({
+      logo: "./src/img/icon.png",
+      background: "#222222"
+    }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./src/html/index.html",
