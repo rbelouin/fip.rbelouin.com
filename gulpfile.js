@@ -39,8 +39,4 @@ gulp.task("less", function() {
     .pipe(gulp.dest("./prod/public/css"));
 });
 
-gulp.task("watch", ["build"], function() {
-  gulp.watch(["./src/less/**/*"], ["less"]);
-});
-
 gulp.task("build", ["configuration", "copy", "less"]);

@@ -57,7 +57,7 @@
     "install": "gulp build && webpack",
     "start": "node ./prod/js/server.js",
     "test": "webpack",
-    "watch": "gulp watch"
+    "watch": "webpack --watch"
   },
   "babel": {
     "plugins": [
