@@ -49,8 +49,9 @@ export function getRadioState(SongController, p_favSongs, p_radioSongs) {
   };
 }
 
-export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus) {
+export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus, autoplayRadio) {
   const p_cmds = p_radio
+    .merge(autoplayRadio ? Bacon.once(autoplayRadio) : Bacon.never())
     .toEventStream()
     .first()
     .map(radio => ({type: "radio", radio: radio}))
@@ -95,18 +96,18 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
 
   // Song being played
-  const p_psong = getSongBeingPlayed(PlayController, p_radios, p_radio, playBus);
+  const initialAutoplayRadio = AutoplayController.getAutoplayRadio();
+  const p_psong = getSongBeingPlayed(PlayController, p_radios, p_radio, playBus, initialAutoplayRadio);
 
   // Song history of the radio having the focus
   const p_history = PlayController.getSongHistory(routes.radio, p_radios);
 
-  const p_src = PlayController.getCurrentSource(playBus);
+  const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
 
   const p_loaded = UIController.getLoadProperty();
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
   const p_playerOnBottom = UIController.getPlayerPosition();
 
-  const initialAutoplayRadio = AutoplayController.getAutoplayRadio();
   const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
 
   // Check for the load event immediately
