@@ -106,7 +106,8 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
   const p_playerOnBottom = UIController.getPlayerPosition();
 
-  const p_autoplayRadio = autoplayBus.toProperty(AutoplayController.getAutoplayRadio());
+  const initialAutoplayRadio = AutoplayController.getAutoplayRadio();
+  const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
 
   // Check for the load event immediately
   p_loaded.onValue();
@@ -114,7 +115,7 @@ export function getState(TokenController, SongController, RouteController, PlayC
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
   saveAutoplayRadio(AutoplayController, autoplayBus);
 
-  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
+  RouteController.redirectRoute(routes, "home", `/radios/${initialAutoplayRadio || "fip-radio"}`);
   RouteController.redirectRoute(routes, "errors", "/");
 
   EventController.watchBrowseEvents(p_route).onValue(ev => {
