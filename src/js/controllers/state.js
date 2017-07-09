@@ -49,8 +49,9 @@ export function getRadioState(SongController, p_favSongs, p_radioSongs) {
   };
 }
 
-export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus) {
+export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus, autoplayRadio) {
   const p_cmds = p_radio
+    .merge(autoplayRadio ? Bacon.once(autoplayRadio) : Bacon.never())
     .toEventStream()
     .first()
     .map(radio => ({type: "radio", radio: radio}))
@@ -68,7 +69,11 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   }).onValue();
 }
 
-export function getState(TokenController, SongController, RouteController, PlayController, EventController, UIController, history, eventUrl, favBus, syncBus, playBus) {
+export function saveAutoplayRadio(AutoplayController, autoplayBus) {
+  autoplayBus.onValue(radio => AutoplayController.setAutoplayRadio(radio));
+}
+
+export function getState(TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController, history, eventUrl, favBus, syncBus, playBus, autoplayBus) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
@@ -91,23 +96,27 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
 
   // Song being played
-  const p_psong = getSongBeingPlayed(PlayController, p_radios, p_radio, playBus);
+  const initialAutoplayRadio = AutoplayController.getAutoplayRadio();
+  const p_psong = getSongBeingPlayed(PlayController, p_radios, p_radio, playBus, initialAutoplayRadio);
 
   // Song history of the radio having the focus
   const p_history = PlayController.getSongHistory(routes.radio, p_radios);
 
-  const p_src = PlayController.getCurrentSource(playBus);
+  const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
 
   const p_loaded = UIController.getLoadProperty();
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
   const p_playerOnBottom = UIController.getPlayerPosition();
 
+  const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
+
   // Check for the load event immediately
   p_loaded.onValue();
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
+  saveAutoplayRadio(AutoplayController, autoplayBus);
 
-  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
+  RouteController.redirectRoute(routes, "home", `/radios/${initialAutoplayRadio || "fip-radio"}`);
   RouteController.redirectRoute(routes, "errors", "/");
 
   EventController.watchBrowseEvents(p_route).onValue(ev => {
@@ -124,10 +133,11 @@ export function getState(TokenController, SongController, RouteController, PlayC
     src: p_src,
     history: p_history,
     paneIsOpen: p_paneIsOpen,
-    playerOnBottom: p_playerOnBottom
+    playerOnBottom: p_playerOnBottom,
+    autoplayRadio: p_autoplayRadio
   };
 }
 
-export default (TokenController, SongController, RouteController, PlayController, EventController, UIController) => ({
-  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController)
+export default (TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController) => ({
+  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController)
 });
