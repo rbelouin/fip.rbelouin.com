@@ -68,7 +68,11 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
   }).onValue();
 }
 
-export function getState(TokenController, SongController, RouteController, PlayController, EventController, UIController, history, eventUrl, favBus, syncBus, playBus) {
+export function saveAutoplayRadio(AutoplayController, autoplayBus) {
+  autoplayBus.onValue(radio => AutoplayController.setAutoplayRadio(radio));
+}
+
+export function getState(TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController, history, eventUrl, favBus, syncBus, playBus, autoplayBus) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
@@ -102,10 +106,13 @@ export function getState(TokenController, SongController, RouteController, PlayC
   const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
   const p_playerOnBottom = UIController.getPlayerPosition();
 
+  const p_autoplayRadio = autoplayBus.toProperty(AutoplayController.getAutoplayRadio());
+
   // Check for the load event immediately
   p_loaded.onValue();
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
+  saveAutoplayRadio(AutoplayController, autoplayBus);
 
   RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
   RouteController.redirectRoute(routes, "errors", "/");
@@ -124,10 +131,11 @@ export function getState(TokenController, SongController, RouteController, PlayC
     src: p_src,
     history: p_history,
     paneIsOpen: p_paneIsOpen,
-    playerOnBottom: p_playerOnBottom
+    playerOnBottom: p_playerOnBottom,
+    autoplayRadio: p_autoplayRadio
   };
 }
 
-export default (TokenController, SongController, RouteController, PlayController, EventController, UIController) => ({
-  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController)
+export default (TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController) => ({
+  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController)
 });

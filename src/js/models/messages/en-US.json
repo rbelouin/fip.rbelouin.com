@@ -33,6 +33,7 @@
     "fip-autour-du-groove": "About the Groove",
     "fip-autour-du-monde": "About the World Music",
     "tout-nouveau-tout-fip": "New releases",
-    "fip-il-y-45-ans": "45 years ago"
+    "fip-il-y-45-ans": "45 years ago",
+    "autoplay-radio": "Play {radio} automatically when opening the web application"
   }
 }

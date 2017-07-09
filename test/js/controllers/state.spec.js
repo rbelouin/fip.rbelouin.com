@@ -128,6 +128,16 @@ test("getState should return a valid state", function(t) {
     }
   };
 
+  const AutoplayController = {
+    autoplayRadio: "radioA",
+    getAutoplayRadio: function() {
+      return this.autoplayRadio;
+    },
+    setAutoplayRadio: function(radio) {
+      this.autoplayRadio = radio;
+    }
+  };
+
   const history = {
     pushState: function(){}
   };
@@ -137,6 +147,7 @@ test("getState should return a valid state", function(t) {
   const favBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
+  const autoplayBus = new Bacon.Bus();
 
   const state = getState(
     TokenController,
@@ -145,11 +156,13 @@ test("getState should return a valid state", function(t) {
     PlayController,
     EventController,
     UIController,
+    AutoplayController,
     history,
     eventUrl,
     favBus,
     syncBus,
-    playBus
+    playBus,
+    autoplayBus
   );
 
   const append = (acc, elem) => acc.concat([elem]);
@@ -164,6 +177,7 @@ test("getState should return a valid state", function(t) {
   const stateHistory = state.history.fold([], append);
   const statePaneIsOpen = state.paneIsOpen.fold([], append);
   const statePlayerOnBottom = state.playerOnBottom.fold([], append);
+  const stateAutoplayRadio = state.autoplayRadio.fold([], append);
 
   Bacon.combineAsArray([
     stateUser,
@@ -175,11 +189,12 @@ test("getState should return a valid state", function(t) {
     stateSrc,
     stateHistory,
     statePaneIsOpen,
-    statePlayerOnBottom
+    statePlayerOnBottom,
+    stateAutoplayRadio
   ]).subscribe(ev => {
     t.ok(ev.hasValue());
 
-    const [user, favSongs, route, radio, bsong, psong, src, history, paneIsOpen, playerOnBottom] = ev.value();
+    const [user, favSongs, route, radio, bsong, psong, src, history, paneIsOpen, playerOnBottom, autoplayRadio] = ev.value();
 
     t.deepEqual(user, [{
       id: "userId"
@@ -238,6 +253,11 @@ test("getState should return a valid state", function(t) {
 
     t.deepEqual(playerOnBottom, [false]);
 
+    t.deepEqual(autoplayRadio, [
+      "radioA",
+      "radioB"
+    ]);
+
     t.end();
     return Bacon.noMore;
   });
@@ -288,6 +308,8 @@ test("getState should return a valid state", function(t) {
     song: {id: "1", spotifyId: "1"}
   });
 
+  autoplayBus.push("radioB");
+
   radios.radioA.end();
   radios.radioB.end();
 
@@ -298,4 +320,5 @@ test("getState should return a valid state", function(t) {
   favBus.end();
   syncBus.end();
   playBus.end();
+  autoplayBus.end();
 });

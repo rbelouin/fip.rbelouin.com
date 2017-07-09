@@ -25,6 +25,7 @@ import getPlayController from "./controllers/play.js";
 import getEventController from "./controllers/event.js";
 import getRouteController from "./controllers/route.js";
 import getUIController from "./controllers/ui.js";
+import getAutoplayController from "./controllers/autoplay.js";
 import getStateController from "./controllers/state.js";
 
 import App from "./views/app.jsx";
@@ -36,6 +37,7 @@ export function start(conf) {
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
+  const autoplayBus = new Bacon.Bus();
 
   const intl = Intl.getIntlData(conf.DefaultLanguage);
 
@@ -53,6 +55,7 @@ export function start(conf) {
   const EventController = getEventController(Storage, Http, uuid, intl, window);
   const RouteController = getRouteController(Bacon, conf.routes);
   const UIController = getUIController(window);
+  const AutoplayController = getAutoplayController(Storage);
 
   /* Use all the controllers to build a state we will forward to the App component */
   const StateController = getStateController(
@@ -61,10 +64,11 @@ export function start(conf) {
     RouteController,
     PlayController,
     EventController,
-    UIController
+    UIController,
+    AutoplayController
   );
 
-  const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus);
+  const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus, autoplayBus);
 
   UIController.getLoadEvent().onValue(function() {
     render(
@@ -76,6 +80,7 @@ export function start(conf) {
           favBus={favBus}
           volBus={volBus}
           playBus={playBus}
+          autoplayBus={autoplayBus}
         />
       </IntlProvider>,
       document.querySelector("#app")

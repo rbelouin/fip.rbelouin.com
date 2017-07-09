@@ -13,8 +13,10 @@ export default createReactClass({
     src: string,
     radios: array.isRequired,
     radio: string.isRequired,
+    autoplayRadio: string,
     favBus: object.isRequired,
     playBus: object.isRequired,
+    autoplayBus: object.isRequired,
     pastSongs: array.isRequired,
     nowPlaying: object.isRequired
   },
@@ -32,6 +34,10 @@ export default createReactClass({
       radio: radio.name
     });
   },
+  onAutoplay: function(event) {
+    const autoplay = event.target.checked ? event.target.value : null;
+    this.props.autoplayBus.push(autoplay);
+  },
   onFavorite: function(song) {
     this.props.favBus.push({
       type: song.favorite ? "remove" : "add",
@@ -46,6 +52,7 @@ export default createReactClass({
     var playBus = this.props.playBus;
     var radios = this.props.radios;
     var radio = _.find(radios, r => r.name === this.props.radio, this);
+    var isChecked = this.props.radio === this.props.autoplayRadio;
     var isPlaying = radio && radio.src === src;
 
     var nowPlayingDisplay = nowPlaying.type === "song" ?
@@ -89,8 +96,32 @@ export default createReactClass({
       </div>
     ) : "";
 
+    const autoplay = (
+      <form className="form-horizontal">
+        <div className="form-group">
+          <div className="col-sm-12">
+            <div className="checkbox">
+              <label>
+                <input type="checkbox" name="autoplay" value={radio.name} onChange={this.onAutoplay} checked={isChecked} />
+                <FormattedMessage
+                  id="autoplay-radio"
+                  values={{
+                    radio: <em><FormattedMessage id={radio.name} /></em>
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
+
     return (
       <div className="fipradio">
+        {autoplay}
+
+        <hr/>
+
         <div>
           <FormattedMessage
             id="now-broadcasting"
