@@ -108,13 +108,6 @@ test("getState should return a valid state", function(t) {
     }
   };
 
-  // Build a partial EventController mock
-  const EventController = {
-    watchBrowseEvents: function() {
-      return Bacon.never();
-    }
-  };
-
   // Build a partial UIController mock
   const UIController = {
     getLoadProperty: function() {
@@ -142,8 +135,6 @@ test("getState should return a valid state", function(t) {
     pushState: function(){}
   };
 
-  const eventUrl = "eventUrl";
-
   const favBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
@@ -154,11 +145,9 @@ test("getState should return a valid state", function(t) {
     SongController,
     RouteController,
     PlayController,
-    EventController,
     UIController,
     AutoplayController,
     history,
-    eventUrl,
     favBus,
     syncBus,
     playBus,

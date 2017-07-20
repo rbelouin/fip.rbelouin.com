@@ -1,4 +1,3 @@
-import uuid from "uuid";
 import React from "react";
 import {render} from "react-dom";
 import {IntlProvider} from "react-intl";
@@ -22,7 +21,6 @@ import getFip from "./models/fip.js";
 import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
-import getEventController from "./controllers/event.js";
 import getRouteController from "./controllers/route.js";
 import getUIController from "./controllers/ui.js";
 import getAutoplayController from "./controllers/autoplay.js";
@@ -31,8 +29,6 @@ import getStateController from "./controllers/state.js";
 import App from "./views/app.jsx";
 
 export function start(conf) {
-  const eventUrl = conf["stats-api"].http_host + "/events";
-
   const volBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
@@ -52,7 +48,6 @@ export function start(conf) {
   const TokenController = getTokenController(Storage, Spotify, location);
   const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
   const PlayController = getPlayController(conf.radios);
-  const EventController = getEventController(Storage, Http, uuid, intl, window);
   const RouteController = getRouteController(Bacon, conf.routes);
   const UIController = getUIController(window);
   const AutoplayController = getAutoplayController(Storage);
@@ -63,12 +58,11 @@ export function start(conf) {
     SongController,
     RouteController,
     PlayController,
-    EventController,
     UIController,
     AutoplayController
   );
 
-  const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus, autoplayBus);
+  const state = StateController.getState(Bacon.history, favBus, syncBus, playBus, autoplayBus);
 
   state.route.onValue(function() {
     ga("set", "page", window.location.pathname);
