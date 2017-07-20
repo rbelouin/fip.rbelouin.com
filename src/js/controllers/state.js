@@ -73,7 +73,7 @@ export function saveAutoplayRadio(AutoplayController, autoplayBus) {
   autoplayBus.onValue(radio => AutoplayController.setAutoplayRadio(radio));
 }
 
-export function getState(TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController, history, eventUrl, favBus, syncBus, playBus, autoplayBus) {
+export function getState(TokenController, SongController, RouteController, PlayController, UIController, AutoplayController, history, favBus, syncBus, playBus, autoplayBus) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
   const p_user = p_print.map(print => print && print.user);
@@ -119,10 +119,6 @@ export function getState(TokenController, SongController, RouteController, PlayC
   RouteController.redirectRoute(routes, "home", `/radios/${initialAutoplayRadio || "fip-radio"}`);
   RouteController.redirectRoute(routes, "errors", "/");
 
-  EventController.watchBrowseEvents(p_route).onValue(ev => {
-    EventController.sendEvent(eventUrl, ev);
-  });
-
   return {
     user: p_user,
     favSongs: p_favSongs,
@@ -138,6 +134,6 @@ export function getState(TokenController, SongController, RouteController, PlayC
   };
 }
 
-export default (TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController) => ({
-  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, EventController, UIController, AutoplayController)
+export default (TokenController, SongController, RouteController, PlayController, UIController, AutoplayController) => ({
+  getState: _.partial(getState, TokenController, SongController, RouteController, PlayController, UIController, AutoplayController)
 });

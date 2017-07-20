@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
+const config = require("./prod/js/config.json");
+
 module.exports = [{
   entry: [
     "./node_modules/whatwg-fetch/fetch.js",
@@ -59,7 +61,8 @@ module.exports = [{
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./src/html/index.html",
-      inject: "head"
+      inject: "head",
+      trackingId: config.google_analytics.tracking_id
     })
   ]
 },{

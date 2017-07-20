@@ -3,6 +3,9 @@
     "http_host": "http://fip.rbelouin.com/api",
     "ws_host": "ws://fip.rbelouin.com/api/ws"
   },
+  "google_analytics": {
+    "tracking_id": "UA-102925848-1"
+  },
   "stats-api": {
     "http_host": "https://fip-stats.cleverapps.io/api"
   },
