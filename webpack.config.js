@@ -61,7 +61,7 @@ module.exports = [{
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./src/html/index.html",
-      inject: "head",
+      inject: "body",
       trackingId: config.google_analytics.tracking_id
     })
   ]

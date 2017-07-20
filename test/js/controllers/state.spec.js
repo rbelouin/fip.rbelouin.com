@@ -110,10 +110,7 @@ test("getState should return a valid state", function(t) {
 
   // Build a partial UIController mock
   const UIController = {
-    getLoadProperty: function() {
-      return Bacon.constant(true);
-    },
-    getPaneStatus: function(p_loaded) {
+    getPaneStatus: function() {
       return Bacon.constant(true);
     },
     getPlayerPosition: function() {
