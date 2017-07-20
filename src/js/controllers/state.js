@@ -104,14 +104,10 @@ export function getState(TokenController, SongController, RouteController, PlayC
 
   const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
 
-  const p_loaded = UIController.getLoadProperty();
-  const p_paneIsOpen = UIController.getPaneStatus(p_loaded);
+  const p_paneIsOpen = UIController.getPaneStatus();
   const p_playerOnBottom = UIController.getPlayerPosition();
 
   const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
-
-  // Check for the load event immediately
-  p_loaded.onValue();
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
   saveAutoplayRadio(AutoplayController, autoplayBus);

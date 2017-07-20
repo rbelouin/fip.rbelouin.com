@@ -1,27 +1,13 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-export function getLoadEvent(win) {
-  return Bacon.fromEvent(win, "load");
-}
-
-export function getLoadProperty(win) {
-  return getLoadEvent(win).map(true).toProperty(false);
-}
-
 // true => open
 // false => closed
-export function getPaneStatus(win, p_loaded) {
-  const s_load = p_loaded.toEventStream()
-    .skipWhile(loaded => !loaded)
-    .first();
-
-  const s_click = s_load.flatMapLatest(() => {
-    return Bacon.fromEvent(
-      win.document.querySelector(".navbar .navbar-brand a"),
-      "click"
-    );
-  });
+export function getPaneStatus(win) {
+  const s_click = Bacon.fromEvent(
+    win.document.querySelector(".navbar .navbar-brand a"),
+    "click"
+  );
 
   return s_click.doAction(".preventDefault").scan(false, (acc) => {
     return !acc;
@@ -43,8 +29,6 @@ export function getPlayerPosition() {
 }
 
 export default (win) => ({
-  getLoadEvent: _.partial(getLoadEvent, win),
-  getLoadProperty: _.partial(getLoadProperty, win),
   getPaneStatus: _.partial(getPaneStatus, win),
   getPlayerPosition
 });

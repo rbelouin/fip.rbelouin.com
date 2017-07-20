@@ -69,22 +69,20 @@ export function start(conf) {
     ga("send", "pageview");
   });
 
-  UIController.getLoadEvent().onValue(function() {
-    render(
-      <IntlProvider locale={intl.locales} messages={intl.messages}>
-        <App
-          radios={conf.radios}
-          state={state}
-          syncBus={syncBus}
-          favBus={favBus}
-          volBus={volBus}
-          playBus={playBus}
-          autoplayBus={autoplayBus}
-        />
-      </IntlProvider>,
-      document.querySelector("#app")
-    );
+  render(
+    <IntlProvider locale={intl.locales} messages={intl.messages}>
+      <App
+        radios={conf.radios}
+        state={state}
+        syncBus={syncBus}
+        favBus={favBus}
+        volBus={volBus}
+        playBus={playBus}
+        autoplayBus={autoplayBus}
+      />
+    </IntlProvider>,
+    document.querySelector("#app")
+  );
 
-    RouteController.browseTo(window.location.pathname + window.location.search);
-  });
+  RouteController.browseTo(window.location.pathname + window.location.search);
 }
