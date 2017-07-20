@@ -70,6 +70,11 @@ export function start(conf) {
 
   const state = StateController.getState(Bacon.history, eventUrl, favBus, syncBus, playBus, autoplayBus);
 
+  state.route.onValue(function() {
+    ga("set", "page", window.location.pathname);
+    ga("send", "pageview");
+  });
+
   UIController.getLoadEvent().onValue(function() {
     render(
       <IntlProvider locale={intl.locales} messages={intl.messages}>
