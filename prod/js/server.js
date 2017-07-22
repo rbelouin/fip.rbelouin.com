@@ -11,8 +11,10 @@ var app = express();
 var apiPrefix = "/api";
 
 app.use(function(req, res, next) {
+  var protocol = req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
+
   if(req.path.indexOf(apiPrefix) === 0) {
-    res.redirect(config.api.http_host + req.path.slice(apiPrefix.length) + "?" + qs.stringify(req.query));
+    res.redirect(protocol + "://" + config.api.http_host + req.path.slice(apiPrefix.length) + "?" + qs.stringify(req.query));
   }
   else {
     next();
