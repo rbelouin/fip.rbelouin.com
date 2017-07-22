@@ -7,14 +7,17 @@ import {
 } from "../../../src/js/models/websocket.js";
 
 test("WebSocket.connect should use the right URL", function(t) {
-  const url = "ws://localhost:8080";
+  const url = "localhost:8080";
+  const location = {
+    protocol: "https:"
+  };
 
   function FakeWebSocket(_url) {
-    t.equal(_url, url, "The URL should be the same");
+    t.equal(_url, "wss://" + url, "The URL should be the same");
     t.end();
   };
 
-  connect(FakeWebSocket, url).onValue();
+  connect(FakeWebSocket, location, url).onValue();
 });
 
 test("WebSocket.connect should forward all messages and errors", function(t) {

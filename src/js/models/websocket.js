@@ -1,9 +1,10 @@
 import _ from "lodash";
 import Bacon from "baconjs";
 
-export function connect(WS, url) {
+export function connect(WS, location, url) {
   return Bacon.fromBinder(function(sink) {
-    const socket = new WS(url);
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    const socket = new WS(protocol + "//" + url);
 
     socket.onmessage = function(message) {
       try {
@@ -30,16 +31,16 @@ export function connect(WS, url) {
   });
 }
 
-export function connectForever(WS, url) {
-  const s_connect = connect(WS, url);
+export function connectForever(WS, location, url) {
+  const s_connect = connect(WS, location, url);
   const s_end = s_connect.errors().skipErrors().mapEnd();
 
   return s_connect.merge(s_end.flatMapLatest(function() {
-    return connectForever(WS, url);
+    return connectForever(WS, location, url);
   }));
 }
 
-export default (WebSocket) => ({
-  connect: _.partial(connect, WebSocket),
-  connectForever: _.partial(connectForever, WebSocket)
+export default (WebSocket, location) => ({
+  connect: _.partial(connect, WebSocket, location),
+  connectForever: _.partial(connectForever, WebSocket, location)
 });

@@ -39,7 +39,7 @@ export function start(conf) {
 
   /* Bind the unsafe dependencies to the models */
   const Http = getHttp(fetch);
-  const WS = getWebSocket(WebSocket);
+  const WS = getWebSocket(WebSocket, location);
   const Storage = getStorage(localStorage);
   const Spotify = getSpotify(Http, location);
   const Fip = getFip(WS);
