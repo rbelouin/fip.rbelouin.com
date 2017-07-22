@@ -6,9 +6,6 @@
   "google_analytics": {
     "tracking_id": "UA-102925848-1"
   },
-  "stats-api": {
-    "http_host": "https://fip-stats.cleverapps.io/api"
-  },
   "default_language": "en",
   "port": 8080,
   "radios": [{
