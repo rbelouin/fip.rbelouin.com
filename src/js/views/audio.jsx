@@ -1,3 +1,5 @@
+/* eslint-disable react/no-find-dom-node */
+
 import React from "react";
 import createReactClass from "create-react-class";
 import {findDOMNode} from "react-dom";
