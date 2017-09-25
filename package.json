@@ -14,7 +14,7 @@
   "author": "Rodolphe Belouin <me@rbelouin.com>",
   "license": "MIT",
   "engines": {
-    "node": 6
+    "node": 8
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
