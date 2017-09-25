@@ -14,7 +14,7 @@
   "author": "Rodolphe Belouin <me@rbelouin.com>",
   "license": "MIT",
   "engines": {
-    "node": 6
+    "node": 8
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -60,7 +60,7 @@
     "install": "webpack",
     "start": "node ./prod/js/server.js",
     "test": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch --hide-modules --progress"
   },
   "babel": {
     "plugins": [
