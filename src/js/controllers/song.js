@@ -72,6 +72,10 @@ export function getFavoriteSongs(syncs) {
 }
 
 export function setFavoriteSongs(syncs, songs) {
+  if (typeof ga === "function") {
+    ga("send", "event", "favorites", "syncs", syncs.length > 1 ? "With Spotify" : "Without Spotify", songs.length);
+  }
+
   return Bacon.zipAsArray(_.map(syncs, sync => sync.set(songs)));
 }
 
