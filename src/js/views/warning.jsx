@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {element} from "prop-types";
 
 export const Warning = createReactClass({
@@ -19,7 +19,6 @@ export const Warning = createReactClass({
 
 export const NoAudioWarning = createReactClass({
   displayName: "NoAudioWarning",
-  mixins: [IntlMixin],
   render: function() {
     return (
       <Warning>
@@ -38,7 +37,6 @@ export const NoAudioWarning = createReactClass({
 
 export const NoMPEGWarning = createReactClass({
   displayName: "NoMPEGWarning",
-  mixins: [IntlMixin],
   render: function() {
     return (
       <Warning>

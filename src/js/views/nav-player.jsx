@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {bool, object, string} from "prop-types";
 
 import Audio from "./audio.jsx";
@@ -14,7 +14,6 @@ export default createReactClass({
     nowPlaying: object.isRequired,
     onBottom: bool.isRequired
   },
-  mixins: [IntlMixin],
   getInitialState: function() {
     return {
       volume: 50
@@ -88,7 +87,6 @@ export const SongDisplay = createReactClass({
   propTypes: {
     song: object.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     const song = this.props.song;
 
@@ -105,7 +103,6 @@ export const SongDisplay = createReactClass({
 });
 
 export const LoadingDisplay = createReactClass({
-  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="nav-player-display nav-player-display-loading">
@@ -116,7 +113,6 @@ export const LoadingDisplay = createReactClass({
 });
 
 export const UnknownDisplay = createReactClass({
-  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="nav-player-display nav-player-display-unknown">
@@ -138,7 +134,6 @@ export const SpotifyDisplay = createReactClass({
   propTypes: {
     songId: string.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     const songId = this.props.songId;
     const url = `https://embed.spotify.com/?uri=spotify:track:${songId}`;

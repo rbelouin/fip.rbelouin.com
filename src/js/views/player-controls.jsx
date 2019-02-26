@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin} from "react-intl";
 import {object} from "prop-types";
 
 import FavoriteButton from "./favorite-button.jsx";
@@ -13,7 +12,6 @@ export const Controls = createReactClass({
     favBus: object.isRequired,
     song: object.isRequired
   },
-  mixins: [IntlMixin],
   toggleFavorite: function(song) {
     this.props.favBus.push({
       type: song.favorite ? "remove" : "add",
