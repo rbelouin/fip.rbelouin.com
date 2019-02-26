@@ -16,7 +16,7 @@ export function redirectRoute(B, routes, src, dest) {
 }
 
 export function getCurrentRoute(routes) {
-  return _.foldl(routes, function(p_route, stream, name) {
+  return _.reduce(routes, function(p_route, stream, name) {
     return name === "errors" ? p_route : p_route.merge(stream.map(name));
   }, Bacon.never());
 }

@@ -117,10 +117,10 @@ export function getPlaylistTracks(send, token, userId, playlistId) {
   const s_tracks = fetchAndFollow(send, token, url);
 
   return s_tracks.fold([], function(tracks, res) {
-    return tracks.concat(_.pluck(res.items, "track").map(track => ({
+    return tracks.concat(_.map(res.items, "track").map(track => ({
       id: track.id,
       title: track.name,
-      artist: _.pluck(track.artists, "name").join("/"),
+      artist: _.map(track.artists, "name").join("/"),
       album: track.album.name,
       favorite: true,
       spotify: track.external_urls.spotify,
@@ -154,7 +154,7 @@ export function sync(send, token, userId, playlistId) {
       return getPlaylistTracks(send, token, userId, playlistId);
     },
     set: function(songs) {
-      return setPlaylistTracks(send, token, userId, playlistId, _(songs).pluck("spotifyId").compact().value());
+      return setPlaylistTracks(send, token, userId, playlistId, _(songs).map("spotifyId").compact().value());
     }
   };
 }

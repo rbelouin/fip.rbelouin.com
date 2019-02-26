@@ -13,7 +13,7 @@ intl.languages = typeof navigator != "undefined" && navigator.languages || ["en-
 
 intl.getIntlData = function() {
   return _.find(intl.langs, function(data, intlLang) {
-    return _.any(intl.languages, function(lang) {
+    return _.some(intl.languages, function(lang) {
       return lang.split("-")[0] === intlLang;
     });
   }) || intl.langs.en;
