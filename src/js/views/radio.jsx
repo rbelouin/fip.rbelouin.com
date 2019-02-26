@@ -80,7 +80,7 @@ export default createReactClass({
     ) : "";
 
     var spotify = nowPlaying.type === "song" && nowPlaying.song.spotify ? (
-      <a target="_blank" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
+      <a target="_blank" rel="noopener noreferrer" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
         <span className="fa fa-spotify"></span>
         <FormattedMessage
           id="open-in-spotify"

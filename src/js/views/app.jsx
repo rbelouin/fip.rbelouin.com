@@ -36,7 +36,7 @@ export default createReactClass({
       autoplayRadio: null
     };
   },
-  componentWillMount: function() {
+  componentDidMount: function() {
     _.each(this.props.state, function(stream, name) {
       stream.onValue(function(value) {
         const state = {};
