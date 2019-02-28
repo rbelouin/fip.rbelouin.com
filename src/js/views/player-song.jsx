@@ -1,13 +1,12 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {object} from "prop-types";
 
 export const SongDetails = createReactClass({
   propTypes: {
     song: object.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
 
@@ -40,7 +39,6 @@ const Song = createReactClass({
   propTypes: {
     song: object.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
     var cover = song.icons.medium || song.icons.small;
@@ -59,7 +57,6 @@ const Song = createReactClass({
 });
 
 Song.loading = createReactClass({
-  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="song">
@@ -70,7 +67,6 @@ Song.loading = createReactClass({
 });
 
 Song.unknown = createReactClass({
-  mixins: [IntlMixin],
   render: function() {
     return (
       <div className="song song-unknown">

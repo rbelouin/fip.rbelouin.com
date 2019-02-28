@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {bool, func} from "prop-types";
 
 export default createReactClass({
@@ -9,7 +9,6 @@ export default createReactClass({
     favorite: bool.isRequired,
     onClick: func.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     var favorite = this.props.favorite;
     var className = favorite ? " player-controls-favorite-added" : "";

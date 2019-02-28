@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin} from "react-intl";
 import {array, object} from "prop-types";
 
 import Radio from "./radio.jsx";
@@ -20,7 +19,6 @@ export default createReactClass({
     autoplayBus: object.isRequired,
     radios: array.isRequired
   },
-  mixins: [IntlMixin],
   getInitialState: function() {
     return {
       paneIsOpen: false,
@@ -36,7 +34,7 @@ export default createReactClass({
       autoplayRadio: null
     };
   },
-  componentWillMount: function() {
+  componentDidMount: function() {
     _.each(this.props.state, function(stream, name) {
       stream.onValue(function(value) {
         const state = {};

@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {object} from "prop-types";
 
 export default createReactClass({
@@ -8,7 +8,6 @@ export default createReactClass({
   propTypes: {
     song: object.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     return (
       <a

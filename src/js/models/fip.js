@@ -13,7 +13,7 @@ export function fetchFipSongs(connectForever, url) {
 export function fetchFipRadios(connectForever, url, radios) {
   const stream = connectForever(url);
 
-  return _.foldl(radios, (data, radio) => {
+  return _.reduce(radios, (data, radio) => {
     data[radio] = stream
       .flatMapLatest(data => Bacon.once(data[radio] || new Bacon.Error()))
       .endOnError()

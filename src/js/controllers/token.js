@@ -11,7 +11,7 @@ export function getTokenFromQS(location) {
     "token_type"
   ];
 
-  const token = _.foldl(keys, (acc, key) => {
+  const token = _.reduce(keys, (acc, key) => {
     if(params[key]) {
       acc[key] = params[key];
     }

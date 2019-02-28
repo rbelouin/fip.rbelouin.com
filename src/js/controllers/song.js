@@ -67,7 +67,7 @@ export function getFavoriteSongs(syncs) {
 
   return p_songLists.map(function(songLists) {
     const songs = _.flatten(songLists);
-    return _.uniq(songs, "spotifyId");
+    return _.uniqBy(songs, song => song.spotifyId);
   }).toProperty();
 }
 
@@ -83,7 +83,7 @@ export function updateFavSongs(songs, ev) {
   switch(ev.type) {
     case "add": {
       const song = _.extend({}, ev.song, {favorite: true});
-      const exists = _.any(songs, s => s.id === song.id);
+      const exists = _.some(songs, s => s.id === song.id);
 
       return songs.concat(exists ? [] : [song]);
     }
@@ -104,7 +104,7 @@ export function getFavSongsStream(syncs, favBus) {
 }
 
 export function mergeFavsAndSongs(items, favSongs) {
-  const favSongsById = _.indexBy(favSongs, "id");
+  const favSongsById = _.keyBy(favSongs, "id");
 
   return _.map(items, item => item.type != "song" ? item : _.extend({}, item, {
     song: _.extend({}, item.song, {

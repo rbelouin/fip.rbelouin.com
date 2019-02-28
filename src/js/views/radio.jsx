@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {array, object, string} from "prop-types";
 
 import Song from "./player-song.jsx";
@@ -20,7 +20,6 @@ export default createReactClass({
     pastSongs: array.isRequired,
     nowPlaying: object.isRequired
   },
-  mixins: [IntlMixin],
   onPlay: function() {
     var src = this.props.src;
     var radios = this.props.radios;
@@ -80,7 +79,7 @@ export default createReactClass({
     ) : "";
 
     var spotify = nowPlaying.type === "song" && nowPlaying.song.spotify ? (
-      <a target="_blank" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
+      <a target="_blank" rel="noopener noreferrer" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
         <span className="fa fa-spotify"></span>
         <FormattedMessage
           id="open-in-spotify"

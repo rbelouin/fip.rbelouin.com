@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {array, bool, func, object} from "prop-types";
 
 export const SongListItem = createReactClass({
@@ -13,7 +13,6 @@ export const SongListItem = createReactClass({
     onSpotifyPlay: func.isRequired,
     onClick: func.isRequired
   },
-  mixins: [IntlMixin],
   render: function() {
     var song = this.props.song;
 
@@ -71,7 +70,6 @@ export default createReactClass({
     favBus: object.isRequired,
     playBus: object.isRequired
   },
-  mixins: [IntlMixin],
   getInitialState: function() {
     return {
       selectedSongId: null

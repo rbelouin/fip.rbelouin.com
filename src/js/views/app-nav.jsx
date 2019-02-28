@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {array, bool, object, string} from "prop-types";
 
 import A from "./link.jsx";
@@ -18,7 +18,6 @@ export default createReactClass({
     playBus: object.isRequired,
     playerOnBottom: bool.isRequired
   },
-  mixins: [IntlMixin],
   isActive: function(route) {
     return this.props.route === route ? "active" : "";
   },

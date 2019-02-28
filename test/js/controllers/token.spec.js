@@ -326,7 +326,7 @@ test("The Token controller should be able to request Spotify tokens if no token 
   const Spotify3 = {
     requestToken: function(scopes) {
       t.ok(Array.prototype.isPrototypeOf(scopes));
-      t.ok(_.all(scopes, scope => typeof scope === "string"));
+      t.ok(_.every(scopes, scope => typeof scope === "string"));
     }
   };
 
@@ -365,7 +365,7 @@ test("The Token controller should request a token everytime a user wants to sync
   const Spotify1 = {
     requestToken: function(scopes) {
       t.ok(Array.prototype.isPrototypeOf(scopes));
-      t.ok(_.all(scopes, scope => typeof scope === "string"));
+      t.ok(_.every(scopes, scope => typeof scope === "string"));
     }
   };
 

@@ -3,7 +3,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import {findDOMNode} from "react-dom";
-import {IntlMixin} from "react-intl";
 import {number, string} from "prop-types";
 
 export default createReactClass({
@@ -13,7 +12,6 @@ export default createReactClass({
     type: string.isRequired,
     volume: number.isRequired
   },
-  mixins: [IntlMixin],
   componentDidMount: function() {
     const audio = findDOMNode(this);
     audio.volume = this.props.volume;

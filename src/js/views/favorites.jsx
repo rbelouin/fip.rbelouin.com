@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {IntlMixin, FormattedMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {array, object} from "prop-types";
 
 import SongList from "./player-song-list.jsx";
@@ -14,7 +14,6 @@ export default createReactClass({
     user: object.isRequired,
     favSongs: array.isRequired,
   },
-  mixins: [IntlMixin],
   onClick: function() {
     this.props.syncBus.push(this.props.user === null);
   },
