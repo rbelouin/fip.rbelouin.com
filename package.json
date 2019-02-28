@@ -38,6 +38,7 @@
     "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.5.0",
+    "sshpk": "^1.16.1",
     "tap-webpack-plugin": "^2.0.0",
     "tape": "^4.2.1",
     "webapp-webpack-plugin": "^2.6.0",
