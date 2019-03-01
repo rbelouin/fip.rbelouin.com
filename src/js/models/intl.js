@@ -1,6 +1,14 @@
 import _ from "lodash";
+
 import frMessages from "./messages/fr-FR.json";
 import enMessages from "./messages/en-US.json";
+
+import {addLocaleData} from "react-intl";
+
+import frLocaleData from "react-intl/locale-data/fr";
+import enLocaleData from "react-intl/locale-data/en";
+
+addLocaleData([...frLocaleData, ...enLocaleData]);
 
 const intl = {};
 export default intl;
