@@ -39,6 +39,14 @@
       "always"
     ]
   },
+  "overrides": [
+    {
+      "files": ["webpack.config.js"],
+      "env": {
+        "node": true
+      }
+    }
+  ],
   "globals": {
     "ga": true
   }
