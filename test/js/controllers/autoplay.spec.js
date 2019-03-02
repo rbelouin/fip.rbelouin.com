@@ -27,6 +27,6 @@ test("The Autoplay controller should set the radio to autoplay to the Storage", 
 
   setAutoplayRadio(Storage, "radio-to-autoplay");
 
-  t.deepEqual(Storage.store, {"autoplay": "radio-to-autoplay"});
+  t.deepEqual(Storage.store, { autoplay: "radio-to-autoplay" });
   t.end();
 });

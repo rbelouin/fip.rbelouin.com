@@ -13,26 +13,25 @@ export function fetchAndFollow(send, token, url) {
     method: "GET",
     url: url,
     headers: {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     }
   };
 
   return send(req).flatMapLatest(function(res) {
-    return Bacon.once(res).merge(res.next ?
-      fetchAndFollow(send, token, res.next) :
-      Bacon.never()
+    return Bacon.once(res).merge(
+      res.next ? fetchAndFollow(send, token, res.next) : Bacon.never()
     );
   });
 }
 
-export function search(send, {title, artist, album}, token) {
+export function search(send, { title, artist, album }, token) {
   const query = `track:${title}+artist:${artist}+album:${album}`;
 
   const p_result = send({
     method: "GET",
     url: host + "/search?type=track&q=" + query,
     headers: {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     }
   });
 
@@ -40,25 +39,31 @@ export function search(send, {title, artist, album}, token) {
     var firstItem = result && result.tracks.items[0];
     var href = firstItem && firstItem.external_urls.spotify;
 
-    return firstItem && {
-      href: href,
-      id: firstItem.id
-    };
+    return (
+      firstItem && {
+        href: href,
+        id: firstItem.id
+      }
+    );
   });
 }
 
 export function requestToken(location, scope) {
-  location.href = "/api/login?" + qs.stringify({
-    redirect_uri: location.href,
-    scope
-  });
+  location.href =
+    "/api/login?" +
+    qs.stringify({
+      redirect_uri: location.href,
+      scope
+    });
 }
 
 export function refreshToken(location, token) {
-  location.href = "/api/login?" + qs.stringify({
-    redirect_uri: location.href,
-    refresh_token: token.refresh_token
-  });
+  location.href =
+    "/api/login?" +
+    qs.stringify({
+      redirect_uri: location.href,
+      refresh_token: token.refresh_token
+    });
 }
 
 export function getUser(send, token) {
@@ -66,7 +71,7 @@ export function getUser(send, token) {
     method: "GET",
     url: `${host}/me`,
     headers: {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     }
   });
 }
@@ -87,12 +92,12 @@ export function createPlaylist(send, token, userId, name, isPublic) {
     method: "POST",
     url: url,
     headers: {
-      "Authorization": getAuthorization(token),
+      Authorization: getAuthorization(token),
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "name": name,
-      "public": isPublic
+      name: name,
+      public: isPublic
     })
   });
 }
@@ -100,15 +105,17 @@ export function createPlaylist(send, token, userId, name, isPublic) {
 export function getOrCreatePlaylist(send, token, userId, name) {
   const p_playlists = getPlaylists(send, token, userId);
 
-  return p_playlists.flatMapLatest(function(playlists) {
-    const playlist = _.find(playlists, function(playlist) {
-      return playlist.name === name;
-    });
+  return p_playlists
+    .flatMapLatest(function(playlists) {
+      const playlist = _.find(playlists, function(playlist) {
+        return playlist.name === name;
+      });
 
-    return playlist ?
-      Bacon.once(playlist) :
-      createPlaylist(send, token, userId, name, false);
-  }).toProperty();
+      return playlist
+        ? Bacon.once(playlist)
+        : createPlaylist(send, token, userId, name, false);
+    })
+    .toProperty();
 }
 
 export function getPlaylistTracks(send, token, userId, playlistId) {
@@ -117,18 +124,20 @@ export function getPlaylistTracks(send, token, userId, playlistId) {
   const s_tracks = fetchAndFollow(send, token, url);
 
   return s_tracks.fold([], function(tracks, res) {
-    return tracks.concat(_.map(res.items, "track").map(track => ({
-      id: track.id,
-      title: track.name,
-      artist: _.map(track.artists, "name").join("/"),
-      album: track.album.name,
-      favorite: true,
-      spotify: track.external_urls.spotify,
-      spotifyId: track.id,
-      icons: {
-        medium: _.first(track.album.images).url
-      }
-    })));
+    return tracks.concat(
+      _.map(res.items, "track").map(track => ({
+        id: track.id,
+        title: track.name,
+        artist: _.map(track.artists, "name").join("/"),
+        album: track.album.name,
+        favorite: true,
+        spotify: track.external_urls.spotify,
+        spotifyId: track.id,
+        icons: {
+          medium: _.first(track.album.images).url
+        }
+      }))
+    );
   });
 }
 
@@ -139,7 +148,7 @@ export function setPlaylistTracks(send, token, userId, playlistId, trackIds) {
     method: "PUT",
     url: url,
     headers: {
-      "Authorization": getAuthorization(token),
+      Authorization: getAuthorization(token),
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -154,7 +163,16 @@ export function sync(send, token, userId, playlistId) {
       return getPlaylistTracks(send, token, userId, playlistId);
     },
     set: function(songs) {
-      return setPlaylistTracks(send, token, userId, playlistId, _(songs).map("spotifyId").compact().value());
+      return setPlaylistTracks(
+        send,
+        token,
+        userId,
+        playlistId,
+        _(songs)
+          .map("spotifyId")
+          .compact()
+          .value()
+      );
     }
   };
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {object} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { object } from "prop-types";
 
 export const SongDetails = createReactClass({
   propTypes: {
@@ -71,7 +71,7 @@ Song.unknown = createReactClass({
     return (
       <div className="song song-unknown">
         <div className="song-icon">
-          <span className="fa fa-question"></span>
+          <span className="fa fa-question" />
         </div>
         <div className="song-info">
           <div className="song-title">

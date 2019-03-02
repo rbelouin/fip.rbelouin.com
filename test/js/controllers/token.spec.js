@@ -20,13 +20,14 @@ test("The Token controller should be able to retrieve a token from the querysrin
   t.deepEqual(getTokenFromQS(location1), null);
 
   const location2 = {
-    search: "?access_token=access_token&refresh_token=refresh_token&expires_in=3600&token_type=type"
+    search:
+      "?access_token=access_token&refresh_token=refresh_token&expires_in=3600&token_type=type"
   };
 
   t.deepEqual(getTokenFromQS(location2), {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
     token_type: "type"
   });
 
@@ -35,7 +36,7 @@ test("The Token controller should be able to retrieve a token from the querysrin
   };
 
   t.deepEqual(getTokenFromQS(location3), {
-    access_token: "access_token",
+    access_token: "access_token",
     expires_in: "3600",
     token_type: "type"
   });
@@ -54,10 +55,10 @@ test("The Token controller should be able to retrieve a token from the localStor
   t.deepEqual(getTokenFromLS(Storage1), null);
 
   const token = {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const Storage2 = {
@@ -76,10 +77,10 @@ test("The Token controller should be able to retrieve a token from the localStor
   const Storage1 = {
     get: function(name) {
       return {
-        access_token: "access_token",
+        access_token: "access_token",
         refresh_token: "refresh_token",
-        expires_in: "3600",
-        token_type: "type"
+        expires_in: "3600",
+        token_type: "type"
       };
     }
   };
@@ -89,7 +90,7 @@ test("The Token controller should be able to retrieve a token from the localStor
   };
 
   t.deepEqual(getToken(Storage1, location1), {
-    access_token: "a",
+    access_token: "a",
     refresh_token: "b",
     expires_in: "c",
     token_type: "d"
@@ -98,10 +99,10 @@ test("The Token controller should be able to retrieve a token from the localStor
   const Storage2 = {
     get: function(name) {
       return {
-        access_token: "access_token",
+        access_token: "access_token",
         refresh_token: "refresh_token",
-        expires_in: "3600",
-        token_type: "type"
+        expires_in: "3600",
+        token_type: "type"
       };
     }
   };
@@ -111,7 +112,7 @@ test("The Token controller should be able to retrieve a token from the localStor
   };
 
   t.deepEqual(getToken(Storage2, location2), {
-    access_token: "a",
+    access_token: "a",
     refresh_token: "refresh_token",
     expires_in: "c",
     token_type: "d"
@@ -120,10 +121,10 @@ test("The Token controller should be able to retrieve a token from the localStor
   const Storage3 = {
     get: function(name) {
       return {
-        access_token: "access_token",
+        access_token: "access_token",
         refresh_token: "refresh_token",
-        expires_in: "3600",
-        token_type: "type"
+        expires_in: "3600",
+        token_type: "type"
       };
     }
   };
@@ -133,7 +134,7 @@ test("The Token controller should be able to retrieve a token from the localStor
   };
 
   t.deepEqual(getToken(Storage3, location3), {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "3600",
     token_type: "type"
@@ -156,10 +157,10 @@ test("The Token controller should be able to retrieve a token from the localStor
 
 test("The Token controller should be able to save a token in the localStorage", function(t) {
   const token = {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const Storage = {
@@ -175,12 +176,12 @@ test("The Token controller should be able to save a token in the localStorage", 
 
 test("The Token controller should be able to remove the query params that are related to a token", function(t) {
   const location1 = {
-    pathname: "/",
-    search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d&e=f&g=h"
+    pathname: "/",
+    search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d&e=f&g=h"
   };
 
   const history1 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "?e=f&g=h");
     }
   };
@@ -189,11 +190,11 @@ test("The Token controller should be able to remove the query params that are re
 
   const location2 = {
     pathname: "/",
-    search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d"
+    search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d"
   };
 
   const history2 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "/");
       t.end();
     }
@@ -209,8 +210,8 @@ test("The Token controller should be able to request Spotify tokens if no token 
       t.equal(item, "token");
       return {
         access_token: "access_token",
-        refresh_token: "refresh_token",
-        expires_in: "expires_in",
+        refresh_token: "refresh_token",
+        expires_in: "expires_in",
         token_type: "type"
       };
     },
@@ -225,13 +226,13 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const history1 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "/");
     }
   };
 
   const Spotify1 = {
-    requestToken: function() {
+    requestToken: function() {
       t.fail("Spotify should not be called");
     }
   };
@@ -239,17 +240,17 @@ test("The Token controller should be able to request Spotify tokens if no token 
   const token1 = getOrRequestToken(Storage1, Spotify1, location1, history1);
 
   t.deepEqual(token1, {
-    access_token: "a",
-    refresh_token: "b",
-    expires_in: "c",
-    token_type: "d"
+    access_token: "a",
+    refresh_token: "b",
+    expires_in: "c",
+    token_type: "d"
   });
 
   t.deepEqual(Storage1.token, {
-    access_token: "a",
-    refresh_token: "b",
-    expires_in: "c",
-    token_type: "d"
+    access_token: "a",
+    refresh_token: "b",
+    expires_in: "c",
+    token_type: "d"
   });
 
   const Storage2 = {
@@ -258,8 +259,8 @@ test("The Token controller should be able to request Spotify tokens if no token 
       t.equal(item, "token");
       return {
         access_token: "access_token",
-        refresh_token: "refresh_token",
-        expires_in: "expires_in",
+        refresh_token: "refresh_token",
+        expires_in: "expires_in",
         token_type: "type"
       };
     },
@@ -274,13 +275,13 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const history2 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "/");
     }
   };
 
   const Spotify2 = {
-    requestToken: function() {
+    requestToken: function() {
       t.fail("Spotify should not be called");
     }
   };
@@ -288,17 +289,17 @@ test("The Token controller should be able to request Spotify tokens if no token 
   const token2 = getOrRequestToken(Storage2, Spotify2, location2, history2);
 
   t.deepEqual(token2, {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "expires_in",
-    token_type: "type"
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "expires_in",
+    token_type: "type"
   });
 
   t.deepEqual(Storage2.token, {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "expires_in",
-    token_type: "type"
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "expires_in",
+    token_type: "type"
   });
 
   const Storage3 = {
@@ -313,18 +314,18 @@ test("The Token controller should be able to request Spotify tokens if no token 
   };
 
   const location3 = {
-    pathname: "/",
+    pathname: "/",
     search: ""
   };
 
   const history3 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.fail("History pushState should not be called");
     }
   };
 
   const Spotify3 = {
-    requestToken: function(scopes) {
+    requestToken: function(scopes) {
       t.ok(Array.prototype.isPrototypeOf(scopes));
       t.ok(_.every(scopes, scope => typeof scope === "string"));
     }
@@ -351,19 +352,19 @@ test("The Token controller should request a token everytime a user wants to sync
   };
 
   const location1 = {
-    pathname: "/",
+    pathname: "/",
     search: ""
   };
 
   const history1 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "/");
       location1.search = href;
     }
   };
 
   const Spotify1 = {
-    requestToken: function(scopes) {
+    requestToken: function(scopes) {
       t.ok(Array.prototype.isPrototypeOf(scopes));
       t.ok(_.every(scopes, scope => typeof scope === "string"));
     }
@@ -371,7 +372,13 @@ test("The Token controller should request a token everytime a user wants to sync
 
   const s_sync1 = new Bacon.Bus();
 
-  const p_tokens1 = getTokenProperty(Storage1, Spotify1, location1, history1, s_sync1).fold([], (items, item) => items.concat([item]));
+  const p_tokens1 = getTokenProperty(
+    Storage1,
+    Spotify1,
+    location1,
+    history1,
+    s_sync1
+  ).fold([], (items, item) => items.concat([item]));
 
   p_tokens1.subscribe(function(ev) {
     t.ok(ev.hasValue());
@@ -395,35 +402,44 @@ test("The Token controller should request a token everytime a user wants to sync
   };
 
   const location2 = {
-    pathname: "/",
+    pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=c&token_type=d"
   };
 
   const history2 = {
-    pushState: function($, $$, href) {
+    pushState: function($, $$, href) {
       t.equal(href, "/");
       location2.search = href;
     }
   };
 
   const Spotify2 = {
-    requestToken: function(scopes) {
+    requestToken: function(scopes) {
       t.fail("Spotify should not be called");
     }
   };
 
   const s_sync2 = new Bacon.Bus();
 
-  const p_tokens2 = getTokenProperty(Storage2, Spotify2, location2, history2, s_sync2).fold([], (items, item) => items.concat([item]));
+  const p_tokens2 = getTokenProperty(
+    Storage2,
+    Spotify2,
+    location2,
+    history2,
+    s_sync2
+  ).fold([], (items, item) => items.concat([item]));
 
   p_tokens2.subscribe(function(ev) {
     t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), [{
-      access_token: "a",
-      refresh_token: "b",
-      expires_in: "c",
-      token_type: "d"
-    }, null]);
+    t.deepEqual(ev.value(), [
+      {
+        access_token: "a",
+        refresh_token: "b",
+        expires_in: "c",
+        token_type: "d"
+      },
+      null
+    ]);
 
     t.end();
 

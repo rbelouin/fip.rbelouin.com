@@ -1,8 +1,8 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {array, bool, func, object} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { array, bool, func, object } from "prop-types";
 
 export const SongListItem = createReactClass({
   displayName: "SongListItem",
@@ -22,11 +22,16 @@ export const SongListItem = createReactClass({
 
     var year = song.year ? (
       <span className="song-list-item-year">{song.year}</span>
-    ) : "";
+    ) : (
+      ""
+    );
 
     var favorite = (
-      <div className="song-list-item-controls-favorite" onClick={this.props.onFavorite}>
-        <span className="fa fa-heart"></span>
+      <div
+        className="song-list-item-controls-favorite"
+        onClick={this.props.onFavorite}
+      >
+        <span className="fa fa-heart" />
         <FormattedMessage
           id={song.favorite ? "remove-from-favorites" : "add-to-favorites"}
         />
@@ -34,13 +39,16 @@ export const SongListItem = createReactClass({
     );
 
     var spotify = song.spotify ? (
-      <div className="song-list-item-controls-spotify" onClick={this.props.onSpotifyPlay}>
-        <span className="fa fa-play"></span>
-        <FormattedMessage
-          id="play-with-spotify"
-        />
+      <div
+        className="song-list-item-controls-spotify"
+        onClick={this.props.onSpotifyPlay}
+      >
+        <span className="fa fa-play" />
+        <FormattedMessage id="play-with-spotify" />
       </div>
-    ) : "";
+    ) : (
+      ""
+    );
 
     var controlsClassName = ["song-list-item-controls"]
       .concat(this.props.active ? "song-list-item-controls-shown" : "")
@@ -84,10 +92,10 @@ export default createReactClass({
   onSelect: function(song) {
     var selectedSongId = song.id === this.state.selectedSongId ? null : song.id;
 
-    this.setState({selectedSongId});
+    this.setState({ selectedSongId });
   },
   onSpotifyPlay: function(song) {
-    if(song.spotifyId) {
+    if (song.spotifyId) {
       this.props.playBus.push({
         type: "spotify",
         song: song
@@ -96,22 +104,22 @@ export default createReactClass({
   },
   render: function() {
     var songNodes = this.props.songs.map(function(song) {
-      return <SongListItem
-        song={song}
-        key={song.id}
-        active={song.id === this.state.selectedSongId}
-        onClick={_.partial(this.onSelect, song).bind(this)}
-        onFavorite={_.partial(this.onFavorite, song).bind(this)}
-        onSpotifyPlay={_.partial(this.onSpotifyPlay, song).bind(this)}
-      />;
+      return (
+        <SongListItem
+          song={song}
+          key={song.id}
+          active={song.id === this.state.selectedSongId}
+          onClick={_.partial(this.onSelect, song).bind(this)}
+          onFavorite={_.partial(this.onFavorite, song).bind(this)}
+          onSpotifyPlay={_.partial(this.onSpotifyPlay, song).bind(this)}
+        />
+      );
     }, this);
 
     return _.isEmpty(this.props.songs) ? (
-      <ul className="song-list"></ul>
+      <ul className="song-list" />
     ) : (
-      <ul className="song-list">
-        {songNodes}
-      </ul>
+      <ul className="song-list">{songNodes}</ul>
     );
   }
 });

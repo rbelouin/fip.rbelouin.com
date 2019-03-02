@@ -1,21 +1,17 @@
 import test from "tape";
 import Bacon from "baconjs";
 
-import {
-  getState
-} from "../../../src/js/controllers/state.js";
+import { getState } from "../../../src/js/controllers/state.js";
 
 import {
   getFavSongsStream,
   mergeFavsAndSongs
 } from "../../../src/js/controllers/song.js";
 
-import {
-  getCurrentRoute
-} from "../../../src/js/controllers/route.js";
+import { getCurrentRoute } from "../../../src/js/controllers/route.js";
 
 import {
-  getSongBeingPlayed, 
+  getSongBeingPlayed,
   getCurrentRadio,
   getBroadcastedSong,
   getSongHistory
@@ -23,9 +19,9 @@ import {
 
 test("getState should return a valid state", function(t) {
   const token = {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
     token_type: "type"
   };
 
@@ -38,11 +34,13 @@ test("getState should return a valid state", function(t) {
   };
 
   const sync = {
-    songs: [{
-      id: "3",
-      spotifyId: "3",
-      favorite: true
-    }],
+    songs: [
+      {
+        id: "3",
+        spotifyId: "3",
+        favorite: true
+      }
+    ],
     get: function() {
       return Bacon.constant(sync.songs);
     },
@@ -61,8 +59,8 @@ test("getState should return a valid state", function(t) {
   const SongController = {
     getSpotifyPrint: function(token) {
       return Bacon.constant({
-        user: {id: "userId"},
-        playlist: {id: "playlistId"},
+        user: { id: "userId" },
+        playlist: { id: "playlistId" },
         token: token
       });
     },
@@ -91,13 +89,12 @@ test("getState should return a valid state", function(t) {
       return routes;
     },
     getCurrentRoute,
-    redirectRoute: function() {
-    }
+    redirectRoute: function() {}
   };
 
   // Build a partial PlayController mock
   const PlayController = {
-    getSongBeingPlayed, 
+    getSongBeingPlayed,
     getCurrentRadio,
     getBroadcastedSong,
     getSongHistory,
@@ -129,7 +126,7 @@ test("getState should return a valid state", function(t) {
   };
 
   const history = {
-    pushState: function(){}
+    pushState: function() {}
   };
 
   const favBus = new Bacon.Bus();
@@ -180,69 +177,77 @@ test("getState should return a valid state", function(t) {
   ]).subscribe(ev => {
     t.ok(ev.hasValue());
 
-    const [user, favSongs, route, radio, bsong, psong, src, history, paneIsOpen, playerOnBottom, autoplayRadio] = ev.value();
+    const [
+      user,
+      favSongs,
+      route,
+      radio,
+      bsong,
+      psong,
+      src,
+      history,
+      paneIsOpen,
+      playerOnBottom,
+      autoplayRadio
+    ] = ev.value();
 
-    t.deepEqual(user, [{
-      id: "userId"
-    }]);
-
-    t.deepEqual(favSongs, [[
-      {id: "3", spotifyId: "3", favorite: true}
-    ],[
-      {id: "3", spotifyId: "3", favorite: true},
-      {id: "1", spotifyId: "1", favorite: true}
-    ]]);
-
-    t.deepEqual(route, [
-      "radio",
-      "radio",
-      "radio"
+    t.deepEqual(user, [
+      {
+        id: "userId"
+      }
     ]);
 
-    t.deepEqual(radio, [
-      "radioA",
-      "radioB",
-      "radioA"
+    t.deepEqual(favSongs, [
+      [{ id: "3", spotifyId: "3", favorite: true }],
+      [
+        { id: "3", spotifyId: "3", favorite: true },
+        { id: "1", spotifyId: "1", favorite: true }
+      ]
     ]);
 
-    t.deepEqual(bsong, [{
-      type: "song",
-      song: {id: "1", spotifyId: "1", favorite: false}
-    },{
-      type: "song",
-      song: {id: "2", spotifyId: "2", favorite: false}
-    },{
-      type: "song",
-      song: {id: "3", spotifyId: "3", favorite: true}
-    }]);
+    t.deepEqual(route, ["radio", "radio", "radio"]);
 
-    t.deepEqual(psong, [{
-      type: "song",
-      song: {id: "1", spotifyId: "1", favorite: false}
-    },{
-      type: "song",
-      song: {id: "2", spotifyId: "2", favorite: false}
-    }]);
+    t.deepEqual(radio, ["radioA", "radioB", "radioA"]);
 
-    t.deepEqual(src, [
-      "radioB"
+    t.deepEqual(bsong, [
+      {
+        type: "song",
+        song: { id: "1", spotifyId: "1", favorite: false }
+      },
+      {
+        type: "song",
+        song: { id: "2", spotifyId: "2", favorite: false }
+      },
+      {
+        type: "song",
+        song: { id: "3", spotifyId: "3", favorite: true }
+      }
     ]);
 
-    t.deepEqual(history, [[
-    ],[
-      {id: "1", spotifyId: "1", favorite: false}
-    ],[
-      {id: "1", spotifyId: "1", favorite: true}
-    ]]);
+    t.deepEqual(psong, [
+      {
+        type: "song",
+        song: { id: "1", spotifyId: "1", favorite: false }
+      },
+      {
+        type: "song",
+        song: { id: "2", spotifyId: "2", favorite: false }
+      }
+    ]);
+
+    t.deepEqual(src, ["radioB"]);
+
+    t.deepEqual(history, [
+      [],
+      [{ id: "1", spotifyId: "1", favorite: false }],
+      [{ id: "1", spotifyId: "1", favorite: true }]
+    ]);
 
     t.deepEqual(paneIsOpen, [true]);
 
     t.deepEqual(playerOnBottom, [false]);
 
-    t.deepEqual(autoplayRadio, [
-      "radioA",
-      "radioB"
-    ]);
+    t.deepEqual(autoplayRadio, ["radioA", "radioB"]);
 
     t.end();
     return Bacon.noMore;
@@ -254,15 +259,19 @@ test("getState should return a valid state", function(t) {
     }
   });
 
-  radios.radioA.push([{
-    type: "song",
-    song: {id: "1", spotifyId: "1"}
-  }]);
+  radios.radioA.push([
+    {
+      type: "song",
+      song: { id: "1", spotifyId: "1" }
+    }
+  ]);
 
-  radios.radioB.push([{
-    type: "song",
-    song: {id: "2", spotifyId: "2"}
-  }]);
+  radios.radioB.push([
+    {
+      type: "song",
+      song: { id: "2", spotifyId: "2" }
+    }
+  ]);
 
   routes.radio.push({
     params: {
@@ -275,13 +284,16 @@ test("getState should return a valid state", function(t) {
     radio: "radioB"
   });
 
-  radios.radioA.push([{
-    type: "song",
-    song: {id: "3", spotifyId: "3"}
-  },{
-    type: "song",
-    song: {id: "1", spotifyId: "1"}
-  }]);
+  radios.radioA.push([
+    {
+      type: "song",
+      song: { id: "3", spotifyId: "3" }
+    },
+    {
+      type: "song",
+      song: { id: "1", spotifyId: "1" }
+    }
+  ]);
 
   routes.radio.push({
     params: {
@@ -291,7 +303,7 @@ test("getState should return a valid state", function(t) {
 
   favBus.push({
     type: "add",
-    song: {id: "1", spotifyId: "1"}
+    song: { id: "1", spotifyId: "1" }
   });
 
   autoplayBus.push("radioB");

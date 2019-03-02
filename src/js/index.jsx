@@ -1,6 +1,6 @@
 import React from "react";
-import {render} from "react-dom";
-import {IntlProvider} from "react-intl";
+import { render } from "react-dom";
+import { IntlProvider } from "react-intl";
 
 import Promise from "promise";
 window.Promise = Promise;
@@ -46,7 +46,13 @@ export function start(conf) {
 
   /* Bind the models to the controllers */
   const TokenController = getTokenController(Storage, Spotify, location);
-  const SongController = getSongController(Storage, Spotify, Fip, conf.api.ws_host, conf.radios.map(r => r.name));
+  const SongController = getSongController(
+    Storage,
+    Spotify,
+    Fip,
+    conf.api.ws_host,
+    conf.radios.map(r => r.name)
+  );
   const PlayController = getPlayController(conf.radios);
   const RouteController = getRouteController(Bacon, conf.routes);
   const UIController = getUIController(window);
@@ -62,7 +68,13 @@ export function start(conf) {
     AutoplayController
   );
 
-  const state = StateController.getState(Bacon.history, favBus, syncBus, playBus, autoplayBus);
+  const state = StateController.getState(
+    Bacon.history,
+    favBus,
+    syncBus,
+    playBus,
+    autoplayBus
+  );
 
   state.route.onValue(function() {
     ga("set", "page", window.location.pathname);

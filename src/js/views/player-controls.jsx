@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {object} from "prop-types";
+import { object } from "prop-types";
 
 import FavoriteButton from "./favorite-button.jsx";
 import SpotifyButton from "./spotify-button.jsx";
@@ -24,17 +24,18 @@ export const Controls = createReactClass({
     const favoriteButton = this.props.song ? (
       <FavoriteButton
         favorite={favorite}
-        onClick={
-          _.partial(this.toggleFavorite, this.props.song)
-        }
+        onClick={_.partial(this.toggleFavorite, this.props.song)}
       />
-    ) : "";
+    ) : (
+      ""
+    );
 
-    const spotifyButton = this.props.song && this.props.song.spotify ? (
-      <SpotifyButton
-        song={this.props.song}
-      />
-    ) : "";
+    const spotifyButton =
+      this.props.song && this.props.song.spotify ? (
+        <SpotifyButton song={this.props.song} />
+      ) : (
+        ""
+      );
 
     return (
       <div className="fipradio-controls">

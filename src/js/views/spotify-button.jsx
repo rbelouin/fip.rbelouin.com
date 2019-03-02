@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {object} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { object } from "prop-types";
 
 export default createReactClass({
   displayName: "SpotifyButton",
@@ -15,7 +15,7 @@ export default createReactClass({
         target="_blank"
         className="player-controls-spotify"
       >
-        <span className="player-controls-spotify-icon fa fa-spotify"></span>
+        <span className="player-controls-spotify-icon fa fa-spotify" />
         <FormattedMessage id="open-in-spotify" />
       </a>
     );

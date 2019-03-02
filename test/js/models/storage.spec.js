@@ -1,17 +1,13 @@
 import test from "tape";
 import Bacon from "baconjs";
 
-import {
-  get,
-  set,
-  sync
-} from "../../../src/js/models/storage.js";
+import { get, set, sync } from "../../../src/js/models/storage.js";
 
 test("Storage.get should parse and return an item from the storage", function(t) {
   const storage = {};
   const object = {
-    a: "b",
-    c: "d"
+    a: "b",
+    c: "d"
   };
 
   t.equal(get(storage, "item"), null);
@@ -25,13 +21,13 @@ test("Storage.get should parse and return an item from the storage", function(t)
 test("Storage.set should save a stringified value to the storage", function(t) {
   const storage = {};
   const object = {
-    a: "b",
-    c: "d"
+    a: "b",
+    c: "d"
   };
 
   set(storage, "item", object);
   t.deepEqual(storage, {
-    item: JSON.stringify(object)
+    item: JSON.stringify(object)
   });
 
   set(storage, "item", null);
@@ -48,8 +44,9 @@ test("Storage.sync should return a sync object for the storage", function(t) {
 
   const p_initial = s.get();
 
-  const p_storage = p_initial.flatMapLatest(() =>
-    s.set([1, 2]).map(() => storage)).toProperty();
+  const p_storage = p_initial
+    .flatMapLatest(() => s.set([1, 2]).map(() => storage))
+    .toProperty();
 
   const p_final = p_storage.flatMapLatest(() => s.get()).toProperty();
 
@@ -62,9 +59,9 @@ test("Storage.sync should return a sync object for the storage", function(t) {
   property.subscribe(function(ev) {
     t.ok(ev.hasValue());
     t.deepEqual(ev.value(), {
-      p_initial: [],
-      p_storage: {favorite: JSON.stringify([1, 2])},
-      p_final: [1, 2]
+      p_initial: [],
+      p_storage: { favorite: JSON.stringify([1, 2]) },
+      p_final: [1, 2]
     });
 
     t.end();

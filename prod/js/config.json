@@ -8,31 +8,40 @@
   },
   "default_language": "en",
   "port": 8080,
-  "radios": [{
-    "name": "fip-radio",
-    "src": "https://direct.fipradio.fr/live/fip-midfi.mp3"
-  },{
-    "name": "fip-autour-du-rock",
-    "src": "https://direct.fipradio.fr/live/fip-webradio1.mp3"
-  },{
-    "name": "fip-autour-du-jazz",
-    "src": "https://direct.fipradio.fr/live/fip-webradio2.mp3"
-  },{
-    "name": "fip-autour-du-groove",
-    "src": "https://direct.fipradio.fr/live/fip-webradio3.mp3"
-  },{
-    "name": "fip-autour-du-monde",
-    "src": "https://direct.fipradio.fr/live/fip-webradio4.mp3"
-  },{
-    "name": "fip-autour-du-reggae",
-    "src": "https://direct.fipradio.fr/live/fip-webradio6.mp3"
-  },{
-    "name": "fip-autour-de-l-electro",
-    "src": "https://direct.fipradio.fr/live/fip-webradio8.mp3"
-  },{
-    "name": "tout-nouveau-tout-fip",
-    "src": "https://direct.fipradio.fr/live/fip-webradio5.mp3"
-  }],
+  "radios": [
+    {
+      "name": "fip-radio",
+      "src": "https://direct.fipradio.fr/live/fip-midfi.mp3"
+    },
+    {
+      "name": "fip-autour-du-rock",
+      "src": "https://direct.fipradio.fr/live/fip-webradio1.mp3"
+    },
+    {
+      "name": "fip-autour-du-jazz",
+      "src": "https://direct.fipradio.fr/live/fip-webradio2.mp3"
+    },
+    {
+      "name": "fip-autour-du-groove",
+      "src": "https://direct.fipradio.fr/live/fip-webradio3.mp3"
+    },
+    {
+      "name": "fip-autour-du-monde",
+      "src": "https://direct.fipradio.fr/live/fip-webradio4.mp3"
+    },
+    {
+      "name": "fip-autour-du-reggae",
+      "src": "https://direct.fipradio.fr/live/fip-webradio6.mp3"
+    },
+    {
+      "name": "fip-autour-de-l-electro",
+      "src": "https://direct.fipradio.fr/live/fip-webradio8.mp3"
+    },
+    {
+      "name": "tout-nouveau-tout-fip",
+      "src": "https://direct.fipradio.fr/live/fip-webradio5.mp3"
+    }
+  ],
   "routes": {
     "favorites": "/users/me/songs",
     "radio": "/radios/:radio",
