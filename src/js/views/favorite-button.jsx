@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {bool, func} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { bool, func } from "prop-types";
 
 export default createReactClass({
   displayName: "FavoriteButton",
@@ -19,7 +19,7 @@ export default createReactClass({
         type="button"
         className={"player-controls-favorite" + className}
       >
-        <span className="player-controls-favorite-icon glyphicon glyphicon-heart"></span>
+        <span className="player-controls-favorite-icon glyphicon glyphicon-heart" />
         <FormattedMessage id={(favorite ? "added" : "add") + "-to-favorites"} />
       </button>
     );

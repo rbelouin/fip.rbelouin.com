@@ -12,12 +12,20 @@ var apiPrefix = "/api";
 var httpsOnly = process.env.HTTPS_ONLY === "1";
 
 app.use(function(req, res, next) {
-  var protocol = req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
+  var protocol =
+    req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
 
-  if(httpsOnly && protocol !== "https") {
+  if (httpsOnly && protocol !== "https") {
     res.redirect("https://" + req.headers["host"] + req.originalUrl);
-  } else if(req.path.indexOf(apiPrefix) === 0) {
-    res.redirect(protocol + "://" + config.api.http_host + req.path.slice(apiPrefix.length) + "?" + qs.stringify(req.query));
+  } else if (req.path.indexOf(apiPrefix) === 0) {
+    res.redirect(
+      protocol +
+        "://" +
+        config.api.http_host +
+        req.path.slice(apiPrefix.length) +
+        "?" +
+        qs.stringify(req.query)
+    );
   } else {
     next();
   }

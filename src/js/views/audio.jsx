@@ -2,8 +2,8 @@
 
 import React from "react";
 import createReactClass from "create-react-class";
-import {findDOMNode} from "react-dom";
-import {number, string} from "prop-types";
+import { findDOMNode } from "react-dom";
+import { number, string } from "prop-types";
 
 export default createReactClass({
   displayName: "Audio",
@@ -21,7 +21,7 @@ export default createReactClass({
     const audio = findDOMNode(this);
     audio.volume = nextProps.volume;
 
-    if(this.props.src != nextProps.src) {
+    if (this.props.src != nextProps.src) {
       audio.src = nextProps.src;
       audio.play();
     }

@@ -3,10 +3,7 @@
     "browser": true,
     "es6": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": "7",
@@ -15,30 +12,15 @@
     },
     "sourceType": "module"
   },
-  "plugins": [
-    "react"
-  ],
-  "rules": {
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
+  "plugins": ["react"],
+  "overrides": [
+    {
+      "files": ["webpack.config.js", "webpack.config.*.js"],
+      "env": {
+        "node": true
       }
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "double"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ]
-  },
+    }
+  ],
   "globals": {
     "ga": true
   }

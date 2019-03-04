@@ -10,19 +10,23 @@ import {
 } from "../../../src/js/controllers/play.js";
 
 test("The Play controller should extract the radio name from the current path", function(t) {
-  const p_route = Bacon.fromArray([{
-    params: {
-      radio: "radio1"
+  const p_route = Bacon.fromArray([
+    {
+      params: {
+        radio: "radio1"
+      }
+    },
+    {
+      params: {
+        radio: "radio2"
+      }
+    },
+    {
+      params: {
+        radio: "radio2"
+      }
     }
-  },{
-    params: {
-      radio: "radio2"
-    }
-  },{
-    params: {
-      radio: "radio2"
-    }
-  }]);
+  ]);
 
   getCurrentRadio(p_route)
     .fold([], (items, item) => items.concat([item]))
@@ -45,143 +49,22 @@ test("The Play controller should get the song the current radio is broadcasting"
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
-      t.deepEqual(ev.value(), [{
-        type: "loading"
-      },{
-        type: "song",
-        song: {
-          id: "ONE"
-        }
-      },{
-        type: "song",
-        song: {
-          id: "THREE"
-        }
-      }]);
-
-      t.end();
-      return Bacon.noMore;
-    });
-
-  s_radios.push({
-    radio1: {
-      nowPlaying: {
-        type: "loading"
-      },
-      pastSongs: []
-    },
-    radio2: {
-      nowPlaying: {
-        type: "loading"
-      },
-      pastSongs: []
-    }
-  });
-
-  s_route.push({
-    params: {
-      radio: "radio1"
-    }
-  });
-
-  s_radios.push({
-    radio1: {
-      nowPlaying: {
-        type: "song",
-        song: {
-          id: "ONE"
-        }
-      },
-      pastSongs: []
-    },
-    radio2: {
-      nowPlaying: {
-        type: "loading"
-      },
-      pastSongs: []
-    }
-  });
-
-  s_radios.push({
-    radio1: {
-      nowPlaying: {
-        type: "song",
-        song: {
-          id: "ONE"
-        }
-      },
-      pastSongs: []
-    },
-    radio2: {
-      nowPlaying: {
-        type: "song",
-        song: {
-          id: "TWO"
-        }
-      },
-      pastSongs: []
-    }
-  });
-
-  s_radios.push({
-    radio1: {
-      nowPlaying: {
-        type: "song",
-        song: {
-          id: "ONE"
-        }
-      },
-      pastSongs: []
-    },
-    radio2: {
-      nowPlaying: {
-        type: "song",
-        song: {
-          id: "THREE"
-        }
-      },
-      pastSongs: [{
-        type: "song",
-        song: {
-          id: "TWO"
-        }
-      }]
-    }
-  });
-
-  s_route.push({
-    params: {
-      radio: "radio2"
-    }
-  });
-
-  s_route.push({
-    params: {
-      radio: "radio2"
-    }
-  });
-
-  s_route.end();
-  s_radios.end();
-});
-
-test("The Play controller should get the song history of the current radio", function(t) {
-  const s_route = new Bacon.Bus();
-  const s_radios = new Bacon.Bus();
-
-  getSongHistory(s_route.toProperty(), s_radios.toProperty())
-    .fold([], (items, item) => items.concat([item]))
-    .subscribe(function(ev) {
-      t.ok(ev.hasValue());
-
       t.deepEqual(ev.value(), [
-        [],
-        [{
-          id: "TWO"
-        }],
-        [{
-          id: "ONE"
-        }]
+        {
+          type: "loading"
+        },
+        {
+          type: "song",
+          song: {
+            id: "ONE"
+          }
+        },
+        {
+          type: "song",
+          song: {
+            id: "THREE"
+          }
+        }
       ]);
 
       t.end();
@@ -265,12 +148,145 @@ test("The Play controller should get the song history of the current radio", fun
           id: "THREE"
         }
       },
-      pastSongs: [{
+      pastSongs: [
+        {
+          type: "song",
+          song: {
+            id: "TWO"
+          }
+        }
+      ]
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio2"
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio2"
+    }
+  });
+
+  s_route.end();
+  s_radios.end();
+});
+
+test("The Play controller should get the song history of the current radio", function(t) {
+  const s_route = new Bacon.Bus();
+  const s_radios = new Bacon.Bus();
+
+  getSongHistory(s_route.toProperty(), s_radios.toProperty())
+    .fold([], (items, item) => items.concat([item]))
+    .subscribe(function(ev) {
+      t.ok(ev.hasValue());
+
+      t.deepEqual(ev.value(), [
+        [],
+        [
+          {
+            id: "TWO"
+          }
+        ],
+        [
+          {
+            id: "ONE"
+          }
+        ]
+      ]);
+
+      t.end();
+      return Bacon.noMore;
+    });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    }
+  });
+
+  s_route.push({
+    params: {
+      radio: "radio1"
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "loading"
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
         type: "song",
         song: {
           id: "TWO"
         }
-      }]
+      },
+      pastSongs: []
+    }
+  });
+
+  s_radios.push({
+    radio1: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "ONE"
+        }
+      },
+      pastSongs: []
+    },
+    radio2: {
+      nowPlaying: {
+        type: "song",
+        song: {
+          id: "THREE"
+        }
+      },
+      pastSongs: [
+        {
+          type: "song",
+          song: {
+            id: "TWO"
+          }
+        }
+      ]
     }
   });
 
@@ -294,12 +310,14 @@ test("The Play controller should get the song history of the current radio", fun
           id: "FOUR"
         }
       },
-      pastSongs: [{
-        type: "song",
-        song: {
-          id: "ONE"
+      pastSongs: [
+        {
+          type: "song",
+          song: {
+            id: "ONE"
+          }
         }
-      }]
+      ]
     },
     radio2: {
       nowPlaying: {
@@ -308,12 +326,14 @@ test("The Play controller should get the song history of the current radio", fun
           id: "THREE"
         }
       },
-      pastSongs: [{
-        type: "song",
-        song: {
-          id: "TWO"
+      pastSongs: [
+        {
+          type: "song",
+          song: {
+            id: "TWO"
+          }
         }
-      }]
+      ]
     }
   });
 
@@ -341,29 +361,35 @@ test("The Play controller should get the song being played", function(t) {
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
-      t.deepEqual(ev.value(), [{
-        type: "loading"
-      },{
-        type: "song",
-        song: {
-          id: "TWO"
+      t.deepEqual(ev.value(), [
+        {
+          type: "loading"
+        },
+        {
+          type: "song",
+          song: {
+            id: "TWO"
+          }
+        },
+        {
+          type: "song",
+          song: {
+            id: "THREE"
+          }
+        },
+        {
+          type: "spotify",
+          song: {
+            id: "TWO"
+          }
+        },
+        {
+          type: "song",
+          song: {
+            id: "ONE"
+          }
         }
-      },{
-        type: "song",
-        song: {
-          id: "THREE"
-        }
-      },{
-        type: "spotify",
-        song: {
-          id: "TWO"
-        }
-      },{
-        type: "song",
-        song: {
-          id: "ONE"
-        }
-      }]);
+      ]);
 
       t.end();
       return Bacon.noMore;
@@ -436,12 +462,14 @@ test("The Play controller should get the song being played", function(t) {
           id: "THREE"
         }
       },
-      pastSongs: [{
-        type: "song",
-        song: {
-          id: "TWO"
+      pastSongs: [
+        {
+          type: "song",
+          song: {
+            id: "TWO"
+          }
         }
-      }]
+      ]
     },
     radio2: {
       nowPlaying: {
@@ -482,13 +510,16 @@ test("The Play controller should get the song being played", function(t) {
 test("The Play controller should get the current source", function(t) {
   const s_playBus = new Bacon.Bus();
 
-  const radios = [{
-    name: "radio1",
-    src: "radio1-url"
-  },{
-    name: "radio2",
-    src: "radio2-url"
-  }];
+  const radios = [
+    {
+      name: "radio1",
+      src: "radio1-url"
+    },
+    {
+      name: "radio2",
+      src: "radio2-url"
+    }
+  ];
 
   getCurrentSource(radios, s_playBus)
     .fold([], (items, item) => items.concat([item]))

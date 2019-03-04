@@ -10,8 +10,7 @@ export function connect(WS, location, url) {
       try {
         const data = JSON.parse(message.data);
         sink(data.type === "error" ? new Bacon.Error(data) : data);
-      }
-      catch(e) {
+      } catch (e) {
         sink(new Bacon.Error(e));
       }
     };
@@ -32,12 +31,21 @@ export function connect(WS, location, url) {
 }
 
 export function connectForever(WS, location, url) {
-  const s_connect = connect(WS, location, url);
-  const s_end = s_connect.errors().skipErrors().mapEnd();
+  const s_connect = connect(
+    WS,
+    location,
+    url
+  );
+  const s_end = s_connect
+    .errors()
+    .skipErrors()
+    .mapEnd();
 
-  return s_connect.merge(s_end.flatMapLatest(function() {
-    return connectForever(WS, location, url);
-  }));
+  return s_connect.merge(
+    s_end.flatMapLatest(function() {
+      return connectForever(WS, location, url);
+    })
+  );
 }
 
 export default (WebSocket, location) => ({

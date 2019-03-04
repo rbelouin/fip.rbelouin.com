@@ -17,7 +17,7 @@ test("redirectRoute should perform a redirection", function(t) {
   const B = {
     history: {
       pushState: function(n, m, path) {
-        switch(path) {
+        switch (path) {
           case "/a":
             routes.a.push();
             break;
@@ -46,14 +46,7 @@ test("redirectRoute should perform a redirection", function(t) {
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
-      t.deepEqual(ev.value(), [
-        "a",
-        "b",
-        "a",
-        "errors",
-        "b",
-        "a"
-      ]);
+      t.deepEqual(ev.value(), ["a", "b", "a", "errors", "b", "a"]);
 
       t.end();
 
@@ -79,7 +72,7 @@ test("browseTo should trigger an event in the corresponding route", function(t) 
   const B = {
     history: {
       pushState: function(n, m, path) {
-        switch(path) {
+        switch (path) {
           case "/a":
             routes.a.push();
             break;
@@ -105,11 +98,7 @@ test("browseTo should trigger an event in the corresponding route", function(t) 
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
-      t.deepEqual(ev.value(), [
-        "a",
-        "b",
-        "errors"
-      ]);
+      t.deepEqual(ev.value(), ["a", "b", "errors"]);
 
       t.end();
 
@@ -139,12 +128,7 @@ test("getCurrentRoute should return a property containing the name of the curren
     .subscribe(function(ev) {
       t.ok(ev.hasValue());
 
-      t.deepEqual(ev.value(), [
-        "a",
-        "a",
-        "b",
-        "a"
-      ]);
+      t.deepEqual(ev.value(), ["a", "a", "b", "a"]);
 
       t.end();
 

@@ -29,7 +29,7 @@ export function getSongBeingPlayed(p_radios, p_playBus) {
   const p_cmds = p_playBus.filter(cmd => cmd.type != "stop");
 
   const p_song = Bacon.combineWith(p_radios, p_cmds, function(radios, cmd) {
-    switch(cmd.type) {
+    switch (cmd.type) {
       case "loading":
       case "spotify":
         return cmd;
@@ -44,14 +44,20 @@ export function getSongBeingPlayed(p_radios, p_playBus) {
 }
 
 export function getCurrentSource(radios, s_playBus, autoplayRadio) {
-  const defaultRadio = autoplayRadio ? _.find(radios, r => r.name === autoplayRadio) : null;
+  const defaultRadio = autoplayRadio
+    ? _.find(radios, r => r.name === autoplayRadio)
+    : null;
   const defaultSource = defaultRadio && defaultRadio.src;
 
   return s_playBus
-    .map(cmd => cmd.type === "radio" && _.find(radios, r => {
-      return r.name === cmd.radio;
-    }))
-    .map(radio => radio ? radio.src : null)
+    .map(
+      cmd =>
+        cmd.type === "radio" &&
+        _.find(radios, r => {
+          return r.name === cmd.radio;
+        })
+    )
+    .map(radio => (radio ? radio.src : null))
     .toProperty(defaultSource);
 }
 

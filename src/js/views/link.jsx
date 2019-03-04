@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import Bacon from "baconjs";
-import {element, string} from "prop-types";
+import { element, string } from "prop-types";
 
 export default createReactClass({
   displayName: "A",

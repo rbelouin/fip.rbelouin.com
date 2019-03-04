@@ -1,8 +1,8 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {array, object, string} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { array, object, string } from "prop-types";
 
 import Song from "./player-song.jsx";
 import SongList from "./player-song-list.jsx";
@@ -26,12 +26,16 @@ export default createReactClass({
     var radio = _.find(radios, r => r.name === this.props.radio, this);
     var isPlaying = radio && radio.src === src;
 
-    this.props.playBus.push(isPlaying ? {
-      type: "stop"
-    } : {
-      type: "radio",
-      radio: radio.name
-    });
+    this.props.playBus.push(
+      isPlaying
+        ? {
+            type: "stop"
+          }
+        : {
+            type: "radio",
+            radio: radio.name
+          }
+    );
   },
   onAutoplay: function(event) {
     const autoplay = event.target.checked ? event.target.value : null;
@@ -54,46 +58,68 @@ export default createReactClass({
     var isChecked = this.props.radio === this.props.autoplayRadio;
     var isPlaying = radio && radio.src === src;
 
-    var nowPlayingDisplay = nowPlaying.type === "song" ?
-      <Song song={nowPlaying.song} /> :
-      nowPlaying.type === "loading" ?
-        <Song.loading /> :
-        <Song.unknown />;
+    var nowPlayingDisplay =
+      nowPlaying.type === "song" ? (
+        <Song song={nowPlaying.song} />
+      ) : nowPlaying.type === "loading" ? (
+        <Song.loading />
+      ) : (
+        <Song.unknown />
+      );
 
     var play = (
       <div className="fipradio-controls-play" onClick={this.onPlay}>
-        <span className={isPlaying ? "fa fa-stop" : "fa fa-play"}></span>
+        <span className={isPlaying ? "fa fa-stop" : "fa fa-play"} />
         <FormattedMessage
           id={isPlaying ? "stop-the-radio" : "play-the-radio"}
         />
       </div>
     );
 
-    var favorite = nowPlaying.type === "song" ? (
-      <div className="fipradio-controls-favorite" onClick={_.partial(this.onFavorite, nowPlaying.song)}>
-        <span className="fa fa-heart"></span>
-        <FormattedMessage
-          id={nowPlaying.song.favorite ? "remove-from-favorites" : "add-to-favorites"}
-        />
-      </div>
-    ) : "";
+    var favorite =
+      nowPlaying.type === "song" ? (
+        <div
+          className="fipradio-controls-favorite"
+          onClick={_.partial(this.onFavorite, nowPlaying.song)}
+        >
+          <span className="fa fa-heart" />
+          <FormattedMessage
+            id={
+              nowPlaying.song.favorite
+                ? "remove-from-favorites"
+                : "add-to-favorites"
+            }
+          />
+        </div>
+      ) : (
+        ""
+      );
 
-    var spotify = nowPlaying.type === "song" && nowPlaying.song.spotify ? (
-      <a target="_blank" rel="noopener noreferrer" href={nowPlaying.song.spotify} className="fipradio-controls-spotify">
-        <span className="fa fa-spotify"></span>
-        <FormattedMessage
-          id="open-in-spotify"
-        />
-      </a>
-    ) : "";
+    var spotify =
+      nowPlaying.type === "song" && nowPlaying.song.spotify ? (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={nowPlaying.song.spotify}
+          className="fipradio-controls-spotify"
+        >
+          <span className="fa fa-spotify" />
+          <FormattedMessage id="open-in-spotify" />
+        </a>
+      ) : (
+        ""
+      );
 
-    var controlsDisplay = nowPlaying.type === "song" ? (
-      <div className="fipradio-controls">
-        {play}
-        {favorite}
-        {spotify}
-      </div>
-    ) : "";
+    var controlsDisplay =
+      nowPlaying.type === "song" ? (
+        <div className="fipradio-controls">
+          {play}
+          {favorite}
+          {spotify}
+        </div>
+      ) : (
+        ""
+      );
 
     const autoplay = (
       <form className="form-horizontal">
@@ -101,11 +127,21 @@ export default createReactClass({
           <div className="col-sm-12">
             <div className="checkbox">
               <label>
-                <input type="checkbox" name="autoplay" value={radio.name} onChange={this.onAutoplay} checked={isChecked} />
+                <input
+                  type="checkbox"
+                  name="autoplay"
+                  value={radio.name}
+                  onChange={this.onAutoplay}
+                  checked={isChecked}
+                />
                 <FormattedMessage
                   id="autoplay-radio"
                   values={{
-                    radio: <em><FormattedMessage id={radio.name} /></em>
+                    radio: (
+                      <em>
+                        <FormattedMessage id={radio.name} />
+                      </em>
+                    )
                   }}
                 />
               </label>
@@ -119,12 +155,10 @@ export default createReactClass({
       <div className="fipradio">
         {autoplay}
 
-        <hr/>
+        <hr />
 
         <div>
-          <FormattedMessage
-            id="now-broadcasting"
-          />
+          <FormattedMessage id="now-broadcasting" />
         </div>
         {nowPlayingDisplay}
         {controlsDisplay}

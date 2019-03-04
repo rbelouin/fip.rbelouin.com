@@ -21,8 +21,8 @@ import {
 test("Spotify.getAuthorization should return an Authorization header", function(t) {
   const token = {
     access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
     token_type: "type"
   };
 
@@ -48,7 +48,7 @@ test("Spotify.fetchAndFollow should concat and return all the items", function(t
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "3600",
-    token_type: "type"
+    token_type: "type"
   };
 
   const responses = {
@@ -66,15 +66,22 @@ test("Spotify.fetchAndFollow should concat and return all the items", function(t
     }
   };
 
-  function send({method, url, headers}) {
+  function send({ method, url, headers }) {
     t.equal(method, "GET", "The method should be GET");
-    t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
-    }, "The Authorization header must be valid");
+    t.deepEqual(
+      headers,
+      {
+        Authorization: getAuthorization(token)
+      },
+      "The Authorization header must be valid"
+    );
 
-    return Bacon.once(responses[url] || new Bacon.Error({
-      error: "Not Found"
-    })).toProperty();
+    return Bacon.once(
+      responses[url] ||
+        new Bacon.Error({
+          error: "Not Found"
+        })
+    ).toProperty();
   }
 
   fetchAndFollow(send, token, url)
@@ -99,30 +106,37 @@ test("Spotify.search should return a song list", function(t) {
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "3600",
-    token_type: "type"
+    token_type: "type"
   };
 
   const response = {
     tracks: {
-      items: [{
-        id: "abc1",
-        external_urls: {
-          spotify: "ABC1"
+      items: [
+        {
+          id: "abc1",
+          external_urls: {
+            spotify: "ABC1"
+          }
+        },
+        {
+          id: "abc2",
+          external_urls: {
+            spotify: "ABC2"
+          }
         }
-      },{
-        id: "abc2",
-        external_urls: {
-          spotify: "ABC2"
-        }
-      }]
+      ]
     }
   };
 
-  function send({method, url, headers}) {
-    t.equal(url, host + "/search?type=track&q=track:Title+artist:Artist+album:Album", "The URL should be correct");
+  function send({ method, url, headers }) {
+    t.equal(
+      url,
+      host + "/search?type=track&q=track:Title+artist:Artist+album:Album",
+      "The URL should be correct"
+    );
     t.equal(method, "GET", "The method should be GET");
     t.deepEqual(headers || new Map(), {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant(response);
@@ -130,10 +144,14 @@ test("Spotify.search should return a song list", function(t) {
 
   search(send, song, token).subscribe(function(ev) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
-    t.deepEqual(ev.value(), {
-      id: "abc1",
-      href: "ABC1"
-    }, "The returned value should be the first result of the response");
+    t.deepEqual(
+      ev.value(),
+      {
+        id: "abc1",
+        href: "ABC1"
+      },
+      "The returned value should be the first result of the response"
+    );
     t.end();
 
     return Bacon.noMore;
@@ -149,16 +167,19 @@ test("Spotify.requestToken should update the location href", function(t) {
 
   requestToken(l, scope);
 
-  t.equal(l.href, "/api/login?redirect_uri=http%3A%2F%2Ffip.rbelouin.com%2Fsome-path&scope=a&scope=b&scope=c");
+  t.equal(
+    l.href,
+    "/api/login?redirect_uri=http%3A%2F%2Ffip.rbelouin.com%2Fsome-path&scope=a&scope=b&scope=c"
+  );
   t.end();
 });
 
 test("Spotify.refreshToken should update the location href", function(t) {
   const token = {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "expires_in",
-    token_type: "type"
+    expires_in: "expires_in",
+    token_type: "type"
   };
 
   const l = {
@@ -167,7 +188,10 @@ test("Spotify.refreshToken should update the location href", function(t) {
 
   refreshToken(l, token);
 
-  t.equal(l.href, "/api/login?redirect_uri=http%3A%2F%2Ffip.rbelouin.com%2Fsome-path&refresh_token=refresh_token");
+  t.equal(
+    l.href,
+    "/api/login?redirect_uri=http%3A%2F%2Ffip.rbelouin.com%2Fsome-path&refresh_token=refresh_token"
+  );
   t.end();
 });
 
@@ -175,20 +199,20 @@ test("Spotify.getUser should return the user data", function(t) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const user = {
-    "display_name" : "Arthur Dent",
-    "id" : "99238472119472937429924"
+    display_name: "Arthur Dent",
+    id: "99238472119472937429924"
   };
 
-  function send({method, url, headers}) {
+  function send({ method, url, headers }) {
     t.equal(method, "GET", "The method should be GET");
     t.equal(url, host + "/me", "The URL should be OK");
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant(user);
@@ -206,8 +230,8 @@ test("Spotify.getUser should return the user data", function(t) {
 test("Spotify.getPlaylists should return the user playlists", function(t) {
   const token = {
     access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
     token_type: "type"
   };
 
@@ -216,11 +240,13 @@ test("Spotify.getPlaylists should return the user playlists", function(t) {
   const responses = {
     "https://api.spotify.com/v1/users/294729/playlists?limit=50": {
       items: _.range(0, 50),
-      next: "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=50"
+      next:
+        "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=50"
     },
     "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=50": {
       items: _.range(50, 100),
-      next: "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=100"
+      next:
+        "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=100"
     },
     "https://api.spotify.com/v1/users/294729/playlists?limit=50&offset=100": {
       items: _.range(100, 130),
@@ -228,11 +254,11 @@ test("Spotify.getPlaylists should return the user playlists", function(t) {
     }
   };
 
-  function send({method, url, headers}) {
+  function send({ method, url, headers }) {
     t.equal(method, "GET", "The method should be GET");
     t.equal(typeof responses[url], "object", "The URL should be correct");
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant(responses[url]);
@@ -253,34 +279,37 @@ test("Spotify.getPlaylists should return the user playlists", function(t) {
 
 test("Spotify.createPlaylist should create a playlist", function(t) {
   const token = {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const userId = "29729";
   const name = "playlist";
   const isPublic = false;
 
-  function send({method, url, headers, body}) {
+  function send({ method, url, headers, body }) {
     t.equal(method, "POST", "The method should be POST");
     t.equal(url, host + "/users/29729/playlists", "The URL should be OK");
 
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token),
+      Authorization: getAuthorization(token),
       "Content-Type": "application/json"
     });
 
-    t.equal(body, JSON.stringify({
-      "name": name,
-      "public": isPublic
-    }));
+    t.equal(
+      body,
+      JSON.stringify({
+        name: name,
+        public: isPublic
+      })
+    );
 
     return Bacon.constant({
-      "id": "blablablabla",
-      "name": name,
-      "public": isPublic
+      id: "blablablabla",
+      name: name,
+      public: isPublic
     });
   }
 
@@ -294,25 +323,29 @@ test("Spotify.createPlaylist should create a playlist", function(t) {
 
 test("Spotify.getOrCreatePlaylist should create a playlist when it does not already exists", function(t) {
   const token = {
-    access_token: "access_token",
-    refresh_token: "refresh_token",
-    expires_in: "3600",
+    access_token: "access_token",
+    refresh_token: "refresh_token",
+    expires_in: "3600",
     token_type: "type"
   };
 
   const userId = "29729";
   const name = "playlist";
   const playlist = {
-    "id" : "blablablabla",
-    "name" : name,
-    "public" : false
+    id: "blablablabla",
+    name: name,
+    public: false
   };
 
-  function getPlaylists({url, headers}) {
-    t.equal(url, host + "/users/29729/playlists?limit=50", "The URL should be correct");
+  function getPlaylists({ url, headers }) {
+    t.equal(
+      url,
+      host + "/users/29729/playlists?limit=50",
+      "The URL should be correct"
+    );
 
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant({
@@ -321,28 +354,31 @@ test("Spotify.getOrCreatePlaylist should create a playlist when it does not alre
     });
   }
 
-  function createPlaylist({url, headers, body}) {
+  function createPlaylist({ url, headers, body }) {
     t.equal(url, host + "/users/29729/playlists", "The URL should be correct");
 
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token),
+      Authorization: getAuthorization(token),
       "Content-Type": "application/json"
     });
 
-    t.deepEqual(body, JSON.stringify({
-      "name": name,
-      "public": false
-    }));
+    t.deepEqual(
+      body,
+      JSON.stringify({
+        name: name,
+        public: false
+      })
+    );
 
     return Bacon.constant(playlist);
   }
 
-  function send({method, url, headers, body}) {
-    switch(method) {
+  function send({ method, url, headers, body }) {
+    switch (method) {
       case "GET":
-        return getPlaylists({url, headers});
+        return getPlaylists({ url, headers });
       case "POST":
-        return createPlaylist({url, headers, body});
+        return createPlaylist({ url, headers, body });
       default:
         t.fail("The method should be GET or POST");
     }
@@ -350,7 +386,11 @@ test("Spotify.getOrCreatePlaylist should create a playlist when it does not alre
 
   getOrCreatePlaylist(send, token, userId, name).subscribe(function(ev) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
-    t.deepEqual(ev.value(), playlist, "The returned value should be the newly created playlist");
+    t.deepEqual(
+      ev.value(),
+      playlist,
+      "The returned value should be the newly created playlist"
+    );
     t.end();
 
     return Bacon.noMore;
@@ -359,25 +399,29 @@ test("Spotify.getOrCreatePlaylist should create a playlist when it does not alre
 
 test("Spotify.getOrCreatePlaylist should not create a playlist when it already exists", function(t) {
   const token = {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const userId = "29729";
   const name = "playlist";
   const playlist = {
-    "id" : "blablablabla",
-    "name" : name,
-    "public" : false
+    id: "blablablabla",
+    name: name,
+    public: false
   };
 
-  function getPlaylists({url, headers}) {
-    t.equal(url, host + "/users/29729/playlists?limit=50", "The URL should be correct");
+  function getPlaylists({ url, headers }) {
+    t.equal(
+      url,
+      host + "/users/29729/playlists?limit=50",
+      "The URL should be correct"
+    );
 
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant({
@@ -386,10 +430,10 @@ test("Spotify.getOrCreatePlaylist should not create a playlist when it already e
     });
   }
 
-  function send({method, url, headers, body}) {
-    switch(method) {
+  function send({ method, url, headers, body }) {
+    switch (method) {
       case "GET":
-        return getPlaylists({url, headers});
+        return getPlaylists({ url, headers });
       case "POST":
         t.fail("It should not create a playlist");
       default:
@@ -399,7 +443,11 @@ test("Spotify.getOrCreatePlaylist should not create a playlist when it already e
 
   getOrCreatePlaylist(send, token, userId, name).subscribe(function(ev) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
-    t.deepEqual(ev.value(), playlist, "The returned value should be the newly created playlist");
+    t.deepEqual(
+      ev.value(),
+      playlist,
+      "The returned value should be the newly created playlist"
+    );
     t.end();
 
     return Bacon.noMore;
@@ -408,10 +456,10 @@ test("Spotify.getOrCreatePlaylist should not create a playlist when it already e
 
 test("Spotify.getPlaylistTracks should return the tracks of a playlist", function(t) {
   const token = {
-    access_token: "access_token",
+    access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const userId = "294729";
@@ -420,13 +468,13 @@ test("Spotify.getPlaylistTracks should return the tracks of a playlist", functio
   const trackFromN = n => ({
     track: {
       id: n,
-      name: n + "-title",
-      artists: [{name: n + "-artist"}],
+      name: n + "-title",
+      artists: [{ name: n + "-artist" }],
       album: {
-        name: n + "-album",
-        images: [{url: n + "-image"}]
+        name: n + "-album",
+        images: [{ url: n + "-image" }]
       },
-      external_urls: {
+      external_urls: {
         spotify: n + "-spotify"
       }
     }
@@ -448,11 +496,13 @@ test("Spotify.getPlaylistTracks should return the tracks of a playlist", functio
   const responses = {
     "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50": {
       items: _.range(0, 50).map(trackFromN),
-      next: "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=50"
+      next:
+        "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=50"
     },
     "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=50": {
       items: _.range(50, 100).map(trackFromN),
-      next: "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=100"
+      next:
+        "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=100"
     },
     "https://api.spotify.com/v1/users/294729/playlists/9274920/tracks?limit=50&offset=100": {
       items: _.range(100, 130).map(trackFromN),
@@ -460,11 +510,11 @@ test("Spotify.getPlaylistTracks should return the tracks of a playlist", functio
     }
   };
 
-  function send({method, url, headers}) {
+  function send({ method, url, headers }) {
     t.equal(method, "GET", "The method should be GET");
     t.equal(typeof responses[url], "object", "The URL should be correct");
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token)
+      Authorization: getAuthorization(token)
     });
 
     return Bacon.constant(responses[url]);
@@ -487,30 +537,40 @@ test("Spotify.setPlaylistTracks should update the track list of the playlist", f
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const userId = "294729";
   const playlistId = "2983";
   const tracks = ["1", "2", "3"];
 
-  function send({method, url, headers, body}) {
+  function send({ method, url, headers, body }) {
     t.equal(method, "PUT", "The method should be PUT");
-    t.equal(url, host + "/users/294729/playlists/2983/tracks", "The URL should be correct");
+    t.equal(
+      url,
+      host + "/users/294729/playlists/2983/tracks",
+      "The URL should be correct"
+    );
     t.deepEqual(headers, {
-      "Authorization": getAuthorization(token),
+      Authorization: getAuthorization(token),
       "Content-Type": "application/json"
     });
 
-    t.equal(body, JSON.stringify({
-      uris: ["spotify:track:1", "spotify:track:2", "spotify:track:3"]
-    }), "The body should contained all the track ids");
+    t.equal(
+      body,
+      JSON.stringify({
+        uris: ["spotify:track:1", "spotify:track:2", "spotify:track:3"]
+      }),
+      "The body should contained all the track ids"
+    );
 
     return Bacon.constant();
   }
 
-  setPlaylistTracks(send, token, userId, playlistId, tracks).subscribe(function(ev) {
+  setPlaylistTracks(send, token, userId, playlistId, tracks).subscribe(function(
+    ev
+  ) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
     t.end();
 
@@ -522,8 +582,8 @@ test("Spotify.sync should return a sync object", function(t) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
-    expires_in: "3600",
-    token_type: "type"
+    expires_in: "3600",
+    token_type: "type"
   };
 
   const userId = "294729";
@@ -532,13 +592,13 @@ test("Spotify.sync should return a sync object", function(t) {
   const trackFromN = n => ({
     track: {
       id: n,
-      name: n + "-title",
-      artists: [{name: n + "-artist"}],
+      name: n + "-title",
+      artists: [{ name: n + "-artist" }],
       album: {
-        name: n + "-album",
-        images: [{url: n + "-image"}]
+        name: n + "-album",
+        images: [{ url: n + "-image" }]
       },
-      external_urls: {
+      external_urls: {
         spotify: n + "-spotify"
       }
     }
@@ -559,32 +619,40 @@ test("Spotify.sync should return a sync object", function(t) {
 
   function getPlaylistTracks() {
     return Bacon.constant({
-      items: _.range(0, 30).map(trackFromN),
+      items: _.range(0, 30).map(trackFromN),
       next: null
     });
   }
 
   function setPlaylistTracks(body) {
-    t.equal(body, JSON.stringify({
-      uris: ["spotify:track:1", "spotify:track:2", "spotify:track:3"]
-    }), "The body should contained all the track ids");
+    t.equal(
+      body,
+      JSON.stringify({
+        uris: ["spotify:track:1", "spotify:track:2", "spotify:track:3"]
+      }),
+      "The body should contained all the track ids"
+    );
 
     return Bacon.constant();
   }
 
-  function send({method, url, headers, body}) {
-    switch(method) {
+  function send({ method, url, headers, body }) {
+    switch (method) {
       case "GET":
-        t.equal(url, host + "/users/294729/playlists/2983/tracks?limit=50", "The URL should be correct");
+        t.equal(
+          url,
+          host + "/users/294729/playlists/2983/tracks?limit=50",
+          "The URL should be correct"
+        );
         t.deepEqual(headers, {
-          "Authorization": getAuthorization(token)
+          Authorization: getAuthorization(token)
         });
 
         return getPlaylistTracks();
       case "PUT":
         t.equal(url, host + "/users/294729/playlists/2983/tracks");
         t.deepEqual(headers, {
-          "Authorization": getAuthorization(token),
+          Authorization: getAuthorization(token),
           "Content-Type": "application/json"
         });
         return setPlaylistTracks(body);

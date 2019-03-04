@@ -13,21 +13,27 @@ export function fetchFipSongs(connectForever, url) {
 export function fetchFipRadios(connectForever, url, radios) {
   const stream = connectForever(url);
 
-  return _.reduce(radios, (data, radio) => {
-    data[radio] = stream
-      .flatMapLatest(data => Bacon.once(data[radio] || new Bacon.Error()))
-      .endOnError()
-      .skipDuplicates((s1, s2) => {
-        return s1.type === "song"
-            && s2.type === "song"
-            && s1.song.startTime >= s2.song.startTime;
-      });
+  return _.reduce(
+    radios,
+    (data, radio) => {
+      data[radio] = stream
+        .flatMapLatest(data => Bacon.once(data[radio] || new Bacon.Error()))
+        .endOnError()
+        .skipDuplicates((s1, s2) => {
+          return (
+            s1.type === "song" &&
+            s2.type === "song" &&
+            s1.song.startTime >= s2.song.startTime
+          );
+        });
 
-    return data;
-  }, {});
+      return data;
+    },
+    {}
+  );
 }
 
-export default (WebSocket) => ({
+export default WebSocket => ({
   fetchFipSongs: _.partial(fetchFipSongs, WebSocket.connectForever),
   fetchFipRadios: _.partial(fetchFipRadios, WebSocket.connectForever)
 });

@@ -1,17 +1,13 @@
 import test from "tape";
 import Bacon from "baconjs";
 
-import {
-  parseResponse,
-  send
-} from "../../../src/js/models/http.js";
+import { parseResponse, send } from "../../../src/js/models/http.js";
 
 test("Http.parseResponse should parse a JSON response", function(t) {
-  const body = {a: 1, b: 2};
+  const body = { a: 1, b: 2 };
   const res = {
     ok: true,
-    headers: new Map()
-      .set("Content-Type", "application/json; charset=utf-8"),
+    headers: new Map().set("Content-Type", "application/json; charset=utf-8"),
     json: function() {
       return Promise.resolve(body);
     }
@@ -27,7 +23,7 @@ test("Http.parseResponse should parse a JSON response", function(t) {
 });
 
 test("Http.parseResponse should not parse response that does not have any content type", function(t) {
-  const body = {a: 1, b: 2};
+  const body = { a: 1, b: 2 };
   const res = {
     ok: true,
     headers: new Map(),
@@ -46,11 +42,10 @@ test("Http.parseResponse should not parse response that does not have any conten
 });
 
 test("Http.parseResponse should return the response when it fails parsing the body", function(t) {
-  const body = {a: 1, b: 2};
+  const body = { a: 1, b: 2 };
   const res = {
     ok: false,
-    headers: new Map()
-      .set("Content-Type", "application/json; charset=utf-8"),
+    headers: new Map().set("Content-Type", "application/json; charset=utf-8"),
     json: function() {
       return Promise.resolve(body);
     }
@@ -69,10 +64,10 @@ test("Http.send should return a property containing the response body", function
   const reqUrl = "/api/songs/current";
   const reqMethod = "GET";
   const reqHeaders = { "Content-Type": "application/json" };
-  const reqBody = JSON.stringify({c: 42});
-  const resBody = {a: 1, b: 2};
+  const reqBody = JSON.stringify({ c: 42 });
+  const resBody = { a: 1, b: 2 };
 
-  function fetch(url, {method, headers, body}) {
+  function fetch(url, { method, headers, body }) {
     t.equal(url, reqUrl, "The URL should be the same");
     t.equal(method, reqMethod, "The method should be the same");
     t.deepEqual(headers, reqHeaders, "The headers should be the same");
@@ -80,8 +75,7 @@ test("Http.send should return a property containing the response body", function
 
     return Promise.resolve({
       ok: true,
-      headers: new Map()
-        .set("Content-Type", "application/json; charset=utf-8"),
+      headers: new Map().set("Content-Type", "application/json; charset=utf-8"),
       json: function() {
         return Promise.resolve(resBody);
       }
@@ -95,7 +89,10 @@ test("Http.send should return a property containing the response body", function
     body: reqBody
   });
 
-  t.ok(Bacon.Property.prototype.isPrototypeOf(p_res), "p_res should be a Bacon.Property");
+  t.ok(
+    Bacon.Property.prototype.isPrototypeOf(p_res),
+    "p_res should be a Bacon.Property"
+  );
 
   p_res.subscribe(function(ev) {
     t.ok(ev.hasValue(), "The event should not be an error nor an end");
@@ -110,10 +107,12 @@ test("Http.send should return the response when the request fails", function(t) 
   const reqUrl = "/api/songs/current";
   const reqMethod = "GET";
   const reqHeaders = { "Content-Type": "application/json" };
-  const reqBody = JSON.stringify({c: 42});
-  const error = new TypeError("NetworkError when attempting to fetch resource.");
+  const reqBody = JSON.stringify({ c: 42 });
+  const error = new TypeError(
+    "NetworkError when attempting to fetch resource."
+  );
 
-  function fetch(url, {method, headers, body}) {
+  function fetch(url, { method, headers, body }) {
     t.equal(url, reqUrl, "The URL should be the same");
     t.equal(method, reqMethod, "The method should be the same");
     t.deepEqual(headers, reqHeaders, "The headers should be the same");
@@ -129,7 +128,10 @@ test("Http.send should return the response when the request fails", function(t) 
     body: reqBody
   });
 
-  t.ok(Bacon.Property.prototype.isPrototypeOf(p_res), "p_res should be a Bacon.Property");
+  t.ok(
+    Bacon.Property.prototype.isPrototypeOf(p_res),
+    "p_res should be a Bacon.Property"
+  );
 
   p_res.subscribe(function(ev) {
     t.ok(ev.isError(), "The event should be an error");
@@ -141,18 +143,20 @@ test("Http.send should return the response when the request fails", function(t) 
 });
 
 test("Http.send should accept a headers Map()", function(t) {
-  function fetch(url, {method, headers, body}) {
-    t.notOk(Map.prototype.isPrototypeOf(headers), "Headers should not be a Map()");
+  function fetch(url, { method, headers, body }) {
+    t.notOk(
+      Map.prototype.isPrototypeOf(headers),
+      "Headers should not be a Map()"
+    );
     t.end();
   }
 
   send(fetch, {
     method: "POST",
     url: "/api/songs",
-    headers: new Map()
-      .set("Content-Type", "application/json"),
+    headers: new Map().set("Content-Type", "application/json"),
     body: JSON.stringify({
-      plop: "blah"
+      plop: "blah"
     })
   });
 });

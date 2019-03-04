@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import {array, object} from "prop-types";
+import { array, object } from "prop-types";
 
 import Radio from "./radio.jsx";
 import Favorites from "./favorites.jsx";
@@ -26,8 +26,8 @@ export default createReactClass({
       route: "radio",
       radio: "fip-radio",
       history: [],
-      bsong: {type: "loading"},
-      psong: {type: "loading"},
+      bsong: { type: "loading" },
+      psong: { type: "loading" },
       src: null,
       favSongs: [],
       user: null,
@@ -35,25 +35,31 @@ export default createReactClass({
     };
   },
   componentDidMount: function() {
-    _.each(this.props.state, function(stream, name) {
-      stream.onValue(function(value) {
-        const state = {};
-        state[name] = value;
+    _.each(
+      this.props.state,
+      function(stream, name) {
+        stream.onValue(
+          function(value) {
+            const state = {};
+            state[name] = value;
 
-        this.setState(state);
-      }.bind(this));
-    }.bind(this));
+            this.setState(state);
+          }.bind(this)
+        );
+      }.bind(this)
+    );
   },
   render: function() {
-    var page =  this.state.route === "favorites" ?
-      <Favorites
-        favSongs={this.state.favSongs}
-        favBus={this.props.favBus}
-        syncBus={this.props.syncBus}
-        playBus={this.props.playBus}
-        user={this.state.user}
-      /> :
-      this.state.route === "radio" ?
+    var page =
+      this.state.route === "favorites" ? (
+        <Favorites
+          favSongs={this.state.favSongs}
+          favBus={this.props.favBus}
+          syncBus={this.props.syncBus}
+          playBus={this.props.playBus}
+          user={this.state.user}
+        />
+      ) : this.state.route === "radio" ? (
         <Radio
           nowPlaying={this.state.bsong}
           src={this.state.src}
@@ -64,8 +70,10 @@ export default createReactClass({
           favBus={this.props.favBus}
           playBus={this.props.playBus}
           autoplayBus={this.props.autoplayBus}
-        /> :
-        "";
+        />
+      ) : (
+        ""
+      );
 
     var player = this.state.playerOnBottom ? (
       <Player
@@ -75,13 +83,13 @@ export default createReactClass({
         radio={this.state.radio}
         onBottom={true}
       />
-    ) : "";
+    ) : (
+      ""
+    );
 
     return (
       <div className="app">
-        <main className="app-main container-fluid">
-          {page}
-        </main>
+        <main className="app-main container-fluid">{page}</main>
         {player}
         <AppNav
           radios={this.props.radios}

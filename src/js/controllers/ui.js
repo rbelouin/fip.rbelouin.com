@@ -9,7 +9,7 @@ export function getPaneStatus(win) {
     "click"
   );
 
-  return s_click.doAction(".preventDefault").scan(false, (acc) => {
+  return s_click.doAction(".preventDefault").scan(false, acc => {
     return !acc;
   });
 }
@@ -24,11 +24,10 @@ export function getPlayerPosition() {
     sink(mediaQuery);
 
     return () => mediaQuery.removeListener(sink);
-  })
-    .map(".matches");
+  }).map(".matches");
 }
 
-export default (win) => ({
+export default win => ({
   getPaneStatus: _.partial(getPaneStatus, win),
   getPlayerPosition
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import {FormattedMessage} from "react-intl";
-import {array, bool, object, string} from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { array, bool, object, string } from "prop-types";
 
 import A from "./link.jsx";
 import Player from "./nav-player.jsx";
@@ -22,7 +22,9 @@ export default createReactClass({
     return this.props.route === route ? "active" : "";
   },
   isRadioActive: function(radio) {
-    return this.props.route === "radio" && this.props.radio === radio ? "active" : "";
+    return this.props.route === "radio" && this.props.radio === radio
+      ? "active"
+      : "";
   },
   render: function() {
     const src = this.props.src;
@@ -32,8 +34,16 @@ export default createReactClass({
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
 
     const player = !this.props.playerOnBottom ? (
-      <Player src={src} nowPlaying={nowPlaying} playBus={playBus} radio={this.props.radio} onBottom={false} />
-    ) : "";
+      <Player
+        src={src}
+        nowPlaying={nowPlaying}
+        playBus={playBus}
+        radio={this.props.radio}
+        onBottom={false}
+      />
+    ) : (
+      ""
+    );
 
     const radios = this.props.radios.map(radio => {
       const href = `/radios/${radio.name}`;
@@ -54,9 +64,7 @@ export default createReactClass({
             <div>
               <FormattedMessage id="radios" />
             </div>
-            <ul>
-              {radios}
-            </ul>
+            <ul>{radios}</ul>
           </li>
           <li className={this.isActive("favorites")}>
             <A href="/users/me/songs">
