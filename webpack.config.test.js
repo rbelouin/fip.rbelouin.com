@@ -8,7 +8,7 @@ module.exports = {
   target: "node",
   entry: () =>
     new Promise((resolve, reject) => {
-      glob("./test/**/*.spec.js", function(err, files) {
+      glob("./test/unit/**/*.spec.js", function(err, files) {
         if (err) {
           reject(err);
         } else {
