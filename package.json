@@ -13,6 +13,7 @@
   ],
   "author": "Rodolphe Belouin <me@rbelouin.com>",
   "license": "MIT",
+  "repository": "https://github.com/rbelouin/fip-client",
   "engines": {
     "node": 8
   },
@@ -29,10 +30,9 @@
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
-    "baconjs": "^0.7.74",
     "bootstrap": "^3.4.1",
-    "css-loader": "^0.28.4",
-    "eslint": "^5.14.1",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
     "eslint-loader": "^2.1.2",
     "eslint-plugin-react": "^7.12.4",
     "express": "^4.13.3",
