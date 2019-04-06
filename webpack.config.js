@@ -64,12 +64,12 @@ module.exports = {
       filename: "all.css"
     }),
     new FaviconsWebpackPlugin({
-      logo: "./src/img/icon.png",
+      logo: "./assets/img/icon.png",
       background: "#222222"
     }),
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: "./src/html/index.html",
+      template: "./assets/html/index.html",
       inject: "body",
       trackingId: config.google_analytics.tracking_id
     })

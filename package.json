@@ -20,6 +20,11 @@
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
+    "@types/baconjs": "^0.7.33",
+    "@types/lodash": "^4.14.123",
+    "@types/node": "^11.11.0",
+    "@types/request": "^2.48.1",
+    "@types/tape": "^4.2.33",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
@@ -44,6 +49,8 @@
     "tap-spec": "^5.0.0",
     "tap-webpack-plugin": "^2.0.0",
     "tape": "^4.2.1",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
     "webapp-webpack-plugin": "^2.6.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
@@ -59,10 +66,12 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-intl": "^2.8.0",
+    "request": "^2.88.0",
     "whatwg-fetch": "^0.10.1"
   },
   "scripts": {
     "build": "webpack",
+    "build:server": "webpack --config webpack.config.server.js",
     "install": "webpack",
     "start": "node ./prod/js/server.js",
     "test": "./test/runner.sh",

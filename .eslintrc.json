@@ -15,7 +15,12 @@
   "plugins": ["react"],
   "overrides": [
     {
-      "files": ["webpack.config.js", "webpack.config.*.js", "test/**/*.js"],
+      "files": [
+        "webpack.config.js",
+        "webpack.config.*.js",
+        "test/**/*.js",
+        "prod/js/server.js"
+      ],
       "env": {
         "node": true
       }
