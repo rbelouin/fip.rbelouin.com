@@ -12,8 +12,6 @@ const apiPrefix = "/api";
 const publicFolder = process.env.PUBLIC_FOLDER || "";
 const httpsOnly = process.env.HTTPS_ONLY === "1";
 
-console.log(publicFolder);
-
 app.use(function(req, res, next) {
   const protocol =
     req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
