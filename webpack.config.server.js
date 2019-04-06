@@ -1,9 +1,10 @@
+const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
   mode: "production",
   target: "node",
-  entry: ["./src/fip/radio-metadata/index.ts"],
+  entry: ["./src/server/index.ts"],
   output: {
     path: path.resolve("output"),
     filename: "server.js"
@@ -16,5 +17,12 @@ module.exports = {
         use: ["ts-loader"]
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.PUBLIC_FOLDER": JSON.stringify(
+        path.resolve(__dirname, "prod", "public")
+      )
+    })
+  ]
 };
