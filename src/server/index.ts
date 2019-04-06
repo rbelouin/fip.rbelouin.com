@@ -1,18 +1,21 @@
-var _ = require("lodash");
-var qs = require("querystring");
-var path = require("path");
-var express = require("express");
-var Bacon = require("baconjs");
+import _ from "lodash";
+import qs from "querystring";
+import path from "path";
+import express from "express";
+import Bacon from "baconjs";
 
-var config = require("./config.json");
+import config from "../../prod/js/config.json";
 
-var app = express();
+const app = express();
 
-var apiPrefix = "/api";
-var httpsOnly = process.env.HTTPS_ONLY === "1";
+const apiPrefix = "/api";
+const publicFolder = process.env.PUBLIC_FOLDER || "";
+const httpsOnly = process.env.HTTPS_ONLY === "1";
+
+console.log(publicFolder);
 
 app.use(function(req, res, next) {
-  var protocol =
+  const protocol =
     req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
 
   if (httpsOnly && protocol !== "https") {
@@ -33,11 +36,11 @@ app.use(function(req, res, next) {
 
 _.each(config.routes, function(route, name) {
   app.get(route, function(req, res) {
-    res.sendFile(path.resolve(__dirname, "../public/index.html"));
+    res.sendFile(path.resolve(publicFolder, "index.html"));
   });
 });
 
-app.use(express.static(path.resolve(__dirname, "../public")));
+app.use(express.static(publicFolder));
 
 app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
