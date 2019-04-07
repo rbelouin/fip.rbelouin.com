@@ -45,19 +45,19 @@ export function getSongBeingPlayed(p_radios, p_playBus) {
 
 export function getCurrentSource(radios, s_playBus, autoplayRadio) {
   const defaultRadio = autoplayRadio
-    ? _.find(radios, r => r.name === autoplayRadio)
+    ? _.find(radios, r => r.id === autoplayRadio)
     : null;
-  const defaultSource = defaultRadio && defaultRadio.src;
+  const defaultSource = defaultRadio && defaultRadio.audioSource;
 
   return s_playBus
     .map(
       cmd =>
         cmd.type === "radio" &&
         _.find(radios, r => {
-          return r.name === cmd.radio;
+          return r.id === cmd.radio;
         })
     )
-    .map(radio => (radio ? radio.src : null))
+    .map(radio => (radio ? radio.audioSource : null))
     .toProperty(defaultSource);
 }
 

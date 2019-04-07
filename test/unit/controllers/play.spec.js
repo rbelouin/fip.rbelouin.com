@@ -512,12 +512,12 @@ test("The Play controller should get the current source", function(t) {
 
   const radios = [
     {
-      name: "radio1",
-      src: "radio1-url"
+      id: "radio1",
+      audioSource: "radio1-url"
     },
     {
-      name: "radio2",
-      src: "radio2-url"
+      id: "radio2",
+      audioSource: "radio2-url"
     }
   ];
 

@@ -5,6 +5,7 @@ import express from "express";
 import Bacon from "baconjs";
 
 import config from "../../prod/js/config.json";
+import { fetchRadios } from "../fip/radio-metadata";
 
 const app = express();
 
@@ -42,3 +43,9 @@ app.use(express.static(publicFolder));
 
 app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
+
+/**
+ * Fetch radios metadata in the background.
+ * Track the number of exceptions, to adjust the parser if necessary.
+ */
+fetchRadios(2000, config.radios).onError(console.log);

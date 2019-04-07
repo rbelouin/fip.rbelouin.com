@@ -23,8 +23,8 @@ export default createReactClass({
   onPlay: function() {
     var src = this.props.src;
     var radios = this.props.radios;
-    var radio = _.find(radios, r => r.name === this.props.radio, this);
-    var isPlaying = radio && radio.src === src;
+    var radio = _.find(radios, r => r.id === this.props.radio, this);
+    var isPlaying = radio && radio.audioSource === src;
 
     this.props.playBus.push(
       isPlaying
@@ -33,7 +33,7 @@ export default createReactClass({
           }
         : {
             type: "radio",
-            radio: radio.name
+            radio: radio.id
           }
     );
   },
@@ -54,9 +54,9 @@ export default createReactClass({
     var favBus = this.props.favBus;
     var playBus = this.props.playBus;
     var radios = this.props.radios;
-    var radio = _.find(radios, r => r.name === this.props.radio, this);
+    var radio = _.find(radios, r => r.id === this.props.radio, this);
     var isChecked = this.props.radio === this.props.autoplayRadio;
-    var isPlaying = radio && radio.src === src;
+    var isPlaying = radio && radio.audioSource === src;
 
     var nowPlayingDisplay =
       nowPlaying.type === "song" ? (
@@ -130,7 +130,7 @@ export default createReactClass({
                 <input
                   type="checkbox"
                   name="autoplay"
-                  value={radio.name}
+                  value={radio.id}
                   onChange={this.onAutoplay}
                   checked={isChecked}
                 />
@@ -139,7 +139,7 @@ export default createReactClass({
                   values={{
                     radio: (
                       <em>
-                        <FormattedMessage id={radio.name} />
+                        <FormattedMessage id={radio.id} />
                       </em>
                     )
                   }}

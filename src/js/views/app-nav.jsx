@@ -46,12 +46,12 @@ export default createReactClass({
     );
 
     const radios = this.props.radios.map(radio => {
-      const href = `/radios/${radio.name}`;
+      const href = `/radios/${radio.id}`;
 
       return (
-        <li key={href} className={this.isRadioActive(radio.name)}>
+        <li key={href} className={this.isRadioActive(radio.id)}>
           <A href={href}>
-            <FormattedMessage id={radio.name} />
+            <FormattedMessage id={radio.id} />
           </A>
         </li>
       );
