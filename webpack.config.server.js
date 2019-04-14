@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
+const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
   mode: "production",
@@ -9,6 +10,7 @@ module.exports = {
     path: path.resolve("output"),
     filename: "server.js"
   },
+  externals: [nodeExternals()],
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
   },

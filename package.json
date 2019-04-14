@@ -54,7 +54,8 @@
     "typescript": "^3.3.3333",
     "webapp-webpack-plugin": "^2.6.0",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
     "bacon-routes": "^1.0.0",
