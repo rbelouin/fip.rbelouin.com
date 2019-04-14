@@ -1,7 +1,8 @@
 import * as Bacon from "baconjs";
+import _ from "lodash";
 import request, { Response } from "request";
 import { Song, Radio, NowPlaying, NowPlayingByRadio } from "../../types";
-import { FipLiveMeta, FipStep } from "./types";
+import { FipLiveMeta, FipStep, FipLevel } from "./types";
 
 export function fetchRadios(
   interval: number,
@@ -65,11 +66,126 @@ export function parseLiveMeta(
   response: Response
 ): FipLiveMeta | Bacon.Error<Error> {
   try {
-    // TODO: stop assuming fip data has the right structure?
-    return JSON.parse(response.body);
+    return isFipLiveMeta(JSON.parse(response.body));
   } catch (e) {
     return new Bacon.Error(e);
   }
+}
+
+type Validator<T> = (value: any) => T;
+
+export function isFipLiveMeta(value: any): FipLiveMeta {
+  return isObject({
+    steps: isRecord(isFipStep),
+    levels: isArray(isFipLevel)
+  })(value);
+}
+
+export function isFipStep(value: any): FipStep {
+  return isObject({
+    uuid: isString,
+    start: isNumber,
+    end: isNumber,
+    title: isString,
+    titreAlbum: isString,
+    authors: isString,
+    anneeEditionMusique: isUndefinedOr(isNumber),
+    label: isString,
+    visual: isString
+  })(value);
+}
+
+export function isFipLevel(value: any): FipLevel {
+  return isObject({
+    items: isArray(isString),
+    position: isNumber
+  })(value);
+}
+
+export function isRecord<V>(
+  validator: Validator<V>
+): Validator<Record<string, V>> {
+  return (value: any) => {
+    if (!_.isObject(value)) {
+      throw new Error(`Not a record: ${JSON.stringify(value)}`);
+    }
+
+    return _.mapValues(value as any, (v, k) => {
+      try {
+        return validator(v);
+      } catch (e) {
+        throw new Error(`For key ${k}: ${e.message}`);
+      }
+    });
+  };
+}
+
+export function isArray<V>(validator: Validator<V>): Validator<Array<V>> {
+  return (value: any) => {
+    if (!_.isArray(value)) {
+      throw new Error(`Not an array: ${JSON.stringify(value)}`);
+    }
+
+    return _.map(value, (v, i) => {
+      try {
+        return validator(v);
+      } catch (e) {
+        throw new Error(`For index ${i}: ${e.message}`);
+      }
+    });
+  };
+}
+
+export function isObject<O>(
+  validators: { [K in keyof O]: Validator<O[K]> }
+): Validator<O> {
+  return (value: any) => {
+    if (!_.isObject(value)) {
+      throw new Error(`Not an object: ${JSON.stringify(value)}`);
+    }
+
+    let validatedObject: Partial<O> = {};
+
+    for (let key in validators) {
+      if (validators.hasOwnProperty(key)) {
+        try {
+          validatedObject[key] = validators[key]((value as any)[key]);
+        } catch (e) {
+          throw new Error(`For key ${key}: ${e.message}`);
+        }
+      }
+    }
+
+    return validatedObject as O;
+  };
+}
+
+export function isUndefinedOr<V>(
+  validator: Validator<V>
+): Validator<V | undefined> {
+  return (value: any) => {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    return validator(value);
+  };
+}
+
+export function isString(value: any): string {
+  if (typeof value !== "string") {
+    throw new Error(`Not a string: ${JSON.stringify(value)}`);
+  }
+
+  return value;
+}
+
+export function isNumber(value: any): number {
+  if (typeof value !== "number") {
+    throw new Error(`Not a number: ${JSON.stringify(value)}`);
+  }
+
+  return value;
 }
 
 export function extractStep(
@@ -92,7 +208,10 @@ export function toSong(step: FipStep): Song {
     title: sanitize(step.title),
     album: sanitize(step.titreAlbum),
     artist: sanitize(step.authors),
-    year: step.anneeEditionMusique.toString(),
+    year:
+      step.anneeEditionMusique === undefined
+        ? undefined
+        : step.anneeEditionMusique.toString(),
     label: sanitize(step.label),
     icons: {
       medium: step.visual

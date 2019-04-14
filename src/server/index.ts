@@ -5,14 +5,13 @@ import express from "express";
 import Bacon from "baconjs";
 
 import config from "../../prod/js/config.json";
+import { fetchRadios } from "../fip/radio-metadata";
 
 const app = express();
 
 const apiPrefix = "/api";
 const publicFolder = process.env.PUBLIC_FOLDER || "";
 const httpsOnly = process.env.HTTPS_ONLY === "1";
-
-console.log(publicFolder);
 
 app.use(function(req, res, next) {
   const protocol =
@@ -44,3 +43,11 @@ app.use(express.static(publicFolder));
 
 app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
+
+/**
+ * Fetch radios metadata in the background.
+ * Track the number of exceptions, to adjust the parser if necessary.
+ */
+const p_radios = fetchRadios(2000, config.radios);
+
+p_radios.onError(console.log);

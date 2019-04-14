@@ -51,7 +51,7 @@ export function start(conf) {
     Spotify,
     Fip,
     conf.api.ws_host,
-    conf.radios.map(r => r.name)
+    conf.radios.map(r => r.id)
   );
   const PlayController = getPlayController(conf.radios);
   const RouteController = getRouteController(Bacon, conf.routes);
