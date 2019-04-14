@@ -88,7 +88,7 @@ export function isFipStep(value: any): FipStep {
     end: isNumber,
     title: isString,
     titreAlbum: isUndefinedOr(isString),
-    authors: isString,
+    authors: isUndefinedOr(isString),
     anneeEditionMusique: isUndefinedOr(isNumber),
     label: isUndefinedOr(isString),
     visual: isUndefinedOr(isString)
@@ -207,7 +207,7 @@ export const toSong = (defaultIcon: string) => (step: FipStep): Song => {
     endTime: step.end,
     title: sanitize(step.title),
     album: mapUndefined(step.titreAlbum, sanitize),
-    artist: sanitize(step.authors),
+    artist: mapUndefined(step.authors, sanitize),
     year: mapUndefined(step.anneeEditionMusique, n => n.toString()),
     label: mapUndefined(step.label, sanitize),
     icons: {
