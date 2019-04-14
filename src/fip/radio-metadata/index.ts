@@ -89,7 +89,7 @@ export function isFipStep(value: any): FipStep {
     title: isString,
     titreAlbum: isString,
     authors: isString,
-    anneeEditionMusique: isNumber,
+    anneeEditionMusique: isUndefinedOr(isNumber),
     label: isString,
     visual: isString
   })(value);
@@ -160,6 +160,18 @@ export function isObject<O>(
   };
 }
 
+export function isUndefinedOr<V>(
+  validator: Validator<V>
+): Validator<V | undefined> {
+  return (value: any) => {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    return validator(value);
+  };
+}
+
 export function isString(value: any): string {
   if (typeof value !== "string") {
     throw new Error(`Not a string: ${JSON.stringify(value)}`);
@@ -196,7 +208,10 @@ export function toSong(step: FipStep): Song {
     title: sanitize(step.title),
     album: sanitize(step.titreAlbum),
     artist: sanitize(step.authors),
-    year: step.anneeEditionMusique.toString(),
+    year:
+      step.anneeEditionMusique === undefined
+        ? undefined
+        : step.anneeEditionMusique.toString(),
     label: sanitize(step.label),
     icons: {
       medium: step.visual
