@@ -3,7 +3,7 @@ export type Song = {
   startTime: number;
   endTime: number;
   title: string;
-  album: string;
+  album: string | undefined;
   artist: string;
   year: string | undefined;
   label: string | undefined;

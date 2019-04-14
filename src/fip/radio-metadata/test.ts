@@ -14,12 +14,16 @@ import {
 import { FipLiveMeta, FipStep } from "./types";
 import { Song, Radio, NowPlaying, NowPlayingByRadio } from "./../../types";
 
+import fipRadioRawLiveMeta from "./test/fipradio.raw-livemeta.json";
 import fipRadioLiveMeta from "./test/fipradio.livemeta.json";
+import fipElectroRawLiveMeta from "./test/fipelectro.raw-livemeta.json";
 import fipElectroLiveMeta from "./test/fipelectro.livemeta.json";
 import flashFipStep from "./test/flash.fipstep.json";
 import flashSong from "./test/flash.song.json";
 import drivingInMyCarFipStep from "./test/drivingInMyCar.fipstep.json";
 import drivingInMyCarSong from "./test/drivingInMyCar.song.json";
+import tiDeFipStep from "./test/tiDe.fipstep.json";
+import tiDeSong from "./test/tiDe.song";
 import marriageIsForOldFolksSong from "./test/marriageIsForOldFolks.song.json";
 
 type SongIdByRadioId = { [radioId: string]: string };
@@ -101,11 +105,11 @@ test("fip/radio-metadata: fetchRadio", function(t) {
 test("fip/radio-metadata: parseLiveMeta", function(t) {
   const scenarios: Array<{ input: Response; output: FipLiveMeta }> = [
     {
-      input: { body: JSON.stringify(fipRadioLiveMeta) } as Response,
+      input: { body: JSON.stringify(fipRadioRawLiveMeta) } as Response,
       output: fipRadioLiveMeta
     },
     {
-      input: { body: JSON.stringify(fipElectroLiveMeta) } as Response,
+      input: { body: JSON.stringify(fipElectroRawLiveMeta) } as Response,
       output: fipElectroLiveMeta
     }
   ];
@@ -188,6 +192,10 @@ test("fip/radio-metadata: toSong", function(t) {
     {
       input: drivingInMyCarFipStep as FipStep,
       output: drivingInMyCarSong
+    },
+    {
+      input: tiDeFipStep as FipStep,
+      output: tiDeSong
     }
   ];
 

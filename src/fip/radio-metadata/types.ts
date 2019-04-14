@@ -10,10 +10,10 @@ export type FipStep = {
   start: number;
   end: number;
   title: string;
-  titreAlbum: string;
+  titreAlbum?: string | undefined;
   authors: string;
-  anneeEditionMusique: number | undefined;
-  label: string;
+  anneeEditionMusique?: number | undefined;
+  label?: string | undefined;
   visual: string;
 };
 
