@@ -4,7 +4,7 @@ export type Song = {
   endTime: number;
   title: string;
   album: string | undefined;
-  artist: string;
+  artist: string | undefined;
   year: string | undefined;
   label: string | undefined;
   icons: { [size: string]: string };

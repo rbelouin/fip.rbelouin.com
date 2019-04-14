@@ -11,7 +11,7 @@ export type FipStep = {
   end: number;
   title: string;
   titreAlbum?: string | undefined;
-  authors: string;
+  authors?: string | undefined;
   anneeEditionMusique?: number | undefined;
   label?: string | undefined;
   visual?: string | undefined;
