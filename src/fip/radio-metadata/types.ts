@@ -14,7 +14,7 @@ export type FipStep = {
   authors: string;
   anneeEditionMusique?: number | undefined;
   label?: string | undefined;
-  visual: string;
+  visual?: string | undefined;
 };
 
 export type FipLevel = {
