@@ -24,6 +24,8 @@ import drivingInMyCarFipStep from "./test/drivingInMyCar.fipstep.json";
 import drivingInMyCarSong from "./test/drivingInMyCar.song.json";
 import tiDeFipStep from "./test/tiDe.fipstep.json";
 import tiDeSong from "./test/tiDe.song";
+import zouzouFipStep from "./test/zouzou.fipstep.json";
+import zouzouSong from "./test/zouzou.song.json";
 import marriageIsForOldFolksSong from "./test/marriageIsForOldFolks.song.json";
 
 type SongIdByRadioId = { [radioId: string]: string };
@@ -41,8 +43,18 @@ test("fip/radio-metadata: fetchRadios", function(t) {
   const unsubscribe = fetchRadios(
     100,
     [
-      { id: "fip-radio", audioSource: "source", metadataHref: "href" },
-      { id: "fip-jazz", audioSource: "source", metadataHref: "href" }
+      {
+        id: "fip-radio",
+        audioSource: "source",
+        metadataHref: "href",
+        picture: "pic"
+      },
+      {
+        id: "fip-jazz",
+        audioSource: "source",
+        metadataHref: "href",
+        picture: "pic"
+      }
     ],
     fetch
   )
@@ -92,7 +104,8 @@ test("fip/radio-metadata: fetchRadio", function(t) {
   const unsubscribe = fetchRadio({
     id: "fip-radio",
     audioSource: "source",
-    metadataHref: "http://127.0.0.1:54321/livemeta"
+    metadataHref: "http://127.0.0.1:54321/livemeta",
+    picture: "picture"
   }).subscribe(function(event: any) {
     unsubscribe();
     server.close();
@@ -196,12 +209,16 @@ test("fip/radio-metadata: toSong", function(t) {
     {
       input: tiDeFipStep as FipStep,
       output: tiDeSong
+    },
+    {
+      input: zouzouFipStep as FipStep,
+      output: zouzouSong
     }
   ];
 
   scenarios.forEach(({ input, output }) =>
     t.deepEqual(
-      toSong(input),
+      toSong("fallback.png")(input),
       output,
       `should successfully transform ${input.title}`
     )

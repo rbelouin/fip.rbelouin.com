@@ -37,7 +37,7 @@ export function fetchRadio(radio: Radio): Bacon.Property<Error, Song> {
   const p_liveMeta = p_response.flatMap(parseLiveMeta);
   const p_step = p_liveMeta.flatMap(extractStep);
 
-  return p_step.map(toSong).toProperty();
+  return p_step.map(toSong(radio.picture)).toProperty();
 }
 
 export function requestRadioLiveMeta(
@@ -91,7 +91,7 @@ export function isFipStep(value: any): FipStep {
     authors: isString,
     anneeEditionMusique: isUndefinedOr(isNumber),
     label: isUndefinedOr(isString),
-    visual: isString
+    visual: isUndefinedOr(isString)
   })(value);
 }
 
@@ -200,7 +200,7 @@ export function extractStep(
   }
 }
 
-export function toSong(step: FipStep): Song {
+export const toSong = (defaultIcon: string) => (step: FipStep): Song => {
   return {
     id: step.uuid,
     startTime: step.start,
@@ -211,10 +211,10 @@ export function toSong(step: FipStep): Song {
     year: mapUndefined(step.anneeEditionMusique, n => n.toString()),
     label: mapUndefined(step.label, sanitize),
     icons: {
-      medium: step.visual
+      medium: step.visual || defaultIcon
     }
   };
-}
+};
 
 function sanitize(input: string): string {
   return input.replace(
