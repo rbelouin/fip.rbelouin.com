@@ -87,10 +87,10 @@ export function isFipStep(value: any): FipStep {
     start: isNumber,
     end: isNumber,
     title: isString,
-    titreAlbum: isString,
+    titreAlbum: isUndefinedOr(isString),
     authors: isString,
     anneeEditionMusique: isUndefinedOr(isNumber),
-    label: isString,
+    label: isUndefinedOr(isString),
     visual: isString
   })(value);
 }
@@ -206,13 +206,10 @@ export function toSong(step: FipStep): Song {
     startTime: step.start,
     endTime: step.end,
     title: sanitize(step.title),
-    album: sanitize(step.titreAlbum),
+    album: mapUndefined(step.titreAlbum, sanitize),
     artist: sanitize(step.authors),
-    year:
-      step.anneeEditionMusique === undefined
-        ? undefined
-        : step.anneeEditionMusique.toString(),
-    label: sanitize(step.label),
+    year: mapUndefined(step.anneeEditionMusique, n => n.toString()),
+    label: mapUndefined(step.label, sanitize),
     icons: {
       medium: step.visual
     }
@@ -224,4 +221,15 @@ function sanitize(input: string): string {
     /(\w)(\w+)/g,
     (...args) => args[1].toUpperCase() + args[2].toLowerCase()
   );
+}
+
+function mapUndefined<A, B>(
+  value: A | undefined,
+  f: (a: A) => B
+): B | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  return f(value);
 }
