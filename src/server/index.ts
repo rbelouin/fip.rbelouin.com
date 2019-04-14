@@ -48,4 +48,6 @@ console.log("Server listening on port " + config.port + "…");
  * Fetch radios metadata in the background.
  * Track the number of exceptions, to adjust the parser if necessary.
  */
-fetchRadios(2000, config.radios).onError(console.log);
+const p_radios = fetchRadios(2000, config.radios);
+
+p_radios.onError(console.log);

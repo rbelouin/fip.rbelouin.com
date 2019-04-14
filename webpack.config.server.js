@@ -9,6 +9,9 @@ module.exports = {
     path: path.resolve("output"),
     filename: "server.js"
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+  },
   module: {
     rules: [
       {
