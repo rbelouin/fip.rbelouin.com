@@ -12,19 +12,20 @@ export function searchOnSpotify(Spotify, song, token) {
   );
 }
 
-export function getFipSongLists(Fip, Spotify, wsHost, radios, p_token) {
-  const data = Fip.fetchFipRadios(wsHost, radios);
+export function getFipSongLists(Fip, Spotify, wsPath, radios, p_token) {
+  const data = Fip.fetchFipRadios(wsPath, radios);
   const search = _.partial(searchOnSpotify, Spotify);
 
   return _.mapValues(data, radio => {
     return radio
       .flatMapLatest(item => {
         return p_token.flatMapLatest(token => {
-          return item.type === "song"
+          return item.song
             ? search(item.song, token).map(song => _.extend({}, item, { song }))
             : Bacon.constant(item);
         });
       })
+      .map(item => item && item.song ? { type: "song", ...item } : item)
       .scan([], (items, item) => [item].concat(items));
   });
 }
@@ -128,9 +129,9 @@ export function mergeFavsAndSongs(items, favSongs) {
   );
 }
 
-export default (Storage, Spotify, Fip, wsHost, radios) => ({
+export default (Storage, Spotify, Fip, wsPath, radios) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
-  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsHost, radios),
+  getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsPath, radios),
   getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,

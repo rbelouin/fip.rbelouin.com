@@ -1,7 +1,7 @@
 {
   "api": {
-    "http_host": "fip.rbelouin.com/api",
-    "ws_host": "fip.rbelouin.com/api/ws"
+    "http_path": "/api",
+    "ws_path": "/api/ws"
   },
   "google_analytics": {
     "tracking_id": "UA-102925848-1"
@@ -13,49 +13,57 @@
       "id": "fip-radio",
       "audioSource": "https://direct.fipradio.fr/live/fip-midfi.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/7",
-      "picture": "https://www.fip.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover_medium.png"
+      "picture": "https://www.fip.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover_medium.png",
+      "stationId": 7
     },
     {
       "id": "fip-autour-du-rock",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio1.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/64",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_rock_logo_hd_player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_rock_logo_hd_player.png",
+      "stationId": 64
     },
     {
       "id": "fip-autour-du-jazz",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio2.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/65",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_jazz_logo_hd_player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_jazz_logo_hd_player.png",
+      "stationId": 65
     },
     {
       "id": "fip-autour-du-groove",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio3.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/66",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_groove_logo_hd_player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_groove_logo_hd_player.png",
+      "stationId": 66
     },
     {
       "id": "fip-autour-du-monde",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio4.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/69",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_monde_logo_hd_player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_autour_du_monde_logo_hd_player.png",
+      "stationId": 69
     },
     {
       "id": "fip-autour-du-reggae",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio6.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/71",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2017/01/fip-autour-du-reggae-hd-player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2017/01/fip-autour-du-reggae-hd-player.png",
+      "stationId": 71
     },
     {
       "id": "fip-autour-de-l-electro",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio8.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/74",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2017/05/fip-autour-de-l-electro-logo-hd-player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2017/05/fip-autour-de-l-electro-logo-hd-player.png",
+      "stationId": 74
     },
     {
       "id": "tout-nouveau-tout-fip",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio5.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/70",
-      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_tout_nouveau_logo_hd_player.png"
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_tout_nouveau_logo_hd_player.png",
+      "stationId": 70
     }
   ],
   "routes": {

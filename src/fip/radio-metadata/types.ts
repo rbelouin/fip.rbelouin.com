@@ -1,23 +1,17 @@
-export type FipLiveMeta = {
-  steps: {
-    [stepId: string]: FipStep;
-  };
-  levels: FipLevel[];
+export type FipNow = {
+  playing_item: FipTimelineItem;
+  song: FipSongOnAir;
 };
 
-export type FipStep = {
-  uuid: string;
-  start: number;
-  end: number;
+export type FipTimelineItem = {
+  start_time: number;
+  end_time: number;
+};
+
+export type FipSongOnAir = {
   title: string;
-  titreAlbum?: string | undefined;
-  authors?: string | undefined;
-  anneeEditionMusique?: number | undefined;
+  cover?: string | undefined;
+  interpreters?: string[] | undefined;
   label?: string | undefined;
-  visual?: string | undefined;
-};
-
-export type FipLevel = {
-  items: string[];
-  position: number;
+  album?: string | undefined;
 };
