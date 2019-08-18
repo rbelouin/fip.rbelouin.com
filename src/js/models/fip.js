@@ -21,8 +21,8 @@ export function fetchFipRadios(connectForever, url, radios) {
         .endOnError()
         .skipDuplicates((s1, s2) => {
           return (
-            s1.type === "song" &&
-            s2.type === "song" &&
+            s1.song &&
+            s2.song &&
             s1.song.startTime >= s2.song.startTime
           );
         });

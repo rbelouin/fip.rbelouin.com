@@ -2,12 +2,14 @@ import _ from "lodash";
 import qs from "querystring";
 import path from "path";
 import express from "express";
+import expressWs from "express-ws";
 import Bacon from "baconjs";
 
 import config from "../../prod/js/config.json";
 import { fetchRadios } from "../fip/radio-metadata";
 
 const app = express();
+expressWs(app);
 
 const apiPrefix = "/api";
 const publicFolder = process.env.PUBLIC_FOLDER || "";
@@ -19,15 +21,6 @@ app.use(function(req, res, next) {
 
   if (httpsOnly && protocol !== "https") {
     res.redirect("https://" + req.headers["host"] + req.originalUrl);
-  } else if (req.path.indexOf(apiPrefix) === 0) {
-    res.redirect(
-      protocol +
-        "://" +
-        config.api.http_host +
-        req.path.slice(apiPrefix.length) +
-        "?" +
-        qs.stringify(req.query)
-    );
   } else {
     next();
   }
@@ -44,10 +37,13 @@ app.use(express.static(publicFolder));
 app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
 
-/**
- * Fetch radios metadata in the background.
- * Track the number of exceptions, to adjust the parser if necessary.
- */
 const p_radios = fetchRadios(2000, config.radios);
-
 p_radios.onError(console.log);
+
+(app as any).ws("/api/ws", function(ws: any, req: any) {
+  const unsubscribe = p_radios.onValue(radios =>
+    ws.send(JSON.stringify(radios))
+  );
+
+  ws.on("close", unsubscribe);
+});

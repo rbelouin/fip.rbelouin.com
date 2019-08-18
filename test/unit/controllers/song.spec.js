@@ -95,7 +95,7 @@ test("The Song controller should be able to get the songs FIP is playing", funct
 
   const Fip = {
     fetchFipRadios: function(url, radios) {
-      t.equal(url, "ws://host/api/ws");
+      t.equal(url, "/api/ws");
       t.deepEqual(radios, ["radio1", "radio2"]);
 
       return {
@@ -131,7 +131,7 @@ test("The Song controller should be able to get the songs FIP is playing", funct
     }
   };
 
-  const wsHost = "ws://host/api/ws";
+  const wsPath = "/api/ws";
 
   const p_token = Bacon.constant({
     access_token: "access_token",
@@ -143,7 +143,7 @@ test("The Song controller should be able to get the songs FIP is playing", funct
   const data = getFipSongLists(
     Fip,
     Spotify,
-    wsHost,
+    wsPath,
     ["radio1", "radio2"],
     p_token
   );
@@ -205,7 +205,9 @@ test("The Song controller should be able to get the songs FIP is playing", funct
         {
           type: "other",
           song: {
-            id: "FOUR"
+            id: "FOUR",
+            spotify: null,
+            spotifyId: null
           }
         },
         {

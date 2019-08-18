@@ -4,25 +4,30 @@ import Bacon from "baconjs";
 import { connect, connectForever } from "../../../src/js/models/websocket.js";
 
 test("WebSocket.connect should use the right URL", function(t) {
-  const url = "localhost:8080";
+  const path = "/api/ws";
   const location = {
-    protocol: "https:"
+    protocol: "https:",
+    host: "localhost:8080"
   };
 
   function FakeWebSocket(_url) {
-    t.equal(_url, "wss://" + url, "The URL should be the same");
+    t.equal(_url, "wss://localhost:8080/api/ws", "The URL should be the same");
     t.end();
   }
 
   connect(
     FakeWebSocket,
     location,
-    url
+    path
   ).onValue();
 });
 
 test("WebSocket.connect should forward all messages and errors", function(t) {
-  const url = "ws://localhost:8080";
+  const path = "/api/ws";
+  const location = {
+    protocol: "https:",
+    host: "localhost:8080"
+  };
 
   function FakeWebSocket(_url) {
     this.close = function() {};
@@ -67,7 +72,8 @@ test("WebSocket.connect should forward all messages and errors", function(t) {
 
   connect(
     FakeWebSocket,
-    url
+    location,
+    path
   )
     .map(data => ({ success: data }))
     .mapError(data => ({ failure: data }))
@@ -105,7 +111,11 @@ test("WebSocket.connect should forward all messages and errors", function(t) {
 });
 
 test("WebSocket.connectForever should reconnect when the connection closes", function(t) {
-  const url = "https://localhost:8080";
+  const path = "/api/ws";
+  const location = {
+    protocol: "https:",
+    host: "localhost:8080"
+  };
   let index = 0;
 
   function FakeWebSocket(_url) {
@@ -162,7 +172,7 @@ test("WebSocket.connectForever should reconnect when the connection closes", fun
     );
   }
 
-  connectForever(FakeWebSocket, url)
+  connectForever(FakeWebSocket, location, path)
     .map(data => ({ success: data }))
     .mapError(data => ({ failure: data }))
     .take(5)

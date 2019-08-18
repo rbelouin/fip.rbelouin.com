@@ -15,6 +15,7 @@ export type Radio = {
   audioSource: string;
   metadataHref: string;
   picture: string;
+  stationId: number;
 };
 
 export type NowPlaying = {

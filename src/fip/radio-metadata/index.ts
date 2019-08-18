@@ -1,8 +1,8 @@
 import * as Bacon from "baconjs";
 import _ from "lodash";
-import request, { Response } from "request";
 import { Song, Radio, NowPlaying, NowPlayingByRadio } from "../../types";
-import { FipLiveMeta, FipStep, FipLevel } from "./types";
+import { FipNow, FipTimelineItem, FipSongOnAir } from "./types";
+import { getStation } from "../client";
 
 export function fetchRadios(
   interval: number,
@@ -33,40 +33,19 @@ function repeat<E, A>(
 }
 
 export function fetchRadio(radio: Radio): Bacon.Property<Error, Song> {
-  const p_response = requestRadioLiveMeta(radio.metadataHref);
-  const p_liveMeta = p_response.flatMap(parseLiveMeta);
-  const p_step = p_liveMeta.flatMap(extractStep);
+  const p_radioData = requestRadioData(radio);
+  const p_fipNow = p_radioData.flatMap(parseRadioData);
 
-  return p_step.map(toSong(radio.picture)).toProperty();
+  return p_fipNow.map(toSong(radio.picture)).toProperty();
 }
 
-export function requestRadioLiveMeta(
-  radioUrl: string
-): Bacon.Property<Error, Response> {
-  const requestWithCallback = (
-    callback: (error: Error, response: Response) => void
-  ) => request.get(radioUrl, callback);
-
-  return Bacon.fromNodeCallback(requestWithCallback)
-    .flatMap(filterSuccessfulResponse)
-    .toProperty();
+export function requestRadioData(radio: Radio): Bacon.Property<Error, any> {
+  return Bacon.fromPromise(getStation(radio.stationId)).toProperty() as any;
 }
 
-function filterSuccessfulResponse(
-  response: Response
-): Response | Bacon.Error<Error> {
-  if (response.statusCode !== 200) {
-    return new Bacon.Error(new Error("Failure when fetching radio metadata"));
-  }
-
-  return response;
-}
-
-export function parseLiveMeta(
-  response: Response
-): FipLiveMeta | Bacon.Error<Error> {
+export function parseRadioData(data: any): FipNow | Bacon.Error<Error> {
   try {
-    return isFipLiveMeta(JSON.parse(response.body));
+    return isFipNow(data);
   } catch (e) {
     return new Bacon.Error(e);
   }
@@ -74,31 +53,31 @@ export function parseLiveMeta(
 
 type Validator<T> = (value: any) => T;
 
-export function isFipLiveMeta(value: any): FipLiveMeta {
+export function isFipNow(value: any): FipNow {
+  const data = isObject({
+    now: isObject({
+      playing_item: isFipTimelineItem,
+      song: isFipSongOnAir
+    })
+  })(value);
+
+  return data.now;
+}
+
+export function isFipTimelineItem(value: any): FipTimelineItem {
   return isObject({
-    steps: isRecord(isFipStep),
-    levels: isArray(isFipLevel)
+    start_time: isNumber,
+    end_time: isNumber
   })(value);
 }
 
-export function isFipStep(value: any): FipStep {
+export function isFipSongOnAir(value: any): FipSongOnAir {
   return isObject({
-    uuid: isString,
-    start: isNumber,
-    end: isNumber,
     title: isString,
-    titreAlbum: isUndefinedOr(isString),
-    authors: isUndefinedOr(isString),
-    anneeEditionMusique: isUndefinedOr(isNumber),
-    label: isUndefinedOr(isString),
-    visual: isUndefinedOr(isString)
-  })(value);
-}
-
-export function isFipLevel(value: any): FipLevel {
-  return isObject({
-    items: isArray(isString),
-    position: isNumber
+    cover: isOptional(isString),
+    interpreters: isOptional(isArray(isString)),
+    label: isOptional(isString),
+    album: isOptional(isString)
   })(value);
 }
 
@@ -160,11 +139,11 @@ export function isObject<O>(
   };
 }
 
-export function isUndefinedOr<V>(
+export function isOptional<V>(
   validator: Validator<V>
 ): Validator<V | undefined> {
   return (value: any) => {
-    if (value === undefined) {
+    if (value === undefined || value === null) {
       return undefined;
     }
 
@@ -188,30 +167,20 @@ export function isNumber(value: any): number {
   return value;
 }
 
-export function extractStep(
-  liveMeta: FipLiveMeta
-): FipStep | Bacon.Error<Error> {
-  try {
-    const level = liveMeta.levels[liveMeta.levels.length - 1];
-    const stepId = level.items[level.position];
-    return liveMeta.steps[stepId];
-  } catch (e) {
-    return new Bacon.Error(e);
-  }
-}
-
-export const toSong = (defaultIcon: string) => (step: FipStep): Song => {
+export const toSong = (defaultIcon: string) => (now: FipNow): Song => {
   return {
-    id: step.uuid,
-    startTime: step.start,
-    endTime: step.end,
-    title: sanitize(step.title),
-    album: mapUndefined(step.titreAlbum, sanitize),
-    artist: mapUndefined(step.authors, sanitize),
-    year: mapUndefined(step.anneeEditionMusique, n => n.toString()),
-    label: mapUndefined(step.label, sanitize),
+    id: "",
+    startTime: now.playing_item.start_time,
+    endTime: now.playing_item.end_time,
+    title: sanitize(now.song.title),
+    album: mapUndefined(now.song.album, sanitize),
+    artist: mapUndefined(now.song.interpreters, interpreters =>
+      interpreters.map(sanitize).join(", ")
+    ),
+    year: undefined,
+    label: mapUndefined(now.song.label, sanitize),
     icons: {
-      medium: step.visual || defaultIcon
+      medium: now.song.cover || defaultIcon
     }
   };
 };

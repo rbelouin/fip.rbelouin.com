@@ -50,7 +50,7 @@ export function start(conf) {
     Storage,
     Spotify,
     Fip,
-    conf.api.ws_host,
+    conf.api.ws_path,
     conf.radios.map(r => r.id)
   );
   const PlayController = getPlayController(conf.radios);
