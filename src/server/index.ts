@@ -37,8 +37,13 @@ app.use(express.static(publicFolder));
 app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
 
+const p_radios = fetchRadios(2000, config.radios);
+p_radios.onError(console.log);
+
 (app as any).ws("/api/ws", function(ws: any, req: any) {
-  const p_radios = fetchRadios(2000, config.radios);
-  p_radios.onError(console.log);
-  p_radios.onValue(radios => ws.send(JSON.stringify(radios)));
+  const unsubscribe = p_radios.onValue(radios =>
+    ws.send(JSON.stringify(radios))
+  );
+
+  ws.on("close", unsubscribe);
 });
