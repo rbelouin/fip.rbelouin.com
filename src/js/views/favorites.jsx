@@ -38,7 +38,7 @@ export default createReactClass({
             )}
             <button
               type="button"
-              className={(this.props.user ? "" : "sync ") + "btn"}
+              className={(this.props.user ? "unsync" : "sync") + " btn"}
               onClick={this.onClick}
             >
               <span className="fa fa-spotify" />
