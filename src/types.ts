@@ -26,3 +26,9 @@ export type NowPlaying = {
 export type NowPlayingByRadio = {
   [radioId: string]: NowPlaying;
 };
+
+export type FipClientError = Error & {
+  data?: {
+    [key: string]: any;
+  };
+};
