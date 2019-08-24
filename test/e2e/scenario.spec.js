@@ -8,7 +8,7 @@ test("End-to-end scenario", function(t) {
 
     await page.goto("https://fip.fr");
     const expectedTitle = await page.$eval(
-      ".current.track .title",
+      ".now-info-title",
       node => node.textContent
     );
 

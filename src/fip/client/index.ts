@@ -16,7 +16,12 @@ const link = createPersistedQueryLink().concat(
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: link
+  link: link,
+  defaultOptions: {
+    query: {
+      fetchPolicy: "network-only"
+    }
+  }
 });
 
 export const stationDataQuery = gql`

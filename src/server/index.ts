@@ -41,9 +41,11 @@ const p_radios = fetchRadios(2000, config.radios);
 p_radios.onError(console.log);
 
 (app as any).ws("/api/ws", function(ws: any, req: any) {
-  const unsubscribe = p_radios.onValue(radios =>
-    ws.send(JSON.stringify(radios))
-  );
+  const unsubscribe = p_radios.onValue(radios => {
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify(radios));
+    }
+  });
 
   ws.on("close", unsubscribe);
 });

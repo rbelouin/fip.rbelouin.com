@@ -1,6 +1,12 @@
 import * as Bacon from "baconjs";
 import _ from "lodash";
-import { Song, Radio, NowPlaying, NowPlayingByRadio } from "../../types";
+import {
+  Song,
+  Radio,
+  NowPlaying,
+  NowPlayingByRadio,
+  FipClientError
+} from "../../types";
 import { FipNow, FipTimelineItem, FipSongOnAir } from "./types";
 import { getStation } from "../client";
 
@@ -32,21 +38,29 @@ function repeat<E, A>(
   ).toProperty();
 }
 
-export function fetchRadio(radio: Radio): Bacon.Property<Error, Song> {
+export function fetchRadio(radio: Radio): Bacon.Property<FipClientError, Song> {
   const p_radioData = requestRadioData(radio);
-  const p_fipNow = p_radioData.flatMap(parseRadioData);
+  const p_fipNow = p_radioData.flatMap(parseRadioData).flatMapError(e => {
+    e.data = { ...e.data, radio: JSON.stringify(radio) };
+    return new Bacon.Error(e) as (FipNow | Bacon.Error<FipClientError>);
+  });
 
   return p_fipNow.map(toSong(radio.picture)).toProperty();
 }
 
-export function requestRadioData(radio: Radio): Bacon.Property<Error, any> {
+export function requestRadioData(
+  radio: Radio
+): Bacon.Property<FipClientError, any> {
   return Bacon.fromPromise(getStation(radio.stationId)).toProperty() as any;
 }
 
-export function parseRadioData(data: any): FipNow | Bacon.Error<Error> {
+export function parseRadioData(
+  data: any
+): FipNow | Bacon.Error<FipClientError> {
   try {
     return isFipNow(data);
   } catch (e) {
+    e.data = { ...e.data, response: JSON.stringify(data) };
     return new Bacon.Error(e);
   }
 }
