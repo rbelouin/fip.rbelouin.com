@@ -1,7 +1,8 @@
 {
   "api": {
+    "http_host": "fip.rbelouin.com",
     "http_path": "/api",
-    "ws_path": "/api/ws"
+    "ws_path": "/ws"
   },
   "google_analytics": {
     "tracking_id": "UA-102925848-1"

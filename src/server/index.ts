@@ -21,6 +21,12 @@ app.use(function(req, res, next) {
 
   if (httpsOnly && protocol !== "https") {
     res.redirect("https://" + req.headers["host"] + req.originalUrl);
+  } else if (req.path.indexOf(apiPrefix) === 0) {
+    res.redirect(
+      `${protocol}://${config.api.http_host}${req.path}?${qs.stringify(
+        req.query
+      )}`
+    );
   } else {
     next();
   }
@@ -40,7 +46,7 @@ console.log("Server listening on port " + config.port + "…");
 const p_radios = fetchRadios(2000, config.radios);
 p_radios.onError(console.log);
 
-(app as any).ws("/api/ws", function(ws: any, req: any) {
+(app as any).ws("/ws", function(ws: any, req: any) {
   const unsubscribe = p_radios.onValue(radios => {
     if (ws.readyState === 1) {
       ws.send(JSON.stringify(radios));
