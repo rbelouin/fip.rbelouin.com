@@ -3,13 +3,17 @@ const puppeteer = require("puppeteer");
 
 const username = process.env.SPOTIFY_USERNAME;
 const password = process.env.SPOTIFY_PASSWORD;
+const headless = process.env.HEADLESS !== "false";
+const devTools = process.env.DEV_TOOLS === "true";
+const slowMo = parseInt(process.env.SLOW_MO || "0");
 
 test("End-to-end scenario", function(t) {
   (async () => {
     const browser = await puppeteer.launch({
-      headless: true,
-      slowMo: 0,
-      devTools: false
+      defaultViewport: null,
+      headless,
+      devTools,
+      slowMo
     });
     const page = await browser.newPage();
 
