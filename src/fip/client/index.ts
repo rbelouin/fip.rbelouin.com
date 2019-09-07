@@ -1,10 +1,10 @@
 import fetch from "node-fetch";
-import gql from "graphql-tag";
 
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient, ApolloQueryResult } from "apollo-client";
+import { stationDataQuery } from "./query";
 
 const link = createPersistedQueryLink().concat(
   createHttpLink({
@@ -24,35 +24,13 @@ const client = new ApolloClient({
   }
 });
 
-export const stationDataQuery = gql`
-  query Now($stationId: Int) {
-    now(stationId: $stationId) {
-      __typename
-      playing_item {
-        __typename
-        title
-        subtitle
-        cover
-        start_time
-        end_time
-      }
-      song {
-        __typename
-        cover
-        title
-        interpreters
-        label
-        album
-      }
-    }
-  }
-`;
-
 export function getStation(stationId: number): Promise<any> {
   const p_result = client.query({
     query: stationDataQuery,
     variables: {
-      stationId: stationId
+      bannerPreset: "1400x1400",
+      stationId: stationId,
+      previousTrackLimit: 3
     }
   });
 
