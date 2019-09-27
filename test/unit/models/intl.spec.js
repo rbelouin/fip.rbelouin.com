@@ -1,21 +1,20 @@
-import test from "tape";
 import intl from "../../../src/js/models/intl.js";
 
-test("intl.getIntlData should choose the right language", function(t) {
+test("intl.getIntlData should choose the right language", function(done) {
   intl.languages = ["en-US", "en"];
-  t.equal(intl.getIntlData().locales, "en-US");
+  expect(intl.getIntlData().locales).toStrictEqual("en-US");
 
   intl.languages = ["fr-FR", "fr"];
-  t.equal(intl.getIntlData().locales, "fr-FR");
+  expect(intl.getIntlData().locales).toStrictEqual("fr-FR");
 
   intl.languages = ["fr-CA"];
-  t.equal(intl.getIntlData().locales, "fr-FR");
+  expect(intl.getIntlData().locales).toStrictEqual("fr-FR");
 
   intl.languages = ["de-DE", "de"];
-  t.equal(intl.getIntlData().locales, "en-US");
+  expect(intl.getIntlData().locales).toStrictEqual("en-US");
 
   intl.languages = [];
-  t.equal(intl.getIntlData().locales, "en-US");
+  expect(intl.getIntlData().locales).toStrictEqual("en-US");
 
-  t.end();
+  done();
 });

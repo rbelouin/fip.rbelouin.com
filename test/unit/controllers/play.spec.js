@@ -1,4 +1,3 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import {
@@ -9,7 +8,7 @@ import {
   getCurrentSource
 } from "../../../src/js/controllers/play.js";
 
-test("The Play controller should extract the radio name from the current path", function(t) {
+test("The Play controller should extract the radio name from the current path", function(done) {
   const p_route = Bacon.fromArray([
     {
       params: {
@@ -31,25 +30,25 @@ test("The Play controller should extract the radio name from the current path", 
   getCurrentRadio(p_route)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), ["radio1", "radio2"]);
+      expect(ev.value()).toStrictEqual(["radio1", "radio2"]);
 
-      t.end();
+      done();
       return Bacon.noMore;
     });
 });
 
-test("The Play controller should get the song the current radio is broadcasting", function(t) {
+test("The Play controller should get the song the current radio is broadcasting", function(done) {
   const s_route = new Bacon.Bus();
   const s_radios = new Bacon.Bus();
 
   getBroadcastedSong(s_route.toProperty(), s_radios.toProperty())
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         {
           type: "loading"
         },
@@ -67,7 +66,7 @@ test("The Play controller should get the song the current radio is broadcasting"
         }
       ]);
 
-      t.end();
+      done();
       return Bacon.noMore;
     });
 
@@ -175,16 +174,16 @@ test("The Play controller should get the song the current radio is broadcasting"
   s_radios.end();
 });
 
-test("The Play controller should get the song history of the current radio", function(t) {
+test("The Play controller should get the song history of the current radio", function(done) {
   const s_route = new Bacon.Bus();
   const s_radios = new Bacon.Bus();
 
   getSongHistory(s_route.toProperty(), s_radios.toProperty())
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         [],
         [
           {
@@ -198,7 +197,7 @@ test("The Play controller should get the song history of the current radio", fun
         ]
       ]);
 
-      t.end();
+      done();
       return Bacon.noMore;
     });
 
@@ -347,7 +346,7 @@ test("The Play controller should get the song history of the current radio", fun
   s_radios.end();
 });
 
-test("The Play controller should get the song being played", function(t) {
+test("The Play controller should get the song being played", function(done) {
   const s_playBus = new Bacon.Bus();
   const s_radios = new Bacon.Bus();
 
@@ -359,9 +358,9 @@ test("The Play controller should get the song being played", function(t) {
   getSongBeingPlayed(s_radios.toProperty(), p_playBus)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         {
           type: "loading"
         },
@@ -391,7 +390,7 @@ test("The Play controller should get the song being played", function(t) {
         }
       ]);
 
-      t.end();
+      done();
       return Bacon.noMore;
     });
 
@@ -507,7 +506,7 @@ test("The Play controller should get the song being played", function(t) {
   s_radios.end();
 });
 
-test("The Play controller should get the current source", function(t) {
+test("The Play controller should get the current source", function(done) {
   const s_playBus = new Bacon.Bus();
 
   const radios = [
@@ -524,9 +523,9 @@ test("The Play controller should get the current source", function(t) {
   getCurrentSource(radios, s_playBus)
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         null,
         "radio1-url",
         null,
@@ -535,7 +534,7 @@ test("The Play controller should get the current source", function(t) {
         "radio2-url"
       ]);
 
-      t.end();
+      done();
       return Bacon.noMore;
     });
 

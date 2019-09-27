@@ -1,4 +1,3 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import { getState } from "../../../src/js/controllers/state.js";
@@ -17,7 +16,7 @@ import {
   getSongHistory
 } from "../../../src/js/controllers/play.js";
 
-test("getState should return a valid state", function(t) {
+test("getState should return a valid state", function(done) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
@@ -175,7 +174,7 @@ test("getState should return a valid state", function(t) {
     statePlayerOnBottom,
     stateAutoplayRadio
   ]).subscribe(ev => {
-    t.ok(ev.hasValue());
+    expect(ev.hasValue()).toBeTruthy();
 
     const [
       user,
@@ -191,13 +190,13 @@ test("getState should return a valid state", function(t) {
       autoplayRadio
     ] = ev.value();
 
-    t.deepEqual(user, [
+    expect(user).toStrictEqual([
       {
         id: "userId"
       }
     ]);
 
-    t.deepEqual(favSongs, [
+    expect(favSongs).toStrictEqual([
       [{ id: "3", spotifyId: "3", favorite: true }],
       [
         { id: "3", spotifyId: "3", favorite: true },
@@ -205,11 +204,11 @@ test("getState should return a valid state", function(t) {
       ]
     ]);
 
-    t.deepEqual(route, ["radio", "radio", "radio"]);
+    expect(route).toStrictEqual(["radio", "radio", "radio"]);
 
-    t.deepEqual(radio, ["radioA", "radioB", "radioA"]);
+    expect(radio).toStrictEqual(["radioA", "radioB", "radioA"]);
 
-    t.deepEqual(bsong, [
+    expect(bsong).toStrictEqual([
       {
         type: "song",
         song: { id: "1", spotifyId: "1", favorite: false }
@@ -224,7 +223,7 @@ test("getState should return a valid state", function(t) {
       }
     ]);
 
-    t.deepEqual(psong, [
+    expect(psong).toStrictEqual([
       {
         type: "song",
         song: { id: "1", spotifyId: "1", favorite: false }
@@ -235,21 +234,21 @@ test("getState should return a valid state", function(t) {
       }
     ]);
 
-    t.deepEqual(src, ["radioB"]);
+    expect(src).toStrictEqual(["radioB"]);
 
-    t.deepEqual(history, [
+    expect(history).toStrictEqual([
       [],
       [{ id: "1", spotifyId: "1", favorite: false }],
       [{ id: "1", spotifyId: "1", favorite: true }]
     ]);
 
-    t.deepEqual(paneIsOpen, [true]);
+    expect(paneIsOpen).toStrictEqual([true]);
 
-    t.deepEqual(playerOnBottom, [false]);
+    expect(playerOnBottom).toStrictEqual([false]);
 
-    t.deepEqual(autoplayRadio, ["radioA", "radioB"]);
+    expect(autoplayRadio).toStrictEqual(["radioA", "radioB"]);
 
-    t.end();
+    done();
     return Bacon.noMore;
   });
 

@@ -1,13 +1,12 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import { fetchFipSongs, fetchFipRadios } from "../../../src/js/models/fip.js";
 
-test("Fip.fetchFipSongs should return played songs", function(t) {
+test("Fip.fetchFipSongs should return played songs", function(done) {
   const url = "ws://localhost/";
 
   function connectForever(_url) {
-    t.equal(_url, url, "URL should be OK");
+    expect(_url).toStrictEqual(url);
 
     return Bacon.fromArray([
       {
@@ -57,13 +56,13 @@ test("Fip.fetchFipSongs should return played songs", function(t) {
 
   const p_songs = fetchFipSongs(connectForever, url);
 
-  t.ok(Bacon.Property.prototype.isPrototypeOf(p_songs));
+  expect(p_songs).toBeInstanceOf(Bacon.Property);
 
   p_songs
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
-      t.deepEqual(ev.value(), [
+      expect(ev.hasValue()).toBeTruthy();
+      expect(ev.value()).toStrictEqual([
         {
           id: "song1",
           startTime: 1
@@ -78,17 +77,17 @@ test("Fip.fetchFipSongs should return played songs", function(t) {
         }
       ]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     });
 });
 
-test("Fip.fetchFipRadios should return data for each radio", function(t) {
+test("Fip.fetchFipRadios should return data for each radio", function(done) {
   const url = "ws://localhost/";
 
   function connectForever(_url) {
-    t.equal(_url, url, "URL should be OK");
+    expect(_url).toStrictEqual(url);
 
     return Bacon.fromArray([
       {
@@ -238,11 +237,11 @@ test("Fip.fetchFipRadios should return data for each radio", function(t) {
     "radio4"
   ]);
 
-  t.ok(Bacon.EventStream.prototype.isPrototypeOf(data.radio1));
-  t.ok(Bacon.EventStream.prototype.isPrototypeOf(data.radio2));
-  t.ok(Bacon.EventStream.prototype.isPrototypeOf(data.radio4));
+  expect(data.radio1).toBeInstanceOf(Bacon.EventStream);
+  expect(data.radio2).toBeInstanceOf(Bacon.EventStream);
+  expect(data.radio4).toBeInstanceOf(Bacon.EventStream);
 
-  t.notOk(Bacon.EventStream.prototype.isPrototypeOf(data.radio3));
+  expect(data.radio3).not.toBeInstanceOf(Bacon.EventStream);
 
   const p_radio1 = data.radio1.fold([], (items, item) => items.concat([item]));
 
@@ -253,11 +252,11 @@ test("Fip.fetchFipRadios should return data for each radio", function(t) {
     .fold([], (items, item) => items.concat([item]));
 
   Bacon.zipAsArray([p_radio1, p_radio2, p_radio4]).subscribe(function(ev) {
-    t.ok(ev.hasValue());
+    expect(ev.hasValue()).toBeTruthy();
 
     const [radio1, radio2, radio4] = ev.value();
 
-    t.deepEqual(radio1, [
+    expect(radio1).toStrictEqual([
       {
         type: "song",
         song: {
@@ -281,7 +280,7 @@ test("Fip.fetchFipRadios should return data for each radio", function(t) {
       }
     ]);
 
-    t.deepEqual(radio2, [
+    expect(radio2).toStrictEqual([
       {
         type: "song",
         song: {
@@ -298,9 +297,9 @@ test("Fip.fetchFipRadios should return data for each radio", function(t) {
       }
     ]);
 
-    t.deepEqual(radio4, []);
+    expect(radio4).toStrictEqual([]);
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });

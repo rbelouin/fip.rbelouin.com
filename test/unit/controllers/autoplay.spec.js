@@ -1,4 +1,3 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import {
@@ -6,18 +5,18 @@ import {
   setAutoplayRadio
 } from "../../../src/js/controllers/autoplay.js";
 
-test("The Autoplay controller should get the radio to autoplay from the Storage", function(t) {
+test("The Autoplay controller should get the radio to autoplay from the Storage", function(done) {
   const Storage = {
     get: function(key) {
       return key === "autoplay" ? "radio-to-autoplay" : null;
     }
   };
 
-  t.deepEqual(getAutoplayRadio(Storage), "radio-to-autoplay");
-  t.end();
+  expect(getAutoplayRadio(Storage)).toStrictEqual("radio-to-autoplay");
+  done();
 });
 
-test("The Autoplay controller should set the radio to autoplay to the Storage", function(t) {
+test("The Autoplay controller should set the radio to autoplay to the Storage", function(done) {
   const Storage = {
     store: {},
     set: function(key, value) {
@@ -27,6 +26,6 @@ test("The Autoplay controller should set the radio to autoplay to the Storage", 
 
   setAutoplayRadio(Storage, "radio-to-autoplay");
 
-  t.deepEqual(Storage.store, { autoplay: "radio-to-autoplay" });
-  t.end();
+  expect(Storage.store).toStrictEqual({ autoplay: "radio-to-autoplay" });
+  done();
 });

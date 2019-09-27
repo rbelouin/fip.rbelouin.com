@@ -1,24 +1,23 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import { get, set, sync } from "../../../src/js/models/storage.js";
 
-test("Storage.get should parse and return an item from the storage", function(t) {
+test("Storage.get should parse and return an item from the storage", function(done) {
   const storage = {};
   const object = {
     a: "b",
     c: "d"
   };
 
-  t.equal(get(storage, "item"), null);
+  expect(get(storage, "item")).toStrictEqual(null);
 
   storage.item = JSON.stringify(object);
 
-  t.deepEqual(get(storage, "item"), object);
-  t.end();
+  expect(get(storage, "item")).toStrictEqual(object);
+  done();
 });
 
-test("Storage.set should save a stringified value to the storage", function(t) {
+test("Storage.set should save a stringified value to the storage", function(done) {
   const storage = {};
   const object = {
     a: "b",
@@ -26,19 +25,19 @@ test("Storage.set should save a stringified value to the storage", function(t) {
   };
 
   set(storage, "item", object);
-  t.deepEqual(storage, {
+  expect(storage).toStrictEqual({
     item: JSON.stringify(object)
   });
 
   set(storage, "item", null);
-  t.deepEqual(storage, {
+  expect(storage).toStrictEqual({
     item: "null"
   });
 
-  t.end();
+  done();
 });
 
-test("Storage.sync should return a sync object for the storage", function(t) {
+test("Storage.sync should return a sync object for the storage", function(done) {
   const storage = {};
   const s = sync(storage, "favorite");
 
@@ -57,14 +56,14 @@ test("Storage.sync should return a sync object for the storage", function(t) {
   });
 
   property.subscribe(function(ev) {
-    t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), {
+    expect(ev.hasValue()).toBeTruthy();
+    expect(ev.value()).toStrictEqual({
       p_initial: [],
       p_storage: { favorite: JSON.stringify([1, 2]) },
       p_final: [1, 2]
     });
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });

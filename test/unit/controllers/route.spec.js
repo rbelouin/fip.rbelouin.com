@@ -1,4 +1,3 @@
-import test from "tape";
 import Bacon from "baconjs";
 
 import {
@@ -7,7 +6,7 @@ import {
   redirectRoute
 } from "../../../src/js/controllers/route.js";
 
-test("redirectRoute should perform a redirection", function(t) {
+test("redirectRoute should perform a redirection", function(done) {
   const routes = {
     a: new Bacon.Bus(),
     b: new Bacon.Bus(),
@@ -44,11 +43,11 @@ test("redirectRoute should perform a redirection", function(t) {
   p_route
     .fold([], (acc, elem) => acc.concat([elem]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), ["a", "b", "a", "errors", "b", "a"]);
+      expect(ev.value()).toStrictEqual(["a", "b", "a", "errors", "b", "a"]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     });
@@ -62,7 +61,7 @@ test("redirectRoute should perform a redirection", function(t) {
   routes.errors.end();
 });
 
-test("browseTo should trigger an event in the corresponding route", function(t) {
+test("browseTo should trigger an event in the corresponding route", function(done) {
   const routes = {
     a: new Bacon.Bus(),
     b: new Bacon.Bus(),
@@ -96,11 +95,11 @@ test("browseTo should trigger an event in the corresponding route", function(t) 
   p_route
     .fold([], (acc, elem) => acc.concat([elem]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), ["a", "b", "errors"]);
+      expect(ev.value()).toStrictEqual(["a", "b", "errors"]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     });
@@ -114,7 +113,7 @@ test("browseTo should trigger an event in the corresponding route", function(t) 
   routes.errors.end();
 });
 
-test("getCurrentRoute should return a property containing the name of the current route", function(t) {
+test("getCurrentRoute should return a property containing the name of the current route", function(done) {
   const routes = {
     a: new Bacon.Bus(),
     b: new Bacon.Bus(),
@@ -126,11 +125,11 @@ test("getCurrentRoute should return a property containing the name of the curren
   p_route
     .fold([], (acc, item) => acc.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), ["a", "a", "b", "a"]);
+      expect(ev.value()).toStrictEqual(["a", "a", "b", "a"]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     });

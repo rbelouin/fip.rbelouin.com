@@ -1,4 +1,3 @@
-import test from "tape";
 import _ from "lodash";
 import Bacon from "baconjs";
 
@@ -14,7 +13,7 @@ import {
   mergeFavsAndSongs
 } from "../../../src/js/controllers/song.js";
 
-test("The Song controller should be able to search a song on spotify and add the ID to the song instance", function(t) {
+test("The Song controller should be able to search a song on spotify and add the ID to the song instance", function(done) {
   const Spotify = {
     search: function(song, token) {
       const responses = {
@@ -48,9 +47,9 @@ test("The Song controller should be able to search a song on spotify and add the
 
   Bacon.zipAsArray(songs.map(_.partial(searchOnSpotify, Spotify))).subscribe(
     function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         {
           id: "ONE",
           spotify: null,
@@ -68,14 +67,14 @@ test("The Song controller should be able to search a song on spotify and add the
         }
       ]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     }
   );
 });
 
-test("The Song controller should be able to get the songs FIP is playing", function(t) {
+test("The Song controller should be able to get the songs FIP is playing", function(done) {
   const Spotify = {
     search: function(song, token) {
       const responses = {
@@ -95,8 +94,8 @@ test("The Song controller should be able to get the songs FIP is playing", funct
 
   const Fip = {
     fetchFipRadios: function(url, radios) {
-      t.equal(url, "/api/ws");
-      t.deepEqual(radios, ["radio1", "radio2"]);
+      expect(url).toStrictEqual("/api/ws");
+      expect(radios).toStrictEqual(["radio1", "radio2"]);
 
       return {
         radio1: Bacon.fromArray([
@@ -153,11 +152,11 @@ test("The Song controller should be able to get the songs FIP is playing", funct
   const p_radio2 = data.radio2.fold([], (items, item) => items.concat([item]));
 
   Bacon.zipAsArray([p_radio1, p_radio2]).subscribe(function(ev) {
-    t.ok(ev.hasValue());
+    expect(ev.hasValue()).toBeTruthy();
 
     const [radio1, radio2] = ev.value();
 
-    t.deepEqual(radio1, [
+    expect(radio1).toStrictEqual([
       [],
       [
         {
@@ -189,7 +188,7 @@ test("The Song controller should be able to get the songs FIP is playing", funct
       ]
     ]);
 
-    t.deepEqual(radio2, [
+    expect(radio2).toStrictEqual([
       [],
       [
         {
@@ -221,13 +220,13 @@ test("The Song controller should be able to get the songs FIP is playing", funct
       ]
     ]);
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });
 });
 
-test('The Song controller should be able to get a spotify "print" (user, playlist and token data) of the user', function(t) {
+test('The Song controller should be able to get a spotify "print" (user, playlist and token data) of the user', function(done) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
@@ -247,32 +246,32 @@ test('The Song controller should be able to get a spotify "print" (user, playlis
 
   const Spotify = {
     getUser: function(_token) {
-      t.deepEqual(_token, token);
+      expect(_token).toStrictEqual(token);
       return Bacon.constant(user);
     },
     getOrCreatePlaylist: function(_token, userId, name) {
-      t.deepEqual(_token, token);
-      t.equal(userId, user.id);
-      t.equal(name, "fipradio");
+      expect(_token).toStrictEqual(token);
+      expect(userId).toStrictEqual(user.id);
+      expect(name).toStrictEqual("fipradio");
       return Bacon.constant(playlist);
     }
   };
 
   getSpotifyPrint(Spotify, token).subscribe(function(ev) {
-    t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), {
+    expect(ev.hasValue()).toBeTruthy();
+    expect(ev.value()).toStrictEqual({
       user: user,
       playlist: playlist,
       token: token
     });
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });
 });
 
-test("The Song controller should be able to get an object for each sync backend (localStorage and Spotify)", function(t) {
+test("The Song controller should be able to get an object for each sync backend (localStorage and Spotify)", function(done) {
   const storageSync = {};
   const spotifySync = {};
 
@@ -295,28 +294,28 @@ test("The Song controller should be able to get an object for each sync backend 
 
   const Storage = {
     sync: function(name) {
-      t.equal(name, "favorites");
+      expect(name).toStrictEqual("favorites");
       return storageSync;
     }
   };
 
   const Spotify = {
     sync: function(token, userId, playlistId) {
-      t.deepEqual(token, print.token);
-      t.equal(userId, print.user.id);
-      t.equal(playlistId, print.playlist.id);
+      expect(token).toStrictEqual(print.token);
+      expect(userId).toStrictEqual(print.user.id);
+      expect(playlistId).toStrictEqual(print.playlist.id);
       return spotifySync;
     }
   };
 
-  t.deepEqual(getSyncs(Storage, Spotify, print), [storageSync, spotifySync]);
+  expect(getSyncs(Storage, Spotify, print)).toStrictEqual([storageSync, spotifySync]);
 
-  t.deepEqual(getSyncs(Storage, Spotify, null), [storageSync]);
+  expect(getSyncs(Storage, Spotify, null)).toStrictEqual([storageSync]);
 
-  t.end();
+  done();
 });
 
-test("The Song controller should be able to get favorite songs from several sources", function(t) {
+test("The Song controller should be able to get favorite songs from several sources", function(done) {
   const sync1 = {
     get: function() {
       return Bacon.constant([
@@ -352,8 +351,8 @@ test("The Song controller should be able to get favorite songs from several sour
   };
 
   getFavoriteSongs([sync1, sync2]).subscribe(function(ev) {
-    t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), [
+    expect(ev.hasValue()).toBeTruthy();
+    expect(ev.value()).toStrictEqual([
       {
         id: "ONE",
         spotifyId: "1"
@@ -372,13 +371,13 @@ test("The Song controller should be able to get favorite songs from several sour
       }
     ]);
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });
 });
 
-test("The Song controller should be able to send favorites to several destinations", function(t) {
+test("The Song controller should be able to send favorites to several destinations", function(done) {
   const sync1 = {
     songs: [],
     set: function(songs) {
@@ -415,18 +414,18 @@ test("The Song controller should be able to send favorites to several destinatio
   ];
 
   setFavoriteSongs([sync1, sync2], songs).subscribe(function(ev) {
-    t.ok(ev.hasValue());
+    expect(ev.hasValue()).toBeTruthy();
 
-    t.deepEqual(sync1.songs, songs);
-    t.deepEqual(sync2.songs, songs);
+    expect(sync1.songs).toStrictEqual(songs);
+    expect(sync2.songs).toStrictEqual(songs);
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });
 });
 
-test("The Song controller should be able to update the favorite song list when it receives an event", function(t) {
+test("The Song controller should be able to update the favorite song list when it receives an event", function(done) {
   const favSongs1 = [
     {
       id: "1",
@@ -462,7 +461,7 @@ test("The Song controller should be able to update the favorite song list when i
     song: { id: "3" }
   });
 
-  t.deepEqual(favSongs2, [
+  expect(favSongs2).toStrictEqual([
     {
       id: "1",
       favorite: true
@@ -481,7 +480,7 @@ test("The Song controller should be able to update the favorite song list when i
     }
   ]);
 
-  t.deepEqual(favSongs3, [
+  expect(favSongs3).toStrictEqual([
     {
       id: "1",
       favorite: true
@@ -500,7 +499,7 @@ test("The Song controller should be able to update the favorite song list when i
     }
   ]);
 
-  t.deepEqual(favSongs4, [
+  expect(favSongs4).toStrictEqual([
     {
       id: "1",
       favorite: true
@@ -515,7 +514,7 @@ test("The Song controller should be able to update the favorite song list when i
     }
   ]);
 
-  t.deepEqual(favSongs5, [
+  expect(favSongs5).toStrictEqual([
     {
       id: "1",
       favorite: true
@@ -530,10 +529,10 @@ test("The Song controller should be able to update the favorite song list when i
     }
   ]);
 
-  t.end();
+  done();
 });
 
-test("The Song controller should be able to provide a property containing the favorite songs", function(t) {
+test("The Song controller should be able to provide a property containing the favorite songs", function(done) {
   const songs1 = [
     {
       id: "ONE",
@@ -579,9 +578,9 @@ test("The Song controller should be able to provide a property containing the fa
   s_favSongs
     .fold([], (items, item) => items.concat([item]))
     .subscribe(function(ev) {
-      t.ok(ev.hasValue());
+      expect(ev.hasValue()).toBeTruthy();
 
-      t.deepEqual(ev.value(), [
+      expect(ev.value()).toStrictEqual([
         [
           {
             id: "ONE",
@@ -679,7 +678,7 @@ test("The Song controller should be able to provide a property containing the fa
         ]
       ]);
 
-      t.end();
+      done();
 
       return Bacon.noMore;
     });
@@ -723,7 +722,7 @@ test("The Song controller should be able to provide a property containing the fa
   favBus.end();
 });
 
-test("The Song controller should fill the data model of the songs being played with a 'favorite' field", function(t) {
+test("The Song controller should fill the data model of the songs being played with a 'favorite' field", function(done) {
   const songs = [
     {
       type: "song",
@@ -762,7 +761,7 @@ test("The Song controller should fill the data model of the songs being played w
     }
   ];
 
-  t.deepEqual(mergeFavsAndSongs(songs, favs), [
+  expect(mergeFavsAndSongs(songs, favs)).toStrictEqual([
     {
       type: "song",
       song: {
@@ -792,5 +791,5 @@ test("The Song controller should fill the data model of the songs being played w
     }
   ]);
 
-  t.end();
+  done();
 });
