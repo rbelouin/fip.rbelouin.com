@@ -1,4 +1,3 @@
-import test from "tape";
 import _ from "lodash";
 import Bacon from "baconjs";
 
@@ -12,19 +11,19 @@ import {
   getTokenProperty
 } from "../../../src/js/controllers/token.js";
 
-test("The Token controller should be able to retrieve a token from the querysring", function(t) {
+test("The Token controller should be able to retrieve a token from the querysring", function(done) {
   const location1 = {
     search: ""
   };
 
-  t.deepEqual(getTokenFromQS(location1), null);
+  expect(getTokenFromQS(location1)).toStrictEqual(null);
 
   const location2 = {
     search:
       "?access_token=access_token&refresh_token=refresh_token&expires_in=3600&token_type=type"
   };
 
-  t.deepEqual(getTokenFromQS(location2), {
+  expect(getTokenFromQS(location2)).toStrictEqual({
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "3600",
@@ -35,24 +34,24 @@ test("The Token controller should be able to retrieve a token from the querysrin
     search: "?access_token=access_token&expires_in=3600&token_type=type&a=b&c=d"
   };
 
-  t.deepEqual(getTokenFromQS(location3), {
+  expect(getTokenFromQS(location3)).toStrictEqual({
     access_token: "access_token",
     expires_in: "3600",
     token_type: "type"
   });
 
-  t.end();
+  done();
 });
 
-test("The Token controller should be able to retrieve a token from the localStorage", function(t) {
+test("The Token controller should be able to retrieve a token from the localStorage", function(done) {
   const Storage1 = {
     get: function(name) {
-      t.equal(name, "token");
+      expect(name).toStrictEqual("token");
       return null;
     }
   };
 
-  t.deepEqual(getTokenFromLS(Storage1), null);
+  expect(getTokenFromLS(Storage1)).toStrictEqual(null);
 
   const token = {
     access_token: "access_token",
@@ -63,17 +62,17 @@ test("The Token controller should be able to retrieve a token from the localStor
 
   const Storage2 = {
     get: function(name) {
-      t.equal(name, "token");
+      expect(name).toStrictEqual("token");
       return token;
     }
   };
 
-  t.deepEqual(getTokenFromLS(Storage2), token);
+  expect(getTokenFromLS(Storage2)).toStrictEqual(token);
 
-  t.end();
+  done();
 });
 
-test("The Token controller should be able to retrieve a token from the localStorage if it has not already found it in the querystring", function(t) {
+test("The Token controller should be able to retrieve a token from the localStorage if it has not already found it in the querystring", function(done) {
   const Storage1 = {
     get: function(name) {
       return {
@@ -89,7 +88,7 @@ test("The Token controller should be able to retrieve a token from the localStor
     search: "?access_token=a&refresh_token=b&expires_in=c&token_type=d"
   };
 
-  t.deepEqual(getToken(Storage1, location1), {
+  expect(getToken(Storage1, location1)).toStrictEqual({
     access_token: "a",
     refresh_token: "b",
     expires_in: "c",
@@ -111,7 +110,7 @@ test("The Token controller should be able to retrieve a token from the localStor
     search: "?access_token=a&expires_in=c&token_type=d"
   };
 
-  t.deepEqual(getToken(Storage2, location2), {
+  expect(getToken(Storage2, location2)).toStrictEqual({
     access_token: "a",
     refresh_token: "refresh_token",
     expires_in: "c",
@@ -133,7 +132,7 @@ test("The Token controller should be able to retrieve a token from the localStor
     search: ""
   };
 
-  t.deepEqual(getToken(Storage3, location3), {
+  expect(getToken(Storage3, location3)).toStrictEqual({
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "3600",
@@ -150,12 +149,12 @@ test("The Token controller should be able to retrieve a token from the localStor
     search: ""
   };
 
-  t.deepEqual(getToken(Storage4, location4), null);
+  expect(getToken(Storage4, location4)).toStrictEqual(null);
 
-  t.end();
+  done();
 });
 
-test("The Token controller should be able to save a token in the localStorage", function(t) {
+test("The Token controller should be able to save a token in the localStorage", function(done) {
   const token = {
     access_token: "access_token",
     refresh_token: "refresh_token",
@@ -165,16 +164,16 @@ test("The Token controller should be able to save a token in the localStorage", 
 
   const Storage = {
     set: function(name, value) {
-      t.equal(name, "token");
-      t.deepEqual(value, token);
-      t.end();
+      expect(name).toStrictEqual("token");
+      expect(value).toStrictEqual(token);
+      done();
     }
   };
 
   setToken(Storage, token);
 });
 
-test("The Token controller should be able to remove the query params that are related to a token", function(t) {
+test("The Token controller should be able to remove the query params that are related to a token", function(done) {
   const location1 = {
     pathname: "/",
     search: "?access_token=a&refresh_token=b&expires_in=3&token_type=d&e=f&g=h"
@@ -182,7 +181,7 @@ test("The Token controller should be able to remove the query params that are re
 
   const history1 = {
     pushState: function($, $$, href) {
-      t.equal(href, "?e=f&g=h");
+      expect(href).toStrictEqual("?e=f&g=h");
     }
   };
 
@@ -195,19 +194,19 @@ test("The Token controller should be able to remove the query params that are re
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "/");
-      t.end();
+      expect(href).toStrictEqual("/");
+      done();
     }
   };
 
   removeTokenFromQS(location2, history2);
 });
 
-test("The Token controller should be able to request Spotify tokens if no token is found", function(t) {
+test("The Token controller should be able to request Spotify tokens if no token is found", function(done) {
   const Storage1 = {
     token: null,
     get: function(item) {
-      t.equal(item, "token");
+      expect(item).toStrictEqual("token");
       return {
         access_token: "access_token",
         refresh_token: "refresh_token",
@@ -227,26 +226,26 @@ test("The Token controller should be able to request Spotify tokens if no token 
 
   const history1 = {
     pushState: function($, $$, href) {
-      t.equal(href, "/");
+      expect(href).toStrictEqual("/");
     }
   };
 
   const Spotify1 = {
     requestToken: function() {
-      t.fail("Spotify should not be called");
+      throw new Error("Spotify should not be called");
     }
   };
 
   const token1 = getOrRequestToken(Storage1, Spotify1, location1, history1);
 
-  t.deepEqual(token1, {
+  expect(token1).toStrictEqual({
     access_token: "a",
     refresh_token: "b",
     expires_in: "c",
     token_type: "d"
   });
 
-  t.deepEqual(Storage1.token, {
+  expect(Storage1.token).toStrictEqual({
     access_token: "a",
     refresh_token: "b",
     expires_in: "c",
@@ -256,7 +255,7 @@ test("The Token controller should be able to request Spotify tokens if no token 
   const Storage2 = {
     token: null,
     get: function(item) {
-      t.equal(item, "token");
+      expect(item).toStrictEqual("token");
       return {
         access_token: "access_token",
         refresh_token: "refresh_token",
@@ -276,26 +275,26 @@ test("The Token controller should be able to request Spotify tokens if no token 
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "/");
+      expect(href).toStrictEqual("/");
     }
   };
 
   const Spotify2 = {
     requestToken: function() {
-      t.fail("Spotify should not be called");
+      throw new Error("Spotify should not be called");
     }
   };
 
   const token2 = getOrRequestToken(Storage2, Spotify2, location2, history2);
 
-  t.deepEqual(token2, {
+  expect(token2).toStrictEqual({
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "expires_in",
     token_type: "type"
   });
 
-  t.deepEqual(Storage2.token, {
+  expect(Storage2.token).toStrictEqual({
     access_token: "access_token",
     refresh_token: "refresh_token",
     expires_in: "expires_in",
@@ -305,7 +304,7 @@ test("The Token controller should be able to request Spotify tokens if no token 
   const Storage3 = {
     token: null,
     get: function(item) {
-      t.equal(item, "token");
+      expect(item).toStrictEqual("token");
       return null;
     },
     set: function(item, value) {
@@ -320,30 +319,30 @@ test("The Token controller should be able to request Spotify tokens if no token 
 
   const history3 = {
     pushState: function($, $$, href) {
-      t.fail("History pushState should not be called");
+      throw new Error("History pushState should not be called");
     }
   };
 
   const Spotify3 = {
     requestToken: function(scopes) {
-      t.ok(Array.prototype.isPrototypeOf(scopes));
-      t.ok(_.every(scopes, scope => typeof scope === "string"));
+      expect(scopes).toBeInstanceOf(Array);
+      expect(_.every(scopes, scope => typeof scope === "string")).toBeTruthy();
     }
   };
 
   const token3 = getOrRequestToken(Storage3, Spotify3, location3, history3);
 
-  t.deepEqual(token3, null);
-  t.deepEqual(Storage3.token, null);
+  expect(token3).toStrictEqual(null);
+  expect(Storage3.token).toStrictEqual(null);
 
-  t.end();
+  done();
 });
 
-test("The Token controller should request a token everytime a user wants to sync his Spotify account", function(t) {
+test("The Token controller should request a token everytime a user wants to sync his Spotify account", function(done) {
   const Storage1 = {
     token: null,
     get: function(item) {
-      t.equal(item, "token");
+      expect(item).toStrictEqual("token");
       return Storage1[item];
     },
     set: function(item, value) {
@@ -358,15 +357,15 @@ test("The Token controller should request a token everytime a user wants to sync
 
   const history1 = {
     pushState: function($, $$, href) {
-      t.equal(href, "/");
+      expect(href).toStrictEqual("/");
       location1.search = href;
     }
   };
 
   const Spotify1 = {
     requestToken: function(scopes) {
-      t.ok(Array.prototype.isPrototypeOf(scopes));
-      t.ok(_.every(scopes, scope => typeof scope === "string"));
+      expect(scopes).toBeInstanceOf(Array);
+      expect(_.every(scopes, scope => typeof scope === "string")).toBeTruthy();
     }
   };
 
@@ -381,8 +380,8 @@ test("The Token controller should request a token everytime a user wants to sync
   ).fold([], (items, item) => items.concat([item]));
 
   p_tokens1.subscribe(function(ev) {
-    t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), [null, null]);
+    expect(ev.hasValue()).toBeTruthy();
+    expect(ev.value()).toStrictEqual([null, null]);
 
     return Bacon.noMore;
   });
@@ -393,7 +392,7 @@ test("The Token controller should request a token everytime a user wants to sync
   const Storage2 = {
     token: null,
     get: function(item) {
-      t.equal(item, "token");
+      expect(item).toStrictEqual("token");
       return Storage2[item];
     },
     set: function(item, value) {
@@ -408,14 +407,14 @@ test("The Token controller should request a token everytime a user wants to sync
 
   const history2 = {
     pushState: function($, $$, href) {
-      t.equal(href, "/");
+      expect(href).toStrictEqual("/");
       location2.search = href;
     }
   };
 
   const Spotify2 = {
     requestToken: function(scopes) {
-      t.fail("Spotify should not be called");
+      throw new Error("Spotify should not be called");
     }
   };
 
@@ -430,8 +429,8 @@ test("The Token controller should request a token everytime a user wants to sync
   ).fold([], (items, item) => items.concat([item]));
 
   p_tokens2.subscribe(function(ev) {
-    t.ok(ev.hasValue());
-    t.deepEqual(ev.value(), [
+    expect(ev.hasValue()).toBeTruthy();
+    expect(ev.value()).toStrictEqual([
       {
         access_token: "a",
         refresh_token: "b",
@@ -441,7 +440,7 @@ test("The Token controller should request a token everytime a user wants to sync
       null
     ]);
 
-    t.end();
+    done();
 
     return Bacon.noMore;
   });
