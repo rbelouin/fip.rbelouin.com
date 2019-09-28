@@ -30,6 +30,7 @@
     "@types/node": "^11.11.0",
     "@types/node-fetch": "^2.3.7",
     "@types/request": "^2.48.1",
+    "@types/uuid": "^3.4.5",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
@@ -82,6 +83,7 @@
     "react-dom": "^16.8.3",
     "react-intl": "^2.8.0",
     "request": "^2.88.0",
+    "uuid": "^3.3.3",
     "whatwg-fetch": "^0.10.1"
   },
   "scripts": {
