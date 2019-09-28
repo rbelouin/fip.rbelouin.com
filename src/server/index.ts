@@ -7,6 +7,7 @@ import Bacon from "baconjs";
 
 import config from "../../prod/js/config.json";
 import { fetchRadios } from "../fip/radio-metadata";
+import { spotifyLogin, spotifyCallback } from "../spotify/auth";
 
 const app = express();
 expressWs(app);
@@ -14,6 +15,12 @@ expressWs(app);
 const apiPrefix = "/api";
 const publicFolder = process.env.PUBLIC_FOLDER || "";
 const httpsOnly = process.env.HTTPS_ONLY === "1";
+const spotifyConfig = {
+  clientId: process.env.SPOTIFY_CLIENT_ID || "",
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
+  loginPath: "/api/login",
+  callbackPath: "/api/callback"
+};
 
 app.use(function(req, res, next) {
   const protocol =
@@ -21,12 +28,6 @@ app.use(function(req, res, next) {
 
   if (httpsOnly && protocol !== "https") {
     res.redirect("https://" + req.headers["host"] + req.originalUrl);
-  } else if (req.path.indexOf(apiPrefix) === 0) {
-    res.redirect(
-      `${protocol}://${config.api.http_host}${req.path}?${qs.stringify(
-        req.query
-      )}`
-    );
   } else {
     next();
   }
@@ -37,6 +38,9 @@ _.each(config.routes, function(route, name) {
     res.sendFile(path.resolve(publicFolder, "index.html"));
   });
 });
+
+app.use(spotifyConfig.loginPath, spotifyLogin(spotifyConfig));
+app.use(spotifyConfig.callbackPath, spotifyCallback(spotifyConfig));
 
 app.use(express.static(publicFolder));
 
