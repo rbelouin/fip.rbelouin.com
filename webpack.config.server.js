@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const NodemonPlugin = require("nodemon-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -24,6 +25,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new NodemonPlugin(),
     new webpack.DefinePlugin({
       "process.env.PUBLIC_FOLDER": JSON.stringify(
         path.resolve(__dirname, "prod", "public")
