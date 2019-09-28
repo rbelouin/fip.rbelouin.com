@@ -25,16 +25,17 @@ export function getFipSongLists(Fip, Spotify, wsPath, radios, p_token) {
             : Bacon.constant(item);
         });
       })
-      .map(item => item && item.song ? { type: "song", ...item } : item)
+      .map(item => (item && item.song ? { type: "song", ...item } : item))
       .scan([], (items, item) => [item].concat(items));
   });
 }
 
-export function getSpotifyPrint(Spotify, token) {
+export function getSpotifyPrint(Storage, Spotify, token) {
   const p_user = Spotify.getUser(token).toProperty();
 
   p_user.onError(res => {
     if (res.status === 401) {
+      Storage.set("token", null);
       Spotify.refreshToken(token);
     }
   });
@@ -132,7 +133,7 @@ export function mergeFavsAndSongs(items, favSongs) {
 export default (Storage, Spotify, Fip, wsPath, radios) => ({
   searchOnSpotify: _.partial(searchOnSpotify, Spotify),
   getFipSongLists: _.partial(getFipSongLists, Fip, Spotify, wsPath, radios),
-  getSpotifyPrint: _.partial(getSpotifyPrint, Spotify),
+  getSpotifyPrint: _.partial(getSpotifyPrint, Storage, Spotify),
   getSyncs: _.partial(getSyncs, Storage, Spotify),
   getFavoriteSongs,
   setFavoriteSongs,

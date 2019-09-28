@@ -244,6 +244,10 @@ test('The Song controller should be able to get a spotify "print" (user, playlis
     name: "2"
   };
 
+  const Storage = {
+    set: function() {}
+  };
+
   const Spotify = {
     getUser: function(_token) {
       expect(_token).toStrictEqual(token);
@@ -257,7 +261,7 @@ test('The Song controller should be able to get a spotify "print" (user, playlis
     }
   };
 
-  getSpotifyPrint(Spotify, token).subscribe(function(ev) {
+  getSpotifyPrint(Storage, Spotify, token).subscribe(function(ev) {
     expect(ev.hasValue()).toBeTruthy();
     expect(ev.value()).toStrictEqual({
       user: user,
@@ -308,7 +312,10 @@ test("The Song controller should be able to get an object for each sync backend 
     }
   };
 
-  expect(getSyncs(Storage, Spotify, print)).toStrictEqual([storageSync, spotifySync]);
+  expect(getSyncs(Storage, Spotify, print)).toStrictEqual([
+    storageSync,
+    spotifySync
+  ]);
 
   expect(getSyncs(Storage, Spotify, null)).toStrictEqual([storageSync]);
 
