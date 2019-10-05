@@ -4,10 +4,15 @@ import path from "path";
 import express from "express";
 import expressWs from "express-ws";
 import Bacon from "baconjs";
+import * as Sentry from "@sentry/node";
 
 import config from "../../prod/js/config.json";
 import { fetchRadios } from "../fip/radio-metadata";
 import { spotifyLogin, spotifyCallback } from "../spotify/auth";
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN
+});
 
 const app = express();
 expressWs(app);
@@ -48,7 +53,7 @@ app.listen(config.port);
 console.log("Server listening on port " + config.port + "…");
 
 const p_radios = fetchRadios(2000, config.radios);
-p_radios.onError(console.log);
+p_radios.onError(error => Sentry.captureMessage(error as any));
 
 (app as any).ws("/ws", function(ws: any, req: any) {
   const unsubscribe = p_radios.onValue(radios => {
