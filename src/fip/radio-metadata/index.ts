@@ -32,10 +32,32 @@ function repeat<E, A>(
   interval: number,
   f: () => Bacon.Property<E, A>
 ): Bacon.Property<E, A> {
-  return Bacon.mergeAll(
-    f().toEventStream(),
-    Bacon.repeat(() => Bacon.later<E, boolean>(interval, true).flatMap(f))
+  return ignoreNonRecurringErrors(
+    6 * interval,
+    5,
+    Bacon.mergeAll(
+      f().toEventStream(),
+      Bacon.repeat(() => Bacon.later<E, boolean>(interval, true).flatMap(f))
+    )
   ).toProperty();
+}
+
+export function ignoreNonRecurringErrors<E, A>(
+  interval: number,
+  threshold: number,
+  stream: Bacon.EventStream<E, A>
+): Bacon.EventStream<E, A> {
+  return Bacon.mergeAll(
+    stream.skipErrors() as Bacon.EventStream<E, A>,
+    stream
+      .errors()
+      .mapError(e => e)
+      .bufferWithTime(interval)
+      .filter(errors => errors.length >= threshold)
+      .flatMap(
+        errors => new Bacon.Error(errors[errors.length - 1])
+      ) as Bacon.EventStream<E, A>
+  );
 }
 
 export function fetchRadio(radio: Radio): Bacon.Property<FipClientError, Song> {
