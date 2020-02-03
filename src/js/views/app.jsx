@@ -1,11 +1,12 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import { array, object } from "prop-types";
+import { array, object, string } from "prop-types";
 
 import Radio from "./radio.jsx";
 import Favorites from "./favorites.jsx";
 
+import App from "../../components/app";
 import AppNav from "./app-nav.jsx";
 import Player from "./nav-player.jsx";
 
@@ -17,7 +18,9 @@ export default createReactClass({
     syncBus: object.isRequired,
     playBus: object.isRequired,
     autoplayBus: object.isRequired,
-    radios: array.isRequired
+    radios: array.isRequired,
+    email: string,
+    github: string
   },
   getInitialState: function() {
     return {
@@ -88,20 +91,22 @@ export default createReactClass({
     );
 
     return (
-      <div className="app">
-        <main className="app-main container-fluid">{page}</main>
-        {player}
-        <AppNav
-          radios={this.props.radios}
-          playBus={this.props.playBus}
-          src={this.state.src}
-          nowPlaying={this.state.psong}
-          route={this.state.route}
-          radio={this.state.radio}
-          paneIsOpen={this.state.paneIsOpen}
-          playerOnBottom={this.state.playerOnBottom}
-        />
-      </div>
+      <App email={this.props.email} github={this.props.github}>
+        <div className="app">
+          <main className="app-main container-fluid">{page}</main>
+          {player}
+          <AppNav
+            radios={this.props.radios}
+            playBus={this.props.playBus}
+            src={this.state.src}
+            nowPlaying={this.state.psong}
+            route={this.state.route}
+            radio={this.state.radio}
+            paneIsOpen={this.state.paneIsOpen}
+            playerOnBottom={this.state.playerOnBottom}
+          />
+        </div>
+      </App>
     );
   }
 });

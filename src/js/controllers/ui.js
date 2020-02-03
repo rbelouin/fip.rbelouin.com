@@ -4,9 +4,12 @@ import Bacon from "baconjs";
 // true => open
 // false => closed
 export function getPaneStatus(win) {
-  const s_click = Bacon.fromEvent(
-    win.document.querySelector(".navbar .navbar-brand a"),
-    "click"
+  const s_click = Bacon.fromEvent(win.document.body, "click").filter(
+    event =>
+      event.target &&
+      event.target.matches &&
+      (event.target.matches("#menu-toggle") ||
+        event.target.matches("#menu-toggle *"))
   );
 
   return s_click.doAction(".preventDefault").scan(false, acc => {

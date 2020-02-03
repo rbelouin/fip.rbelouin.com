@@ -3,6 +3,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const FaviconsWebpackPlugin = require("webapp-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const config = require("./prod/js/config.json");
 
@@ -18,12 +19,35 @@ module.exports = {
     publicPath: "/",
     filename: "js/bundle.js"
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+  },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: ["babel-loader", "eslint-loader"]
+      },
+      {
+        test: /\.ts|\.tsx$/,
+        exclude: /node_modules/,
+        use: "babel-loader"
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "css-loader",
+            options: {
+              import: true,
+              modules: true
+            }
+          }
+        ]
       },
       {
         test: /\.less$/,
@@ -72,6 +96,7 @@ module.exports = {
       template: "./assets/html/index.html",
       inject: "body",
       trackingId: config.google_analytics.tracking_id
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin()
   ]
 };

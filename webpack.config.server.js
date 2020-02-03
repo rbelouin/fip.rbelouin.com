@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const NodemonPlugin = require("nodemon-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -18,9 +19,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.ts|\.tsx$/,
         exclude: /node_modules/,
-        use: ["ts-loader"]
+        use: ["babel-loader"]
       }
     ]
   },
@@ -30,6 +31,7 @@ module.exports = {
       "process.env.PUBLIC_FOLDER": JSON.stringify(
         path.resolve(__dirname, "prod", "public")
       )
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin()
   ]
 };

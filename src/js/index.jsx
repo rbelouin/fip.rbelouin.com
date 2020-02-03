@@ -84,6 +84,8 @@ export function start(conf) {
   render(
     <IntlProvider locale={intl.locales} messages={intl.messages}>
       <App
+        email={conf.email}
+        github={conf.github}
         radios={conf.radios}
         state={state}
         syncBus={syncBus}
