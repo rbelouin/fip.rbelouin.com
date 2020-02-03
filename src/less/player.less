@@ -32,14 +32,13 @@
 
       &::-moz-range-thumb {
         -moz-appearance: none;
-        .thumb()
+        .thumb();
       }
 
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
-        .thumb()
+        .thumb();
       }
-
     }
 
     .player-controls-volume {
@@ -89,43 +88,6 @@
       }
     }
 
-    .player-controls-spotify {
-      background-color: transparent;
-      border: none;
-      color: #bbbbbb;
-      display: inline-block;
-      height: 20px;
-      margin-left: 20px;
-      outline: none;
-      padding: 1px 0;
-
-      .player-controls-spotify-icon {
-        color: #bbbbbb;
-        font-size: 18px;
-        margin-right: 10px;
-        vertical-align: middle;
-      }
-
-      &:hover, &:focus {
-        color: #ffffff;
-        text-decoration: none;
-
-        .player-controls-spotify-icon {
-          color: #ffffff;
-        }
-      }
-
-      @media (max-width: 470px) {
-        & {
-          display: block;
-          font-size: 18px;
-          height: 40px;
-          margin-left: 0;
-          text-align: center;
-        }
-      }
-    }
-
     .alert {
       text-align: left;
     }
@@ -144,5 +106,43 @@
   .song-list tr td:nth-child(2),
   .song-list tr th:nth-child(2) {
     display: none;
+  }
+}
+
+.player-controls-spotify {
+  background-color: transparent;
+  border: none;
+  color: #bbbbbb;
+  display: inline-block;
+  height: 20px;
+  margin-left: 20px;
+  outline: none;
+  padding: 1px 0;
+
+  .player-controls-spotify-icon {
+    color: #bbbbbb;
+    font-size: 18px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  &:hover,
+  &:focus {
+    color: #ffffff;
+    text-decoration: none;
+
+    .player-controls-spotify-icon {
+      color: #ffffff;
+    }
+  }
+
+  @media (max-width: 470px) {
+    & {
+      display: block;
+      font-size: 18px;
+      height: 40px;
+      margin-left: 0;
+      text-align: center;
+    }
   }
 }

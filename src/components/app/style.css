@@ -1,0 +1,40 @@
+@import "../../variables.css";
+
+.root {
+  background: var(--grey-darkest);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  background: var(--pink-fip);
+  border: 0;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  width: 50px;
+}
+
+.icon {
+  font-size: 18px;
+  line-height: 50px;
+}
+
+@media (max-width: 991px) {
+  .icon {
+    font-size: 26px;
+    vertical-align: middle;
+  }
+
+  .icon::before {
+    content: "\e236";
+  }
+}
+
+.title {
+  font-size: 18px;
+  line-height: 20px;
+  margin: 0 0 0 10px;
+  padding: 0;
+}

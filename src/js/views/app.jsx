@@ -6,6 +6,7 @@ import { array, object } from "prop-types";
 import Radio from "./radio.jsx";
 import Favorites from "./favorites.jsx";
 
+import App from "../../components/app";
 import AppNav from "./app-nav.jsx";
 import Player from "./nav-player.jsx";
 
@@ -88,20 +89,22 @@ export default createReactClass({
     );
 
     return (
-      <div className="app">
-        <main className="app-main container-fluid">{page}</main>
-        {player}
-        <AppNav
-          radios={this.props.radios}
-          playBus={this.props.playBus}
-          src={this.state.src}
-          nowPlaying={this.state.psong}
-          route={this.state.route}
-          radio={this.state.radio}
-          paneIsOpen={this.state.paneIsOpen}
-          playerOnBottom={this.state.playerOnBottom}
-        />
-      </div>
+      <App>
+        <div className="app">
+          <main className="app-main container-fluid">{page}</main>
+          {player}
+          <AppNav
+            radios={this.props.radios}
+            playBus={this.props.playBus}
+            src={this.state.src}
+            nowPlaying={this.state.psong}
+            route={this.state.route}
+            radio={this.state.radio}
+            paneIsOpen={this.state.paneIsOpen}
+            playerOnBottom={this.state.playerOnBottom}
+          />
+        </div>
+      </App>
     );
   }
 });

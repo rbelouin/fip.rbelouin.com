@@ -1,0 +1,9 @@
+:root {
+  --grey-darkest: #222222;
+  --pink-fip: #e2007a;
+  --white: #ffffff;
+
+  --screen-small: 470px;
+  --screen-medium: 768px;
+  --screen-large: 991px;
+}
