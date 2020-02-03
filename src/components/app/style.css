@@ -4,6 +4,12 @@
   background: var(--grey-darkest);
   color: var(--white);
   display: flex;
+  justify-content: space-between;
+}
+
+.startSection,
+.endSection {
+  display: flex;
   align-items: center;
 }
 
@@ -37,4 +43,24 @@
   line-height: 20px;
   margin: 0 0 0 10px;
   padding: 0;
+}
+
+.linkContainer {
+  text-align: center;
+  width: 50px;
+}
+
+.link {
+  color: var(--grey-light);
+  font-size: 26px;
+  line-height: 50px;
+}
+
+.link:hover {
+  color: var(--white);
+  text-decoration: none;
+}
+.link:active,
+.link:focus {
+  color: var(--grey);
 }

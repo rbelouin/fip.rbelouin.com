@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import createReactClass from "create-react-class";
-import { array, object } from "prop-types";
+import { array, object, string } from "prop-types";
 
 import Radio from "./radio.jsx";
 import Favorites from "./favorites.jsx";
@@ -18,7 +18,9 @@ export default createReactClass({
     syncBus: object.isRequired,
     playBus: object.isRequired,
     autoplayBus: object.isRequired,
-    radios: array.isRequired
+    radios: array.isRequired,
+    email: string,
+    github: string
   },
   getInitialState: function() {
     return {
@@ -89,7 +91,7 @@ export default createReactClass({
     );
 
     return (
-      <App>
+      <App email={this.props.email} github={this.props.github}>
         <div className="app">
           <main className="app-main container-fluid">{page}</main>
           {player}
