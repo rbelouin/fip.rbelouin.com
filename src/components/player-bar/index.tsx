@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   bool,
   func,
   number,
   object,
+  string,
   InferProps,
   Requireable
 } from "prop-types";
@@ -34,6 +35,7 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = props => {
 
   return !nowPlaying ? null : (
     <div className={style.root}>
+      {playing && <Audio src={nowPlaying.radio.audioSource} volume={volume} />}
       <div className={style.song}>
         <img
           className={style.cover}
@@ -111,5 +113,39 @@ export const VolumeControls: React.FunctionComponent<VolumeControlsPropTypes> = 
 };
 
 VolumeControls.propTypes = volumeControlsPropTypes;
+
+export const audioPropTypes = {
+  src: string.isRequired,
+  volume: number.isRequired
+};
+
+export type AudioPropTypes = InferProps<typeof audioPropTypes>;
+
+export const makeSourceUncachable = (src: string): string => {
+  const sourceURL = new URL(src);
+  // Add a timestamp to the query string to avoid weird cache issues on playback
+  sourceURL.searchParams.append("_t", Date.now().toString());
+  return sourceURL.toString();
+};
+
+export const Audio: React.FunctionComponent<AudioPropTypes> = ({
+  src,
+  volume
+}) => {
+  const audioRef = React.createRef<HTMLAudioElement>();
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+      audioRef.current.play();
+    }
+  }, [volume]);
+
+  return (
+    <audio ref={audioRef}>
+      <source src={makeSourceUncachable(src)} type="audio/mpeg" />
+    </audio>
+  );
+};
 
 export default PlayerBar;
