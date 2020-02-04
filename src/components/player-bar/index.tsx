@@ -31,7 +31,7 @@ export const onPlayButtonClick = (props: PlayerBarPropTypes) => () => {
 
 export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = props => {
   const { nowPlaying, playBus, playing } = props;
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useState(100);
 
   return !nowPlaying ? null : (
     <div className={style.root}>
