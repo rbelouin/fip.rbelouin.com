@@ -17,6 +17,8 @@ export function send(fetch, { url, method, headers, body }) {
   const s_res = Bacon.fromPromise(
     fetch(url, {
       method,
+      // We trust that Map.prototype is defined.
+      // eslint-disable-next-line no-prototype-builtins
       headers: Map.prototype.isPrototypeOf(headers)
         ? _.zipObject(Array.from(headers.entries()))
         : headers || {},
