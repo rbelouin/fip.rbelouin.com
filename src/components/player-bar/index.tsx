@@ -66,7 +66,10 @@ export const PlayButton: React.FunctionComponent<PlayButtonPropTypes> = ({
 }) => {
   const icon = playing ? "stop" : "play";
   return (
-    <button className={style.playButton} onClick={onClick || (() => {})}>
+    <button
+      className={`${style.playButton} ${playing ? style.isPlaying : ""}`}
+      onClick={onClick || (() => {})}
+    >
       <span className={`fa fa-${icon}`} aria-label={icon}></span>
     </button>
   );

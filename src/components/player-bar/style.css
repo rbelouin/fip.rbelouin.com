@@ -48,6 +48,10 @@
   padding: 5px 0 6px 2px;
   width: 60px;
 }
+.playButton.isPlaying {
+  padding-left: 0;
+  padding-top: 6px;
+}
 
 .volumeControls {
   align-items: center;
