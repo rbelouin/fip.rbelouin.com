@@ -1,19 +1,37 @@
-import React from "react";
-import { bool, number, object, InferProps, Requireable } from "prop-types";
-import { NowPlaying } from "../../types";
+import React, { useState } from "react";
+import {
+  bool,
+  func,
+  number,
+  object,
+  InferProps,
+  Requireable
+} from "prop-types";
+import { NowPlaying, PlayCommand } from "../../types";
 const style = require("./style.css");
 
 export const playerBarPropTypes = {
   nowPlaying: (object as any) as Requireable<NowPlaying>,
+  playBus: (object as any) as Requireable<Bacon.Bus<any, PlayCommand>>,
   playing: bool
 };
 
 export type PlayerBarPropTypes = InferProps<typeof playerBarPropTypes>;
 
-export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
-  nowPlaying,
-  playing
-}) => {
+export const onPlayButtonClick = (props: PlayerBarPropTypes) => () => {
+  if (props.nowPlaying && props.playBus) {
+    props.playBus.push(
+      props.playing
+        ? { type: "stop" }
+        : { type: "play", radio: props.nowPlaying.radio.id }
+    );
+  }
+};
+
+export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = props => {
+  const { nowPlaying, playBus, playing } = props;
+  const [volume, setVolume] = useState(50);
+
   return !nowPlaying ? null : (
     <div className={style.root}>
       <div className={style.song}>
@@ -27,8 +45,8 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
           <div className={style.artist}>{nowPlaying.song.artist}</div>
         </div>
       </div>
-      <PlayButton playing={playing} />
-      <VolumeControls volume={50} />
+      <PlayButton playing={playing} onClick={onPlayButtonClick(props)} />
+      <VolumeControls volume={volume} onVolumeChange={setVolume} />
     </div>
   );
 };
@@ -36,17 +54,19 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
 PlayerBar.propTypes = playerBarPropTypes;
 
 export const playButtonPropTypes = {
-  playing: bool
+  playing: bool,
+  onClick: func as Requireable<(event: React.MouseEvent<HTMLElement>) => void>
 };
 
 export type PlayButtonPropTypes = InferProps<typeof playButtonPropTypes>;
 
 export const PlayButton: React.FunctionComponent<PlayButtonPropTypes> = ({
-  playing
+  playing,
+  onClick
 }) => {
   const icon = playing ? "stop" : "play";
   return (
-    <button className={style.playButton}>
+    <button className={style.playButton} onClick={onClick || (() => {})}>
       <span className={`fa fa-${icon}`} aria-label={icon}></span>
     </button>
   );
@@ -54,7 +74,8 @@ export const PlayButton: React.FunctionComponent<PlayButtonPropTypes> = ({
 PlayButton.propTypes = playButtonPropTypes;
 
 export const volumeControlsPropTypes = {
-  volume: number.isRequired
+  volume: number.isRequired,
+  onVolumeChange: func as Requireable<(value: number) => any>
 };
 
 export type VolumeControlsPropTypes = InferProps<
@@ -62,7 +83,8 @@ export type VolumeControlsPropTypes = InferProps<
 >;
 
 export const VolumeControls: React.FunctionComponent<VolumeControlsPropTypes> = ({
-  volume
+  volume,
+  onVolumeChange
 }) => {
   const icon = volume === 0 ? "off" : volume < 50 ? "down" : "up";
   return (
@@ -77,6 +99,9 @@ export const VolumeControls: React.FunctionComponent<VolumeControlsPropTypes> = 
         min="0"
         max="100"
         value={volume}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onVolumeChange && onVolumeChange(parseInt(event.target.value))
+        }
       />
     </div>
   );

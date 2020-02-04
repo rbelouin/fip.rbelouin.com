@@ -1,5 +1,7 @@
-import * as React from "react";
+import React, { useState } from "react";
+import Bacon from "baconjs";
 import PlayerBar from "./index";
+import { PlayCommand } from "../../types";
 
 export default {
   title: "PlayerBar"
@@ -10,6 +12,20 @@ export const WithSong = () => <PlayerBar nowPlaying={{ song, radio }} />;
 export const WithPlayingSong = () => (
   <PlayerBar nowPlaying={{ song, radio }} playing={true} />
 );
+export const WithPlayableSong = () => {
+  const [playing, setPlaying] = useState(false);
+  const playBus = new Bacon.Bus<any, PlayCommand>();
+
+  playBus.onValue(event => setPlaying(event.type === "play"));
+
+  return (
+    <PlayerBar
+      nowPlaying={{ song, radio }}
+      playing={playing}
+      playBus={playBus}
+    />
+  );
+};
 
 const song = {
   id: "songId",
