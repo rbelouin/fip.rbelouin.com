@@ -1,0 +1,101 @@
+.root {
+  background-color: var(--grey-3);
+  box-shadow: 0 -1px var(--grey-2);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.song {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.cover {
+  width: 60px;
+}
+
+.textSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+  min-width: 0;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.title,
+.artist {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playButton {
+  background: var(--pink-fip);
+  border: none;
+  border-radius: 30px;
+  color: var(--white);
+  flex-shrink: 0;
+  font-size: 26px;
+  height: 60px;
+  outline: none;
+  margin: 0 30px;
+  padding: 5px 0 6px 2px;
+  width: 60px;
+}
+
+.volumeControls {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 100px;
+}
+
+.volumeIcon {
+  font-size: 22px;
+}
+
+.volumePicker {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: var(--grey-4);
+  border: none;
+  border-radius: 3px;
+  flex: 0 1 200px;
+  height: 6px;
+  margin: 0 0 0 10px;
+  outline: none;
+  min-width: 130px;
+}
+
+.volumePicker::-moz-range-track {
+  height: 0;
+}
+
+.volumePicker::-moz-range-thumb,
+.volumePicker::-webkit-slider-thumb {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--pink-fip);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  height: 16px;
+  width: 16px;
+}
+
+@media (max-width: 470px) {
+  .playButton {
+    margin-right: 0;
+  }
+
+  .volumeControls {
+    display: none;
+  }
+}

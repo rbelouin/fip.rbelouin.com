@@ -1,7 +1,7 @@
 @import "../../variables.css";
 
 .root {
-  background: var(--grey-darkest);
+  background: var(--grey-1);
   color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -51,7 +51,7 @@
 }
 
 .link {
-  color: var(--grey-light);
+  color: var(--grey-7);
   font-size: 26px;
   line-height: 50px;
 }
@@ -62,5 +62,5 @@
 }
 .link:active,
 .link:focus {
-  color: var(--grey);
+  color: var(--grey-5);
 }
