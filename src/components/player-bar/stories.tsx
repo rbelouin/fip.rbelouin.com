@@ -18,7 +18,7 @@ export const WithPlayableSong = () => {
   const [playing, setPlaying] = useState(false);
   const playBus = new Bacon.Bus<any, PlayCommand>();
 
-  playBus.onValue(event => setPlaying(event.type === "play"));
+  playBus.onValue(event => setPlaying(event.type === "radio"));
 
   return (
     <PlayerBar
