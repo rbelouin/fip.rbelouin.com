@@ -8,9 +8,11 @@ export default {
 };
 
 export const Empty = () => <PlayerBar />;
-export const WithSong = () => <PlayerBar nowPlaying={{ song, radio }} />;
-export const WithPlayingSong = () => (
-  <PlayerBar nowPlaying={{ song, radio }} playing={true} />
+export const WithRadioSong = () => (
+  <PlayerBar nowPlaying={{ type: "radio", song, radio }} />
+);
+export const WithPlayingRadioSong = () => (
+  <PlayerBar nowPlaying={{ type: "radio", song, radio }} playing={true} />
 );
 export const WithPlayableSong = () => {
   const [playing, setPlaying] = useState(false);
@@ -20,12 +22,20 @@ export const WithPlayableSong = () => {
 
   return (
     <PlayerBar
-      nowPlaying={{ song, radio }}
+      nowPlaying={{ type: "radio", song, radio }}
       playing={playing}
       playBus={playBus}
     />
   );
 };
+export const WithSpotifySong = () => (
+  <PlayerBar
+    nowPlaying={{
+      type: "spotify",
+      songId: "7clXG2g9KnftB0HVNBCoFm"
+    }}
+  />
+);
 
 const song = {
   id: "songId",

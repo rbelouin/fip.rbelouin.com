@@ -6,45 +6,137 @@ import {
   object,
   string,
   InferProps,
-  Requireable
+  Requireable,
+  Validator
 } from "prop-types";
-import { NowPlaying, PlayCommand } from "../../types";
+import { Radio, Song, PlayCommand } from "../../types";
 const style = require("./style.css");
 
+export type PlayerBarNowPlaying =
+  | {
+      type: "radio";
+      song: Song;
+      radio: Radio;
+    }
+  | {
+      type: "spotify";
+      songId: string;
+    };
+
 export const playerBarPropTypes = {
-  nowPlaying: (object as any) as Requireable<NowPlaying>,
+  nowPlaying: (object as any) as Requireable<PlayerBarNowPlaying>,
   playBus: (object as any) as Requireable<Bacon.Bus<any, PlayCommand>>,
   playing: bool
 };
 
 export type PlayerBarPropTypes = InferProps<typeof playerBarPropTypes>;
 
-export const onPlayButtonClick = (props: PlayerBarPropTypes) => () => {
-  if (props.nowPlaying && props.playBus) {
+export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
+  nowPlaying,
+  playBus,
+  playing
+}) => {
+  if (!nowPlaying) {
+    return null;
+  }
+
+  if (nowPlaying.type === "radio") {
+    return (
+      <RadioPlayerBar
+        radio={nowPlaying.radio}
+        song={nowPlaying.song}
+        playBus={playBus}
+        playing={playing}
+      />
+    );
+  }
+
+  if (nowPlaying.type === "spotify") {
+    return <SpotifyPlayerBar songId={nowPlaying.songId} />;
+  }
+
+  return null;
+};
+
+export const spotifyPlayerBarPropTypes = {
+  songId: string.isRequired
+};
+
+export type SpotifyPlayerBarPropTypes = InferProps<
+  typeof spotifyPlayerBarPropTypes
+>;
+
+export const SpotifyPlayerBar: React.FunctionComponent<SpotifyPlayerBarPropTypes> = ({
+  songId
+}) => {
+  const [width, setWidth] = useState(320);
+  const [timeoutId, setTimeoutId] = useState<number | undefined>(undefined);
+  const url = `https://embed.spotify.com/?uri=spotify:track:${songId}`;
+
+  const resize = () => setWidth(window.document.body.clientWidth);
+
+  const debouncedResize = (cache => () => {
+    if (cache.timeoutId) {
+      window.clearTimeout(cache.timeoutId);
+    }
+
+    cache.timeoutId = window.setTimeout(resize, 300);
+  })({} as { timeoutId: number | undefined });
+
+  useEffect(() => {
+    resize();
+    window.addEventListener("resize", debouncedResize);
+    return () => window.removeEventListener("resize", debouncedResize);
+  }, []);
+
+  return (
+    <iframe
+      src={url}
+      width={width}
+      height="80"
+      frameBorder={0}
+      allowTransparency={true}
+    />
+  );
+};
+
+PlayerBar.propTypes = playerBarPropTypes;
+
+export const radioPlayerBarPropTypes = {
+  radio: (object.isRequired as any) as Validator<NonNullable<Radio>>,
+  song: (object.isRequired as any) as Validator<NonNullable<Song>>,
+  playBus: (object as any) as Requireable<Bacon.Bus<any, PlayCommand>>,
+  playing: bool
+};
+
+export type RadioPlayerBarPropTypes = InferProps<
+  typeof radioPlayerBarPropTypes
+>;
+
+export const onPlayButtonClick = (props: RadioPlayerBarPropTypes) => () => {
+  if (props.playBus) {
     props.playBus.push(
-      props.playing
-        ? { type: "stop" }
-        : { type: "play", radio: props.nowPlaying.radio.id }
+      props.playing ? { type: "stop" } : { type: "play", radio: props.radio.id }
     );
   }
 };
 
-export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = props => {
-  const { nowPlaying, playBus, playing } = props;
+export const RadioPlayerBar: React.FunctionComponent<RadioPlayerBarPropTypes> = props => {
+  const { radio, song, playBus, playing } = props;
   const [volume, setVolume] = useState(100);
 
-  return !nowPlaying ? null : (
-    <div className={style.root}>
-      {playing && <Audio src={nowPlaying.radio.audioSource} volume={volume} />}
+  return (
+    <div className={style.radioPlayerBar}>
+      {playing && <Audio src={radio.audioSource} volume={volume} />}
       <div className={style.song}>
         <img
           className={style.cover}
-          src={nowPlaying.song.icons.medium}
+          src={song.icons.medium}
           alt="Album cover"
         />
         <div className={style.textSection}>
-          <div className={style.title}>{nowPlaying.song.title}</div>
-          <div className={style.artist}>{nowPlaying.song.artist}</div>
+          <div className={style.title}>{song.title}</div>
+          <div className={style.artist}>{song.artist}</div>
         </div>
       </div>
       <PlayButton playing={playing} onClick={onPlayButtonClick(props)} />
@@ -53,7 +145,7 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = props => {
   );
 };
 
-PlayerBar.propTypes = playerBarPropTypes;
+RadioPlayerBar.propTypes = radioPlayerBarPropTypes;
 
 export const playButtonPropTypes = {
   playing: bool,
