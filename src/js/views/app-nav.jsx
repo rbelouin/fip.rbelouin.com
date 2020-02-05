@@ -1,10 +1,9 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import { FormattedMessage } from "react-intl";
-import { array, bool, object, string } from "prop-types";
+import { array, bool, string } from "prop-types";
 
 import A from "./link.jsx";
-import Player from "./nav-player.jsx";
 
 export default createReactClass({
   displayName: "AppNav",
@@ -12,11 +11,7 @@ export default createReactClass({
     route: string.isRequired,
     radio: string.isRequired,
     radios: array.isRequired,
-    src: string,
-    nowPlaying: object.isRequired,
-    paneIsOpen: bool.isRequired,
-    playBus: object.isRequired,
-    playerOnBottom: bool.isRequired
+    paneIsOpen: bool.isRequired
   },
   isActive: function(route) {
     return this.props.route === route ? "active" : "";
@@ -27,23 +22,8 @@ export default createReactClass({
       : "";
   },
   render: function() {
-    const src = this.props.src;
-    const nowPlaying = this.props.nowPlaying;
     const isOpen = this.props.paneIsOpen;
-    const playBus = this.props.playBus;
     const navClass = isOpen ? "app-nav-open" : "app-nav-close";
-
-    const player = !this.props.playerOnBottom ? (
-      <Player
-        src={src}
-        nowPlaying={nowPlaying}
-        playBus={playBus}
-        radio={this.props.radio}
-        onBottom={false}
-      />
-    ) : (
-      ""
-    );
 
     const radios = this.props.radios.map(radio => {
       const href = `/radios/${radio.id}`;
@@ -72,7 +52,6 @@ export default createReactClass({
             </A>
           </li>
         </ul>
-        {player}
       </nav>
     );
   }

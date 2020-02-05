@@ -3,12 +3,37 @@ import React from "react";
 import createReactClass from "create-react-class";
 import { array, object, string } from "prop-types";
 
-import Radio from "./radio.jsx";
-import Favorites from "./favorites.jsx";
+import Radio from "./radio";
+import Favorites from "./favorites";
 
 import App from "../../components/app";
-import AppNav from "./app-nav.jsx";
-import Player from "./nav-player.jsx";
+import PlayerBar, { PlayerBarPropTypes } from "../../components/player-bar";
+import AppNav from "./app-nav";
+
+export const getPlayerBarProps = (
+  props: any,
+  state: any
+): PlayerBarPropTypes => {
+  const nowPlaying: PlayerBarPropTypes["nowPlaying"] =
+    state.psong.type === "song"
+      ? {
+          type: "radio",
+          song: state.psong.song,
+          radio: state.psong.radio
+        }
+      : state.psong.type === "spotify"
+      ? {
+          type: "spotify",
+          songId: state.psong.song.spotifyId
+        }
+      : undefined;
+
+  return {
+    nowPlaying,
+    playBus: props.playBus,
+    playing: state.src !== null
+  };
+};
 
 export default createReactClass({
   displayName: "App",
@@ -25,7 +50,6 @@ export default createReactClass({
   getInitialState: function() {
     return {
       paneIsOpen: false,
-      playerOnBottom: false,
       route: "radio",
       radio: "fip-radio",
       history: [],
@@ -78,23 +102,16 @@ export default createReactClass({
         ""
       );
 
-    var player = this.state.playerOnBottom ? (
-      <Player
-        playBus={this.props.playBus}
-        src={this.state.src}
-        nowPlaying={this.state.psong}
-        radio={this.state.radio}
-        onBottom={true}
-      />
-    ) : (
-      ""
-    );
+    const playerBarProps = getPlayerBarProps(this.props, this.state);
+    const playerBar = <PlayerBar {...playerBarProps} />;
 
     return (
-      <App email={this.props.email} github={this.props.github}>
+      <App
+        email={this.props.email}
+        github={this.props.github}
+        bottomBar={playerBar}
+      >
         <div className="app">
-          <main className="app-main container-fluid">{page}</main>
-          {player}
           <AppNav
             radios={this.props.radios}
             playBus={this.props.playBus}
@@ -103,8 +120,8 @@ export default createReactClass({
             route={this.state.route}
             radio={this.state.radio}
             paneIsOpen={this.state.paneIsOpen}
-            playerOnBottom={this.state.playerOnBottom}
           />
+          <main className="app-main container-fluid">{page}</main>
         </div>
       </App>
     );

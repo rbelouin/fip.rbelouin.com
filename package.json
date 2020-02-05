@@ -28,6 +28,7 @@
     "@storybook/addons": "^5.3.10",
     "@storybook/react": "^5.3.10",
     "@types/baconjs": "^0.7.34",
+    "@types/create-react-class": "^15.6.3",
     "@types/express": "^4.17.1",
     "@types/express-ws": "^3.0.0",
     "@types/jest": "^25.1.1",

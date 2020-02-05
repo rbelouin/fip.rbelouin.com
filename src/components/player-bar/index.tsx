@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   bool,
   func,
@@ -90,13 +90,15 @@ export const SpotifyPlayerBar: React.FunctionComponent<SpotifyPlayerBarPropTypes
   }, []);
 
   return (
-    <iframe
-      src={url}
-      width={width}
-      height="80"
-      frameBorder={0}
-      allowTransparency={true}
-    />
+    <div className={style.spotifyPlayerBar}>
+      <iframe
+        src={url}
+        width={width}
+        height="80"
+        frameBorder={0}
+        allowTransparency={true}
+      />
+    </div>
   );
 };
 
@@ -116,7 +118,9 @@ export type RadioPlayerBarPropTypes = InferProps<
 export const onPlayButtonClick = (props: RadioPlayerBarPropTypes) => () => {
   if (props.playBus) {
     props.playBus.push(
-      props.playing ? { type: "stop" } : { type: "play", radio: props.radio.id }
+      props.playing
+        ? { type: "stop" }
+        : { type: "radio", radio: props.radio.id }
     );
   }
 };
@@ -229,15 +233,17 @@ export const Audio: React.FunctionComponent<AudioPropTypes> = ({
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume / 100;
-      audioRef.current.play();
     }
   }, [volume]);
 
-  return (
-    <audio ref={audioRef}>
-      <source src={makeSourceUncachable(src)} type="audio/mpeg" />
-    </audio>
-  );
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = makeSourceUncachable(src);
+      audioRef.current.play();
+    }
+  }, [src]);
+
+  return <audio ref={audioRef}></audio>;
 };
 
 export default PlayerBar;

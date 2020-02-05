@@ -26,7 +26,7 @@ import getUIController from "./controllers/ui.js";
 import getAutoplayController from "./controllers/autoplay.js";
 import getStateController from "./controllers/state.js";
 
-import App from "./views/app.jsx";
+import App from "./views/app";
 
 export function start(conf) {
   const volBus = new Bacon.Bus();

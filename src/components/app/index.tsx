@@ -1,18 +1,24 @@
 import * as React from "react";
+import PropTypes, { InferProps } from "prop-types";
 const style = require("./style.css");
 
-export type AppPropTypes = {
-  email?: string;
-  github?: string;
+export const appPropTypes = {
+  email: PropTypes.string,
+  github: PropTypes.string,
+  bottomBar: PropTypes.node,
+  children: PropTypes.node
 };
+
+export type AppPropTypes = InferProps<typeof appPropTypes>;
 
 export const App: React.FunctionComponent<AppPropTypes> = ({
   email,
   github,
+  bottomBar,
   children
 }) => (
-  <div>
-    <div className={style.root}>
+  <div className={style.root}>
+    <div className={style.startBar}>
       <div className={style.startSection}>
         <button id="menu-toggle" className={style.button}>
           <span className={`${style.icon} glyphicon glyphicon-headphones`} />
@@ -24,6 +30,7 @@ export const App: React.FunctionComponent<AppPropTypes> = ({
           <div className={style.linkContainer}>
             <a
               href={`mailto:${email}`}
+              rel="noopener noreferrer"
               target="_blank"
               className={`${style.link} fa fa-envelope`}
               aria-label="Send an email"
@@ -34,6 +41,7 @@ export const App: React.FunctionComponent<AppPropTypes> = ({
           <div className={style.linkContainer}>
             <a
               href={github}
+              rel="noopener noreferrer"
               target="_blank"
               className={`${style.link} fa fa-github`}
               aria-label="Visit the Github page"
@@ -42,8 +50,11 @@ export const App: React.FunctionComponent<AppPropTypes> = ({
         )}
       </div>
     </div>
-    {children}
+    <div className={style.middleContent}>{children}</div>
+    {bottomBar && <div className={style.bottomBar}>{bottomBar}</div>}
   </div>
 );
+
+App.propTypes = appPropTypes;
 
 export default App;

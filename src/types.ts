@@ -33,4 +33,4 @@ export type FipClientError = Error & {
   };
 };
 
-export type PlayCommand = { type: "stop" } | { type: "play"; radio: string };
+export type PlayCommand = { type: "stop" } | { type: "radio"; radio: string };
