@@ -1,7 +1,13 @@
 :root {
-  --grey-darkest: #222222;
-  --grey: #444444;
-  --grey-light: #BBBBBB;
+  --grey-1: #222222;
+  --grey-2: #272727;
+  --grey-3: #303030;
+  --grey-4: #373737;
+  --grey-5: #444444;
+  --grey-6: #666666;
+  --grey-7: #bbbbbb;
+  --grey-8: #c0c0c0;
+
   --pink-fip: #e2007a;
   --white: #ffffff;
 

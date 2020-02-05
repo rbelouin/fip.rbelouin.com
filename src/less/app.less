@@ -1,16 +1,10 @@
 .app {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  display: flex;
+  height: 100%;
+  position: relative;
 
   .app-nav {
     background-color: #444444;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
     width: 250px;
 
     ul {
@@ -20,12 +14,14 @@
 
       li {
         a {
-          color: #C0C0C0;
+          color: #c0c0c0;
           font-size: 18px;
           line-height: 40px;
           padding: 0 20px;
 
-          &:hover, &:active, &:focus {
+          &:hover,
+          &:active,
+          &:focus {
             color: white;
             text-decoration: none;
           }
@@ -39,7 +35,7 @@
       }
 
       li.app-nav-group {
-        color: #C0C0C0;
+        color: #c0c0c0;
         font-size: 18px;
         line-height: 40px;
         padding: 0 20px;
@@ -49,7 +45,7 @@
           margin-top: 0;
 
           li a {
-            color: #C0C0C0;
+            color: #c0c0c0;
             font-size: 16px;
             line-height: 30px;
           }
@@ -64,6 +60,12 @@
     }
 
     @media (max-width: 991px) {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      top: 0;
+      z-index: 100;
+
       &.app-nav-close {
         transform: translate(-300px);
         transition: transform 300ms;
@@ -77,11 +79,7 @@
   }
 
   .app-main {
-    position: absolute;
-    top: 0;
-    left: 250px;
-    bottom: 0;
-    right: 0;
+    flex: 1;
     padding-top: 20px;
     overflow-y: auto;
 

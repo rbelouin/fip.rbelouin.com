@@ -32,3 +32,5 @@ export type FipClientError = Error & {
     [key: string]: any;
   };
 };
+
+export type PlayCommand = { type: "stop" } | { type: "radio"; radio: string };

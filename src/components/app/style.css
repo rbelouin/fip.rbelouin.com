@@ -1,10 +1,30 @@
 @import "../../variables.css";
 
 .root {
-  background: var(--grey-darkest);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.startBar {
+  background: var(--grey-1);
   color: var(--white);
   display: flex;
+  flex: 0;
   justify-content: space-between;
+}
+
+.middleContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.bottomBar {
+  flex: 0;
+  /* TODO: remove the following line after the left menu has been weaponized */
+  z-index: 100;
 }
 
 .startSection,
@@ -51,7 +71,7 @@
 }
 
 .link {
-  color: var(--grey-light);
+  color: var(--grey-7);
   font-size: 26px;
   line-height: 50px;
 }
@@ -62,5 +82,5 @@
 }
 .link:active,
 .link:focus {
-  color: var(--grey);
+  color: var(--grey-5);
 }
