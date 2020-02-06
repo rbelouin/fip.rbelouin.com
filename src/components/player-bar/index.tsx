@@ -139,7 +139,9 @@ export const RadioPlayerBar: React.FunctionComponent<RadioPlayerBarPropTypes> = 
           alt="Album cover"
         />
         <div className={style.textSection}>
-          <div className={style.title}>{song.title}</div>
+          <div id="player-bar-song-title" className={style.title}>
+            {song.title}
+          </div>
           <div className={style.artist}>{song.artist}</div>
         </div>
       </div>
