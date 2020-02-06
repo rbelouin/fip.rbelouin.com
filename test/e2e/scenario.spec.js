@@ -34,9 +34,9 @@ test("End-to-end scenario", async function(done) {
     expectedTitle.toUpperCase()
   );
 
-  await page.waitForSelector(".nav-player-title");
+  await page.waitForSelector("#player-bar-song-title");
   const actualPlayerTitle = await page.$eval(
-    ".nav-player-title",
+    "#player-bar-song-title",
     node => node.textContent
   );
 
@@ -62,7 +62,7 @@ test("End-to-end scenario", async function(done) {
   );
 
   const actualNextPlayerTitle = await page.$eval(
-    ".nav-player-title",
+    "#player-bar-song-title",
     node => node.textContent
   );
 
