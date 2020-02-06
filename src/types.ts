@@ -8,6 +8,7 @@ export type Song = {
   year: string | undefined;
   label: string | undefined;
   icons: { [size: string]: string };
+  spotifyId?: string;
 };
 
 export type Radio = {

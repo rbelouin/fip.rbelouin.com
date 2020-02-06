@@ -24,7 +24,7 @@ export const getPlayerBarProps = (
       : state.psong.type === "spotify"
       ? {
           type: "spotify",
-          songId: state.psong.song.spotifyId
+          song: state.psong.song
         }
       : undefined;
 
