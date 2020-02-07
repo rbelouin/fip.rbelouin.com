@@ -6,6 +6,7 @@ import { array, object, string } from "prop-types";
 
 import Song from "./player-song.jsx";
 import SongList from "./player-song-list.jsx";
+import * as MIDI from "../../midi";
 
 export default createReactClass({
   displayName: "Radio",
@@ -46,6 +47,17 @@ export default createReactClass({
       type: song.favorite ? "remove" : "add",
       song: song
     });
+  },
+  componentDidMount: function() {
+   const unsubscribeMIDI = MIDI.getNoteOffEvents()
+    .map(pitch => this.props.radios[pitch - 60])
+    .filter(radio => radio && radio.id === this.props.radio)
+    .onValue(radio => this.props.playBus.push({ type: "radio", radio: radio.id }));
+
+    this.setState({ unsubscribeMIDI });
+  },
+  componentWillUnmount: function() {
+    this.state.unsubscribeMIDI && this.state.unsubscribeMIDI();
   },
   render: function() {
     var history = this.props.pastSongs;
