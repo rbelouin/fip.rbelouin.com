@@ -5,6 +5,7 @@ import * as SpotifyClient from "../../spotify/client";
 const style = require("./style.css");
 
 import PlayerBarView from "./view";
+import * as MIDI from "../../midi";
 
 export type PlayerBarNowPlaying =
   | {
@@ -42,6 +43,12 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
   } else if (nowPlaying.type === "spotify") {
     Component = SpotifyPlayerBar;
   }
+
+  useEffect(() => {
+    return MIDI.getVolumeEvents().onValue(midiVolume =>
+      setVolume(Math.round((midiVolume / 127) * 100))
+    );
+  }, []);
 
   return (
     Component && (
@@ -113,6 +120,12 @@ export const SpotifyPlayerBar: React.FunctionComponent<PlayerBarInstancePropType
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    if (typeof volume === "number") {
+      setVolume(volume);
+    }
+  }, [volume]);
+
   function onPlayButtonClick() {
     const player = SpotifyClient.getPlayer();
     player && player.togglePlay();
@@ -163,7 +176,10 @@ export const RadioPlayerBar: React.FunctionComponent<PlayerBarInstancePropTypes>
       onVolumeChange={onVolumeChange}
     >
       {playing && nowPlaying.type === "radio" && (
-        <Audio src={nowPlaying.radio.audioSource} volume={volume || 100} />
+        <Audio
+          src={nowPlaying.radio.audioSource}
+          volume={typeof volume === "number" ? volume : 100}
+        />
       )}
     </PlayerBarView>
   );

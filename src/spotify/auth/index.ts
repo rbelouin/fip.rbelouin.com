@@ -85,7 +85,7 @@ export const spotifyCallback = (config: SpotifyConfig): RequestHandler => (
 
 export const getCallbackUrl = (req: Request, callbackPath: string): string => {
   const protocol =
-    req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
+    req.headers["x-forwarded-proto"] === "https" ? "https" : req.protocol;
   return `${protocol}://${req.headers["host"]}${callbackPath}`;
 };
 
