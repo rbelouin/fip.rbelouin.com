@@ -176,7 +176,10 @@ export const RadioPlayerBar: React.FunctionComponent<PlayerBarInstancePropTypes>
       onVolumeChange={onVolumeChange}
     >
       {playing && nowPlaying.type === "radio" && (
-        <Audio src={nowPlaying.radio.audioSource} volume={volume || 100} />
+        <Audio
+          src={nowPlaying.radio.audioSource}
+          volume={typeof volume === "number" ? volume : 100}
+        />
       )}
     </PlayerBarView>
   );
