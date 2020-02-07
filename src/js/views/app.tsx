@@ -8,7 +8,7 @@ import Favorites from "./favorites";
 
 import App from "../../components/app";
 import PlayerBar, { PlayerBarPropTypes } from "../../components/player-bar";
-import AppNav from "./app-nav";
+import Navigation from "../../components/navigation";
 
 export const getPlayerBarProps = (
   props: any,
@@ -112,11 +112,8 @@ export default createReactClass({
         bottomBar={playerBar}
       >
         <div className="app">
-          <AppNav
+          <Navigation
             radios={this.props.radios}
-            playBus={this.props.playBus}
-            src={this.state.src}
-            nowPlaying={this.state.psong}
             route={this.state.route}
             radio={this.state.radio}
             paneIsOpen={this.state.paneIsOpen}
