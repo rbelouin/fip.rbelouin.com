@@ -123,6 +123,7 @@ export function initializePlayer() {
     });
 
     player &&
+      getOAuthToken() &&
       player.connect().then((success: boolean) => {
         if (success) {
           playerInstance = player;
