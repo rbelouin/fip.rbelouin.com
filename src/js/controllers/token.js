@@ -61,9 +61,12 @@ export function getOrRequestToken(Storage, Spotify, location, history) {
     return token;
   } else {
     Spotify.requestToken([
-      "user-library-read",
+      "playlist-modify-private",
       "playlist-read-private",
-      "playlist-modify-private"
+      "streaming",
+      "user-library-read",
+      "user-read-email",
+      "user-read-private"
     ]);
     return null;
   }

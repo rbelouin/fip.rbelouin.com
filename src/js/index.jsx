@@ -25,6 +25,7 @@ import getRouteController from "./controllers/route.js";
 import getUIController from "./controllers/ui.js";
 import getAutoplayController from "./controllers/autoplay.js";
 import getStateController from "./controllers/state.js";
+import * as SpotifyClient from "../spotify/client";
 
 import App from "./views/app";
 
@@ -99,4 +100,5 @@ export function start(conf) {
   );
 
   RouteController.browseTo(window.location.pathname + window.location.search);
+  SpotifyClient.initializePlayer();
 }

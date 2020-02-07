@@ -32,7 +32,7 @@ export const WithSpotifySong = () => (
   <PlayerBar
     nowPlaying={{
       type: "spotify",
-      songId: "7clXG2g9KnftB0HVNBCoFm"
+      song: spotifySong
     }}
   />
 );
@@ -49,6 +49,21 @@ const song = {
   icons: {
     medium:
       "https://cdn.radiofrance.fr/s3/cruiser-production/2019/11/eb33ce41-a76b-44a6-8cdc-5e7f1a8016b3/400x400_rf_omm_0000204995_dnc.0058126723.jpg"
+  }
+};
+
+const spotifySong = {
+  id: "7clXG2g9KnftB0HVNBCoFm",
+  startTime: Date.now(),
+  endTime: Date.now() + 3 * 60 * 1000,
+  title: "Sinnerman",
+  album: "Autour De Nina",
+  artist: "Keziah Jones",
+  year: undefined,
+  label: undefined,
+  spotifyId: "7clXG2g9KnftB0HVNBCoFm",
+  icons: {
+    medium: "https://i.scdn.co/image/62756b3e2ad90e80cf41122b18af83201dc74302"
   }
 };
 
