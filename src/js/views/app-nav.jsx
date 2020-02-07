@@ -3,7 +3,7 @@ import createReactClass from "create-react-class";
 import { FormattedMessage } from "react-intl";
 import { array, bool, string } from "prop-types";
 
-import A from "./link.jsx";
+import { Link } from "../../components/navigation";
 
 export default createReactClass({
   displayName: "AppNav",
@@ -30,9 +30,9 @@ export default createReactClass({
 
       return (
         <li key={href} className={this.isRadioActive(radio.id)}>
-          <A href={href}>
+          <Link href={href}>
             <FormattedMessage id={radio.id} />
-          </A>
+          </Link>
         </li>
       );
     });
@@ -47,9 +47,9 @@ export default createReactClass({
             <ul>{radios}</ul>
           </li>
           <li className={this.isActive("favorites")}>
-            <A href="/users/me/songs">
+            <Link href="/users/me/songs">
               <FormattedMessage id="favorites" />
-            </A>
+            </Link>
           </li>
         </ul>
       </nav>
