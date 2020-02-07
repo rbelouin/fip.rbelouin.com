@@ -54,3 +54,17 @@ export const getVolumeEvents = () =>
         Math.floor(statusByte / 0xf) === 0xb && byte2 === 0x7
     )
     .map(([statusByte, byte2, byte3]) => byte3);
+
+export const getNoteOffEvents = () =>
+  getAllEvents()
+    .filter(
+      ([statusByte, byte2, byte3]) => Math.floor(statusByte / 0xf) === 0x8
+    )
+    .map(([statusByte, byte2, byte3]) => byte2);
+
+export const getNoteOnEvents = () =>
+  getAllEvents()
+    .filter(
+      ([statusByte, byte2, byte3]) => Math.floor(statusByte / 0xf) === 0x9
+    )
+    .map(([statusByte, byte2, byte3]) => byte2);

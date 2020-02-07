@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import Bacon from "baconjs";
 import PropTypes, { InferProps, Validator } from "prop-types";
 import { Radio } from "../../types";
+
+import * as MIDI from "../../midi";
 
 type BaconRoutes = typeof Bacon & {
   history: typeof window.history;
@@ -25,6 +27,13 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
   radios,
   paneIsOpen
 }) => {
+  useEffect(() => {
+    return MIDI.getNoteOnEvents()
+      .map(pitch => radios[pitch - 60])
+      .filter(radioItem => radioItem !== undefined)
+      .onValue(radioItem => navigateTo(getRadioUrl(radioItem)));
+  }, []);
+
   return (
     <nav className={`app-nav ${paneIsOpen ? "app-nav-open" : "app-nav-close"}`}>
       <ul>
@@ -116,5 +125,8 @@ const onLinkClick = (href: string) => (
   event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
 ) => {
   event.preventDefault();
-  (Bacon as BaconRoutes).history.pushState(null, "", href);
+  navigateTo(href);
 };
+
+const navigateTo = (href: string) =>
+  (Bacon as BaconRoutes).history.pushState(null, "", href);
