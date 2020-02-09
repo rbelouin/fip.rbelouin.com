@@ -126,6 +126,18 @@ export const SpotifyPlayerBar: React.FunctionComponent<PlayerBarInstancePropType
     }
   }, [volume]);
 
+  useMediaSessionActionHandler(
+    action => {
+      const player = SpotifyClient.getPlayer();
+      if (player && action === "play") {
+        player.resume();
+      } else if (player && action === "pause") {
+        player.pause();
+      }
+    },
+    [playing]
+  );
+
   function onPlayButtonClick() {
     const player = SpotifyClient.getPlayer();
     player && player.togglePlay();
@@ -166,6 +178,17 @@ export const RadioPlayerBar: React.FunctionComponent<PlayerBarInstancePropTypes>
       );
     }
   };
+
+  useMediaSessionActionHandler(
+    action => {
+      if (playBus && nowPlaying.type === "radio" && action === "play") {
+        playBus.push({ type: "radio", radio: nowPlaying.radio.id });
+      } else if (playBus && action === "pause") {
+        playBus.push({ type: "stop" });
+      }
+    },
+    [playBus, playing]
+  );
 
   return (
     <PlayerBarView
@@ -221,4 +244,23 @@ export const Audio: React.FunctionComponent<AudioPropTypes> = ({
   }, [src]);
 
   return <audio ref={audioRef}></audio>;
+};
+
+const useMediaSessionActionHandler = (
+  handler: (action: MediaSessionAction) => void,
+  effectGuards?: Array<any> | undefined
+) => {
+  useEffect(() => {
+    if (navigator.mediaSession) {
+      navigator.mediaSession.setActionHandler("play", () => handler("play"));
+      navigator.mediaSession.setActionHandler("pause", () => handler("pause"));
+    }
+
+    return () => {
+      if (navigator.mediaSession) {
+        navigator.mediaSession.setActionHandler("play", null);
+        navigator.mediaSession.setActionHandler("pause", null);
+      }
+    };
+  }, effectGuards);
 };
