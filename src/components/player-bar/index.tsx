@@ -149,6 +149,8 @@ export const SpotifyPlayerBar: React.FunctionComponent<PlayerBarInstancePropType
     player && player.setVolume(volume / 100);
   }
 
+  useSpaceBarHandler(onPlayButtonClick);
+
   return (
     <PlayerBarView
       song={nowPlaying.song}
@@ -189,6 +191,8 @@ export const RadioPlayerBar: React.FunctionComponent<PlayerBarInstancePropTypes>
     },
     [playBus, playing]
   );
+
+  useSpaceBarHandler(onPlayButtonClick, [playBus, playing, nowPlaying]);
 
   return (
     <PlayerBarView
@@ -262,5 +266,22 @@ const useMediaSessionActionHandler = (
         navigator.mediaSession.setActionHandler("pause", null);
       }
     };
+  }, effectGuards);
+};
+
+const useSpaceBarHandler = (
+  handler: () => void,
+  effectGuards?: Array<any> | undefined
+) => {
+  const keydownHandler = (event: KeyboardEvent) => {
+    if (event.code === "Space") {
+      event.preventDefault();
+      handler();
+    }
+  };
+
+  useEffect(() => {
+    document.body.addEventListener("keydown", keydownHandler);
+    return () => document.body.removeEventListener("keydown", keydownHandler);
   }, effectGuards);
 };
