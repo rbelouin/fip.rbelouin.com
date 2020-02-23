@@ -91,7 +91,6 @@ export function getState(
   SongController,
   RouteController,
   PlayController,
-  UIController,
   AutoplayController,
   history,
   favBus,
@@ -135,8 +134,6 @@ export function getState(
 
   const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
 
-  const p_playerOnBottom = UIController.getPlayerPosition();
-
   const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
@@ -158,7 +155,6 @@ export function getState(
     psong: p_psong,
     src: p_src,
     history: p_history,
-    playerOnBottom: p_playerOnBottom,
     autoplayRadio: p_autoplayRadio
   };
 }
@@ -168,7 +164,6 @@ export default (
   SongController,
   RouteController,
   PlayController,
-  UIController,
   AutoplayController
 ) => ({
   getState: _.partial(
@@ -177,7 +172,6 @@ export default (
     SongController,
     RouteController,
     PlayController,
-    UIController,
     AutoplayController
   )
 });

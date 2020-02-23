@@ -22,7 +22,6 @@ import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
 import getRouteController from "./controllers/route.js";
-import getUIController from "./controllers/ui.js";
 import getAutoplayController from "./controllers/autoplay.js";
 import getStateController from "./controllers/state.js";
 import * as SpotifyClient from "../spotify/client";
@@ -56,7 +55,6 @@ export function start(conf) {
   );
   const PlayController = getPlayController(conf.radios);
   const RouteController = getRouteController(Bacon, conf.routes);
-  const UIController = getUIController(window);
   const AutoplayController = getAutoplayController(Storage);
 
   /* Use all the controllers to build a state we will forward to the App component */
@@ -65,7 +63,6 @@ export function start(conf) {
     SongController,
     RouteController,
     PlayController,
-    UIController,
     AutoplayController
   );
 

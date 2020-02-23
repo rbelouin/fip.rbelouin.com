@@ -104,16 +104,6 @@ test("getState should return a valid state", function(done) {
     }
   };
 
-  // Build a partial UIController mock
-  const UIController = {
-    getPaneStatus: function() {
-      return Bacon.constant(true);
-    },
-    getPlayerPosition: function() {
-      return Bacon.constant(false);
-    }
-  };
-
   const AutoplayController = {
     autoplayRadio: "radioA",
     getAutoplayRadio: function() {
@@ -138,7 +128,6 @@ test("getState should return a valid state", function(done) {
     SongController,
     RouteController,
     PlayController,
-    UIController,
     AutoplayController,
     history,
     favBus,
@@ -157,7 +146,6 @@ test("getState should return a valid state", function(done) {
   const statePSong = state.psong.fold([], append);
   const stateSrc = state.src.fold([], append);
   const stateHistory = state.history.fold([], append);
-  const statePlayerOnBottom = state.playerOnBottom.fold([], append);
   const stateAutoplayRadio = state.autoplayRadio.fold([], append);
 
   Bacon.combineAsArray([
@@ -169,8 +157,6 @@ test("getState should return a valid state", function(done) {
     statePSong,
     stateSrc,
     stateHistory,
-    statePaneIsOpen,
-    statePlayerOnBottom,
     stateAutoplayRadio
   ]).subscribe(ev => {
     expect(ev.hasValue()).toBeTruthy();
@@ -184,7 +170,6 @@ test("getState should return a valid state", function(done) {
       psong,
       src,
       history,
-      playerOnBottom,
       autoplayRadio
     ] = ev.value();
 
@@ -239,8 +224,6 @@ test("getState should return a valid state", function(done) {
       [{ id: "1", spotifyId: "1", favorite: false }],
       [{ id: "1", spotifyId: "1", favorite: true }]
     ]);
-
-    expect(playerOnBottom).toStrictEqual([false]);
 
     expect(autoplayRadio).toStrictEqual(["radioA", "radioB"]);
 
