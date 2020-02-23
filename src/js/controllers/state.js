@@ -54,15 +54,8 @@ export function getRadioState(SongController, p_favSongs, p_radioSongs) {
   };
 }
 
-export function getSongBeingPlayed(
-  PlayController,
-  p_radios,
-  p_radio,
-  playBus,
-  autoplayRadio
-) {
+export function getSongBeingPlayed(PlayController, p_radios, p_radio, playBus) {
   const p_cmds = p_radio
-    .merge(autoplayRadio ? Bacon.once(autoplayRadio) : Bacon.never())
     .toEventStream()
     .first()
     .map(radio => ({ type: "radio", radio: radio }))
@@ -82,21 +75,15 @@ export function saveFavoriteSongs(SongController, p_syncs, p_favSongs) {
     .onValue();
 }
 
-export function saveAutoplayRadio(AutoplayController, autoplayBus) {
-  autoplayBus.onValue(radio => AutoplayController.setAutoplayRadio(radio));
-}
-
 export function getState(
   TokenController,
   SongController,
   RouteController,
   PlayController,
-  AutoplayController,
   history,
   favBus,
   syncBus,
-  playBus,
-  autoplayBus
+  playBus
 ) {
   const p_token = TokenController.getTokenProperty(history, syncBus);
   const p_print = getPrint(SongController, p_token);
@@ -120,30 +107,21 @@ export function getState(
   const p_bsong = PlayController.getBroadcastedSong(routes.radio, p_radios);
 
   // Song being played
-  const initialAutoplayRadio = AutoplayController.getAutoplayRadio();
   const p_psong = getSongBeingPlayed(
     PlayController,
     p_radios,
     p_radio,
-    playBus,
-    initialAutoplayRadio
+    playBus
   );
 
   // Song history of the radio having the focus
   const p_history = PlayController.getSongHistory(routes.radio, p_radios);
 
-  const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
-
-  const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
+  const p_src = PlayController.getCurrentSource(playBus);
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
-  saveAutoplayRadio(AutoplayController, autoplayBus);
 
-  RouteController.redirectRoute(
-    routes,
-    "home",
-    `/radios/${initialAutoplayRadio || "fip-radio"}`
-  );
+  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
   RouteController.redirectRoute(routes, "errors", "/");
 
   return {
@@ -154,8 +132,7 @@ export function getState(
     bsong: p_bsong,
     psong: p_psong,
     src: p_src,
-    history: p_history,
-    autoplayRadio: p_autoplayRadio
+    history: p_history
   };
 }
 
@@ -163,15 +140,13 @@ export default (
   TokenController,
   SongController,
   RouteController,
-  PlayController,
-  AutoplayController
+  PlayController
 ) => ({
   getState: _.partial(
     getState,
     TokenController,
     SongController,
     RouteController,
-    PlayController,
-    AutoplayController
+    PlayController
   )
 });

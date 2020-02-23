@@ -42,7 +42,6 @@ export default createReactClass({
     favBus: object.isRequired,
     syncBus: object.isRequired,
     playBus: object.isRequired,
-    autoplayBus: object.isRequired,
     radios: array.isRequired,
     email: string,
     github: string
@@ -56,8 +55,7 @@ export default createReactClass({
       psong: { type: "loading" },
       src: null,
       favSongs: [],
-      user: null,
-      autoplayRadio: null
+      user: null
     };
   },
   componentDidMount: function() {
@@ -92,10 +90,8 @@ export default createReactClass({
           pastSongs={this.state.history}
           radio={this.state.radio}
           radios={this.props.radios}
-          autoplayRadio={this.state.autoplayRadio}
           favBus={this.props.favBus}
           playBus={this.props.playBus}
-          autoplayBus={this.props.autoplayBus}
         />
       ) : (
         ""

@@ -104,16 +104,6 @@ test("getState should return a valid state", function(done) {
     }
   };
 
-  const AutoplayController = {
-    autoplayRadio: "radioA",
-    getAutoplayRadio: function() {
-      return this.autoplayRadio;
-    },
-    setAutoplayRadio: function(radio) {
-      this.autoplayRadio = radio;
-    }
-  };
-
   const history = {
     pushState: function() {}
   };
@@ -121,19 +111,16 @@ test("getState should return a valid state", function(done) {
   const favBus = new Bacon.Bus();
   const syncBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
-  const autoplayBus = new Bacon.Bus();
 
   const state = getState(
     TokenController,
     SongController,
     RouteController,
     PlayController,
-    AutoplayController,
     history,
     favBus,
     syncBus,
-    playBus,
-    autoplayBus
+    playBus
   );
 
   const append = (acc, elem) => acc.concat([elem]);
@@ -146,7 +133,6 @@ test("getState should return a valid state", function(done) {
   const statePSong = state.psong.fold([], append);
   const stateSrc = state.src.fold([], append);
   const stateHistory = state.history.fold([], append);
-  const stateAutoplayRadio = state.autoplayRadio.fold([], append);
 
   Bacon.combineAsArray([
     stateUser,
@@ -156,8 +142,7 @@ test("getState should return a valid state", function(done) {
     stateBSong,
     statePSong,
     stateSrc,
-    stateHistory,
-    stateAutoplayRadio
+    stateHistory
   ]).subscribe(ev => {
     expect(ev.hasValue()).toBeTruthy();
 
@@ -169,8 +154,7 @@ test("getState should return a valid state", function(done) {
       bsong,
       psong,
       src,
-      history,
-      autoplayRadio
+      history
     ] = ev.value();
 
     expect(user).toStrictEqual([
@@ -224,8 +208,6 @@ test("getState should return a valid state", function(done) {
       [{ id: "1", spotifyId: "1", favorite: false }],
       [{ id: "1", spotifyId: "1", favorite: true }]
     ]);
-
-    expect(autoplayRadio).toStrictEqual(["radioA", "radioB"]);
 
     done();
     return Bacon.noMore;
@@ -284,8 +266,6 @@ test("getState should return a valid state", function(done) {
     song: { id: "1", spotifyId: "1" }
   });
 
-  autoplayBus.push("radioB");
-
   radios.radioA.end();
   radios.radioB.end();
 
@@ -296,5 +276,4 @@ test("getState should return a valid state", function(done) {
   favBus.end();
   syncBus.end();
   playBus.end();
-  autoplayBus.end();
 });
