@@ -6,7 +6,7 @@ import { array, object, string } from "prop-types";
 import Radio from "./radio";
 import Favorites from "./favorites";
 
-import App from "../../components/app";
+import { App, AppSection } from "../../components/app";
 import PlayerBar, { PlayerBarPropTypes } from "../../components/player-bar";
 import Navigation from "../../components/navigation";
 
@@ -49,7 +49,6 @@ export default createReactClass({
   },
   getInitialState: function() {
     return {
-      paneIsOpen: false,
       route: "radio",
       radio: "fip-radio",
       history: [],
@@ -111,15 +110,14 @@ export default createReactClass({
         github={this.props.github}
         bottomBar={playerBar}
       >
-        <div className="app">
+        <AppSection>
           <Navigation
             radios={this.props.radios}
             route={this.state.route}
             radio={this.state.radio}
-            paneIsOpen={this.state.paneIsOpen}
           />
-          <main className="app-main container-fluid">{page}</main>
-        </div>
+        </AppSection>
+        <AppSection>{page}</AppSection>
       </App>
     );
   }

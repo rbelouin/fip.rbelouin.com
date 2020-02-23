@@ -157,7 +157,6 @@ test("getState should return a valid state", function(done) {
   const statePSong = state.psong.fold([], append);
   const stateSrc = state.src.fold([], append);
   const stateHistory = state.history.fold([], append);
-  const statePaneIsOpen = state.paneIsOpen.fold([], append);
   const statePlayerOnBottom = state.playerOnBottom.fold([], append);
   const stateAutoplayRadio = state.autoplayRadio.fold([], append);
 
@@ -185,7 +184,6 @@ test("getState should return a valid state", function(done) {
       psong,
       src,
       history,
-      paneIsOpen,
       playerOnBottom,
       autoplayRadio
     ] = ev.value();
@@ -241,8 +239,6 @@ test("getState should return a valid state", function(done) {
       [{ id: "1", spotifyId: "1", favorite: false }],
       [{ id: "1", spotifyId: "1", favorite: true }]
     ]);
-
-    expect(paneIsOpen).toStrictEqual([true]);
 
     expect(playerOnBottom).toStrictEqual([false]);
 

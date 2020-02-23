@@ -21,10 +21,17 @@
   overflow-y: auto;
 }
 
+.section {
+  flex: 0 0 auto;
+  overflow-x: auto;
+  padding: 10px 10px 0 10px;
+}
+.section:last-child {
+  padding-bottom: 10px;
+}
+
 .bottomBar {
   flex: 0;
-  /* TODO: remove the following line after the left menu has been weaponized */
-  z-index: 100;
 }
 
 .startSection,
@@ -45,17 +52,6 @@
 .icon {
   font-size: 18px;
   line-height: 50px;
-}
-
-@media (max-width: 991px) {
-  .icon {
-    font-size: 26px;
-    vertical-align: middle;
-  }
-
-  .icon::before {
-    content: "\e236";
-  }
 }
 
 .title {

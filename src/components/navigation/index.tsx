@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import Bacon from "baconjs";
 import PropTypes, { InferProps, Validator } from "prop-types";
 import { Radio } from "../../types";
+const style = require("./style.css");
 
 import * as MIDI from "../../midi";
 
@@ -15,17 +16,20 @@ export const navigationPropTypes = {
   radio: PropTypes.string.isRequired,
   radios: PropTypes.arrayOf(
     (PropTypes.object.isRequired as any) as Validator<Radio>
-  ).isRequired,
-  paneIsOpen: PropTypes.bool.isRequired
+  ).isRequired
 };
 
 export type NavigationPropTypes = InferProps<typeof navigationPropTypes>;
 
+export type NavigationCSSProperties = React.CSSProperties & {
+  "--navigation-items-count"?: number;
+  "--navigation-item-color"?: string;
+};
+
 export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
   route,
   radio,
-  radios,
-  paneIsOpen
+  radios
 }) => {
   useEffect(() => {
     return MIDI.getNoteOnEvents()
@@ -35,29 +39,31 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
   }, []);
 
   return (
-    <nav className={`app-nav ${paneIsOpen ? "app-nav-open" : "app-nav-close"}`}>
-      <ul>
-        <li
-          className={`app-nav-group ${isRadiosActive(route) ? "active" : ""}`}
-        >
-          <div>
-            <FormattedMessage id="radios" />
-          </div>
-          <ul>
-            {radios.map(radioItem => (
-              <NavigationItem
-                key={radioItem.id}
-                href={getRadioUrl(radioItem)}
-                messageId={radioItem.id}
-                active={isRadiosActive(route) && radio === radioItem.id}
-              />
-            ))}
-          </ul>
-        </li>
+    <nav>
+      <ul
+        className={style.navigation}
+        style={
+          {
+            "--navigation-items-count": 1 + radios.length
+          } as NavigationCSSProperties
+        }
+      >
+        {radios.map(radioItem => (
+          <NavigationItem
+            key={radioItem.id}
+            href={getRadioUrl(radioItem)}
+            messageId={radioItem.id}
+            color={radioItem.color}
+            active={isRadiosActive(route) && radio === radioItem.id}
+          />
+        ))}
         <NavigationItem
           href="/users/me/songs"
           messageId="favorites"
           active={isFavoritesActive(route)}
+          color={getComputedStyle(document.body).getPropertyValue(
+            "--green-spotify"
+          )}
         />
       </ul>
     </nav>
@@ -82,6 +88,7 @@ function isRadiosActive(route: string) {
 export const navigationItemPropTypes = {
   href: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
+  color: PropTypes.string,
   active: PropTypes.bool
 };
 
@@ -92,9 +99,13 @@ export type NavigationItemPropTypes = InferProps<
 export const NavigationItem: React.FunctionComponent<NavigationItemPropTypes> = ({
   href,
   messageId,
+  color,
   active
 }) => (
-  <li className={active ? "active" : ""}>
+  <li
+    className={`${style.navigationItem} ${active ? "active" : ""}`}
+    style={{ "--navigation-item-color": color } as NavigationCSSProperties}
+  >
     <Link href={href}>
       <FormattedMessage id={messageId} />
     </Link>
@@ -114,7 +125,11 @@ export const Link: React.FunctionComponent<LinkPropTypes> = ({
   href,
   children
 }) => (
-  <a href={href} onClick={onLinkClick(href)}>
+  <a
+    href={href}
+    className={style.navigationItemLink}
+    onClick={onLinkClick(href)}
+  >
     {children}
   </a>
 );

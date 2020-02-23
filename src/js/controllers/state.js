@@ -135,7 +135,6 @@ export function getState(
 
   const p_src = PlayController.getCurrentSource(playBus, initialAutoplayRadio);
 
-  const p_paneIsOpen = UIController.getPaneStatus();
   const p_playerOnBottom = UIController.getPlayerPosition();
 
   const p_autoplayRadio = autoplayBus.toProperty(initialAutoplayRadio);
@@ -159,7 +158,6 @@ export function getState(
     psong: p_psong,
     src: p_src,
     history: p_history,
-    paneIsOpen: p_paneIsOpen,
     playerOnBottom: p_playerOnBottom,
     autoplayRadio: p_autoplayRadio
   };

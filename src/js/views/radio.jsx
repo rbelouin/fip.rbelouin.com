@@ -134,31 +134,27 @@ export default createReactClass({
       );
 
     const autoplay = (
-      <form className="form-horizontal">
-        <div className="form-group">
-          <div className="col-sm-12">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="autoplay"
-                  value={radio.id}
-                  onChange={this.onAutoplay}
-                  checked={isChecked}
-                />
-                <FormattedMessage
-                  id="autoplay-radio"
-                  values={{
-                    radio: (
-                      <em>
-                        <FormattedMessage id={radio.id} />
-                      </em>
-                    )
-                  }}
-                />
-              </label>
-            </div>
-          </div>
+      <form>
+        <div className="checkbox">
+          <label>
+            <input
+              type="checkbox"
+              name="autoplay"
+              value={radio.id}
+              onChange={this.onAutoplay}
+              checked={isChecked}
+            />
+            <FormattedMessage
+              id="autoplay-radio"
+              values={{
+                radio: (
+                  <em>
+                    <FormattedMessage id={radio.id} />
+                  </em>
+                )
+              }}
+            />
+          </label>
         </div>
       </form>
     );
