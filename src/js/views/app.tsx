@@ -50,6 +50,7 @@ export default createReactClass({
     return {
       route: "radio",
       radio: "fip-radio",
+      radios: {},
       history: [],
       bsong: { type: "loading" },
       psong: { type: "loading" },
@@ -108,7 +109,7 @@ export default createReactClass({
       >
         <AppSection>
           <Navigation
-            radios={this.props.radios}
+            radios={this.state.radios}
             route={this.state.route}
             radio={this.state.radio}
           />

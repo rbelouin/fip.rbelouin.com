@@ -129,6 +129,7 @@ export function getState(
     favSongs: p_favSongs,
     route: p_route,
     radio: p_radio,
+    radios: p_radios,
     bsong: p_bsong,
     psong: p_psong,
     src: p_src,

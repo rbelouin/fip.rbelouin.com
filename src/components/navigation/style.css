@@ -16,13 +16,40 @@
 }
 
 .navigationItem {
-  background: var(--navigation-item-color);
   flex: 0 0 var(--navigation-item-width);
   height: var(--navigation-item-width);
   list-style: none;
   margin: 0 0 0 var(--navigation-item-margin);
   padding: 0;
+  position: relative;
   width: var(--navigation-item-width);
+}
+
+.navigationItem::after {
+  background: var(--navigation-item-color);
+  bottom: 0;
+  content: " ";
+  display: block;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -2;
+}
+.navigationItem::before {
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
+    var(--navigation-item-background);
+  background-size: cover;
+  bottom: 0;
+  content: " ";
+  display: block;
+  filter: grayscale(100%);
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
 }
 
 .navigationItem:first-child {
