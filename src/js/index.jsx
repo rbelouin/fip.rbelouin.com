@@ -22,8 +22,6 @@ import getTokenController from "./controllers/token.js";
 import getSongController from "./controllers/song.js";
 import getPlayController from "./controllers/play.js";
 import getRouteController from "./controllers/route.js";
-import getUIController from "./controllers/ui.js";
-import getAutoplayController from "./controllers/autoplay.js";
 import getStateController from "./controllers/state.js";
 import * as SpotifyClient from "../spotify/client";
 
@@ -34,7 +32,6 @@ export function start(conf) {
   const syncBus = new Bacon.Bus();
   const favBus = new Bacon.Bus();
   const playBus = new Bacon.Bus();
-  const autoplayBus = new Bacon.Bus();
 
   const intl = Intl.getIntlData(conf.DefaultLanguage);
 
@@ -56,8 +53,6 @@ export function start(conf) {
   );
   const PlayController = getPlayController(conf.radios);
   const RouteController = getRouteController(Bacon, conf.routes);
-  const UIController = getUIController(window);
-  const AutoplayController = getAutoplayController(Storage);
 
   /* Use all the controllers to build a state we will forward to the App component */
   const StateController = getStateController(
@@ -65,8 +60,6 @@ export function start(conf) {
     SongController,
     RouteController,
     PlayController,
-    UIController,
-    AutoplayController
   );
 
   const state = StateController.getState(
@@ -74,7 +67,6 @@ export function start(conf) {
     favBus,
     syncBus,
     playBus,
-    autoplayBus
   );
 
   state.route.onValue(function() {
@@ -93,7 +85,6 @@ export function start(conf) {
         favBus={favBus}
         volBus={volBus}
         playBus={playBus}
-        autoplayBus={autoplayBus}
       />
     </IntlProvider>,
     document.querySelector("#app")

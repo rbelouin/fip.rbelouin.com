@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import Bacon from "baconjs";
 import PropTypes, { InferProps, Validator } from "prop-types";
-import { Radio } from "../../types";
+import { Radio, Song, NowPlaying } from "../../types";
+const style = require("./style.css");
 
 import * as MIDI from "../../midi";
 
@@ -10,54 +11,85 @@ type BaconRoutes = typeof Bacon & {
   history: typeof window.history;
 };
 
+export type SongPlaying = NowPlaying & { type: "song" };
+export type RadiosState = {
+  [name: string]: {
+    nowPlaying: { type: "loading" } | SongPlaying;
+  };
+};
+
 export const navigationPropTypes = {
   route: PropTypes.string.isRequired,
   radio: PropTypes.string.isRequired,
-  radios: PropTypes.arrayOf(
-    (PropTypes.object.isRequired as any) as Validator<Radio>
-  ).isRequired,
-  paneIsOpen: PropTypes.bool.isRequired
+  radios: (PropTypes.object.isRequired as any) as Validator<RadiosState>,
+  favoriteSongs: PropTypes.arrayOf(
+    (PropTypes.object.isRequired as any) as Validator<Song>
+  ).isRequired
 };
 
 export type NavigationPropTypes = InferProps<typeof navigationPropTypes>;
+
+export type NavigationCSSProperties = React.CSSProperties & {
+  "--navigation-items-count"?: number;
+  "--navigation-item-color"?: string;
+  "--navigation-item-background"?: string;
+};
 
 export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
   route,
   radio,
   radios,
-  paneIsOpen
+  favoriteSongs
 }) => {
   useEffect(() => {
     return MIDI.getNoteOnEvents()
-      .map(pitch => radios[pitch - 60])
-      .filter(radioItem => radioItem !== undefined)
-      .onValue(radioItem => navigateTo(getRadioUrl(radioItem)));
-  }, []);
+      .map(pitch => Object.values(radios)[pitch - 60])
+      .map(item => item && item.nowPlaying)
+      .filter(nowPlaying => nowPlaying && nowPlaying.type === "song")
+      .onValue(nowPlaying =>
+        navigateTo(getRadioUrl((nowPlaying as SongPlaying).radio))
+      );
+  }, [radios]);
+
+  const favoriteBackground =
+    favoriteSongs.length === 0
+      ? undefined
+      : favoriteSongs[Math.floor(Math.random() * favoriteSongs.length)].icons
+          .medium;
 
   return (
-    <nav className={`app-nav ${paneIsOpen ? "app-nav-open" : "app-nav-close"}`}>
-      <ul>
-        <li
-          className={`app-nav-group ${isRadiosActive(route) ? "active" : ""}`}
-        >
-          <div>
-            <FormattedMessage id="radios" />
-          </div>
-          <ul>
-            {radios.map(radioItem => (
+    <nav>
+      <ul
+        className={style.navigation}
+        style={
+          {
+            "--navigation-items-count": 1 + Object.values(radios).length
+          } as NavigationCSSProperties
+        }
+      >
+        {Object.values(radios)
+          .filter(({ nowPlaying }) => nowPlaying.type !== "loading")
+          .map(item => {
+            const { radio: radioItem, song } = item.nowPlaying as SongPlaying;
+            return (
               <NavigationItem
                 key={radioItem.id}
                 href={getRadioUrl(radioItem)}
                 messageId={radioItem.id}
+                color={radioItem.color}
+                backgroundImage={song && song.icons.medium}
                 active={isRadiosActive(route) && radio === radioItem.id}
               />
-            ))}
-          </ul>
-        </li>
+            );
+          })}
         <NavigationItem
           href="/users/me/songs"
           messageId="favorites"
           active={isFavoritesActive(route)}
+          color={getComputedStyle(document.body).getPropertyValue(
+            "--green-spotify"
+          )}
+          backgroundImage={favoriteBackground}
         />
       </ul>
     </nav>
@@ -82,6 +114,8 @@ function isRadiosActive(route: string) {
 export const navigationItemPropTypes = {
   href: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
+  color: PropTypes.string,
+  backgroundImage: PropTypes.string,
   active: PropTypes.bool
 };
 
@@ -92,9 +126,22 @@ export type NavigationItemPropTypes = InferProps<
 export const NavigationItem: React.FunctionComponent<NavigationItemPropTypes> = ({
   href,
   messageId,
+  color,
+  backgroundImage,
   active
 }) => (
-  <li className={active ? "active" : ""}>
+  <li
+    className={`${style.navigationItem} ${
+      active ? style.navigationItemActive : ""
+    }`}
+    style={
+      {
+        "--navigation-item-color": color,
+        "--navigation-item-background":
+          backgroundImage && `url("${backgroundImage}")`
+      } as NavigationCSSProperties
+    }
+  >
     <Link href={href}>
       <FormattedMessage id={messageId} />
     </Link>
@@ -114,7 +161,11 @@ export const Link: React.FunctionComponent<LinkPropTypes> = ({
   href,
   children
 }) => (
-  <a href={href} onClick={onLinkClick(href)}>
+  <a
+    href={href}
+    className={style.navigationItemLink}
+    onClick={onLinkClick(href)}
+  >
     {children}
   </a>
 );

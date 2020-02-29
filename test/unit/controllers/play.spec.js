@@ -526,7 +526,6 @@ test("The Play controller should get the current source", function(done) {
       expect(ev.hasValue()).toBeTruthy();
 
       expect(ev.value()).toStrictEqual([
-        null,
         "radio1-url",
         null,
         "radio1-url",

@@ -98,7 +98,7 @@
   width: 16px;
 }
 
-@media (max-width: 470px) {
+@media (--small-viewport) {
   .playButton {
     margin-right: 0;
   }

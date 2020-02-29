@@ -73,5 +73,6 @@ const radio = {
   metadataHref: "https://www.fip.fr/livemeta/7",
   picture:
     "https://www.fip.fr/sites/all/modules/fip/fip_direct/images/direct_default_cover_medium.png",
-  stationId: 7
+  stationId: 7,
+  color: "#e2007a"
 };

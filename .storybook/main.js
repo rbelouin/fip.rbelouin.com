@@ -27,8 +27,12 @@ module.exports = {
             loader: "css-loader",
             options: {
               import: true,
+              importLoaders: 1,
               modules: true
             }
+          },
+          {
+            loader: "postcss-loader"
           }
         ]
       },

@@ -6,7 +6,7 @@ import { array, object, string } from "prop-types";
 import Radio from "./radio";
 import Favorites from "./favorites";
 
-import App from "../../components/app";
+import { App, AppSection } from "../../components/app";
 import PlayerBar, { PlayerBarPropTypes } from "../../components/player-bar";
 import Navigation from "../../components/navigation";
 
@@ -42,23 +42,21 @@ export default createReactClass({
     favBus: object.isRequired,
     syncBus: object.isRequired,
     playBus: object.isRequired,
-    autoplayBus: object.isRequired,
     radios: array.isRequired,
     email: string,
     github: string
   },
   getInitialState: function() {
     return {
-      paneIsOpen: false,
       route: "radio",
       radio: "fip-radio",
+      radios: {},
       history: [],
       bsong: { type: "loading" },
       psong: { type: "loading" },
       src: null,
       favSongs: [],
-      user: null,
-      autoplayRadio: null
+      user: null
     };
   },
   componentDidMount: function() {
@@ -93,10 +91,8 @@ export default createReactClass({
           pastSongs={this.state.history}
           radio={this.state.radio}
           radios={this.props.radios}
-          autoplayRadio={this.state.autoplayRadio}
           favBus={this.props.favBus}
           playBus={this.props.playBus}
-          autoplayBus={this.props.autoplayBus}
         />
       ) : (
         ""
@@ -111,15 +107,15 @@ export default createReactClass({
         github={this.props.github}
         bottomBar={playerBar}
       >
-        <div className="app">
+        <AppSection>
           <Navigation
-            radios={this.props.radios}
+            radios={this.state.radios}
             route={this.state.route}
             radio={this.state.radio}
-            paneIsOpen={this.state.paneIsOpen}
+            favoriteSongs={this.state.favSongs}
           />
-          <main className="app-main container-fluid">{page}</main>
-        </div>
+        </AppSection>
+        <AppSection>{page}</AppSection>
       </App>
     );
   }
