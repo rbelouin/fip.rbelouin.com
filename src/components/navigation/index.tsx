@@ -131,7 +131,9 @@ export const NavigationItem: React.FunctionComponent<NavigationItemPropTypes> = 
   active
 }) => (
   <li
-    className={`${style.navigationItem} ${active ? "active" : ""}`}
+    className={`${style.navigationItem} ${
+      active ? style.navigationItemActive : ""
+    }`}
     style={
       {
         "--navigation-item-color": color,
