@@ -12,8 +12,6 @@
   --green-spotify: #84bd00;
   --pink-fip: #e2007a;
   --white: #ffffff;
-
-  --screen-small: 470px;
-  --screen-medium: 768px;
-  --screen-large: 991px;
 }
+
+@custom-media --small-viewport (max-width: 470px);

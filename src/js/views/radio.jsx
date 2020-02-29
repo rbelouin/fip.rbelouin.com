@@ -128,8 +128,6 @@ export default createReactClass({
 
     return (
       <div className="fipradio">
-        <hr />
-
         <div>
           <FormattedMessage id="now-broadcasting" />
         </div>

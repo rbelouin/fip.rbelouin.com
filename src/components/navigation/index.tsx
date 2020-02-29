@@ -21,7 +21,10 @@ export type RadiosState = {
 export const navigationPropTypes = {
   route: PropTypes.string.isRequired,
   radio: PropTypes.string.isRequired,
-  radios: (PropTypes.object.isRequired as any) as Validator<RadiosState>
+  radios: (PropTypes.object.isRequired as any) as Validator<RadiosState>,
+  favoriteSongs: PropTypes.arrayOf(
+    (PropTypes.object.isRequired as any) as Validator<Song>
+  ).isRequired
 };
 
 export type NavigationPropTypes = InferProps<typeof navigationPropTypes>;
@@ -35,7 +38,8 @@ export type NavigationCSSProperties = React.CSSProperties & {
 export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
   route,
   radio,
-  radios
+  radios,
+  favoriteSongs
 }) => {
   useEffect(() => {
     return MIDI.getNoteOnEvents()
@@ -46,6 +50,12 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
         navigateTo(getRadioUrl((nowPlaying as SongPlaying).radio))
       );
   }, []);
+
+  const favoriteBackground =
+    favoriteSongs.length === 0
+      ? undefined
+      : favoriteSongs[Math.floor(Math.random() * favoriteSongs.length)].icons
+          .medium;
 
   return (
     <nav>
@@ -79,6 +89,7 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
           color={getComputedStyle(document.body).getPropertyValue(
             "--green-spotify"
           )}
+          backgroundImage={favoriteBackground}
         />
       </ul>
     </nav>

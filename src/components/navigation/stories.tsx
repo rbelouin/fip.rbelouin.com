@@ -17,6 +17,7 @@ export const Empty = () => (
         }
       }
     }}
+    favoriteSongs={[]}
   />
 );
 
@@ -40,6 +41,7 @@ export const Default = () => (
         }
       }
     }}
+    favoriteSongs={[songTwo]}
   />
 );
 
@@ -91,6 +93,7 @@ export const WithManyItems = () => (
         }
       }
     }}
+    favoriteSongs={[songTwo]}
   />
 );
 
@@ -106,6 +109,21 @@ const songOne: Song = {
   icons: {
     medium:
       "https://cdn.radiofrance.fr/s3/cruiser-production/2019/12/f874ad9d-7f1a-4b76-94e1-4bb0f4a4cfda/400x400_rf_omm_0000683567_dnc.0053788382.jpg"
+  }
+};
+
+const songTwo: Song = {
+  id: "7Ivi1qpPhlNKeGRMjmGxMC",
+  startTime: 1582577144,
+  endTime: 1582577357,
+  title: "Thinkin' About Your Body - Live",
+  artist: "Bobby McFerrin",
+  album: "The Best Of Bobby McFerrin",
+  label: undefined,
+  year: undefined,
+  spotifyId: "7Ivi1qpPhlNKeGRMjmGxMC",
+  icons: {
+    medium: "https://i.scdn.co/image/962d0fe2a700fa072fd6e48af227770feaa3d236"
   }
 };
 

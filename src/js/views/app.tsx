@@ -112,6 +112,7 @@ export default createReactClass({
             radios={this.state.radios}
             route={this.state.route}
             radio={this.state.radio}
+            favoriteSongs={this.state.favSongs}
           />
         </AppSection>
         <AppSection>{page}</AppSection>

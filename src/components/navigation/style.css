@@ -3,6 +3,7 @@
   --navigation-item-color: var(--grey-2);
   --navigation-item-width: 160px;
   --navigation-item-margin: 10px;
+  --navigation-item-font-size: 22px;
 }
 
 .navigation {
@@ -60,7 +61,7 @@
   color: var(--white);
   display: flex;
   flex-direction: column-reverse;
-  font-size: 22px;
+  font-size: var(--navigation-item-font-size);
   font-weight: bold;
   height: 100%;
   padding: 5px 5px 5px 10px;
@@ -73,4 +74,11 @@
 .navigationItemLink:hover,
 .navigationItemLink:focus {
   color: var(--white);
+}
+
+@media (--small-viewport) {
+  :root {
+    --navigation-item-width: 120px;
+    --navigation-item-font-size: 18px;
+  }
 }
