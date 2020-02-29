@@ -45,11 +45,11 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
     return MIDI.getNoteOnEvents()
       .map(pitch => Object.values(radios)[pitch - 60])
       .map(item => item && item.nowPlaying)
-      .filter(nowPlaying => nowPlaying.type === "song")
+      .filter(nowPlaying => nowPlaying && nowPlaying.type === "song")
       .onValue(nowPlaying =>
         navigateTo(getRadioUrl((nowPlaying as SongPlaying).radio))
       );
-  }, []);
+  }, [radios]);
 
   const favoriteBackground =
     favoriteSongs.length === 0
