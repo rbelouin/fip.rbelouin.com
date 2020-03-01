@@ -2,7 +2,7 @@ import * as React from "react";
 import App from "./index";
 
 export default {
-  title: "App"
+  title: "AppScaffolding"
 };
 
 const bottomBar = <div style={{ background: "black" }}>Bottom Bar</div>;

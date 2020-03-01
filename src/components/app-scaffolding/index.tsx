@@ -2,16 +2,18 @@ import * as React from "react";
 import PropTypes, { InferProps } from "prop-types";
 const style = require("./style.css");
 
-export const appPropTypes = {
+export const appScaffoldingPropTypes = {
   email: PropTypes.string,
   github: PropTypes.string,
   bottomBar: PropTypes.node,
   children: PropTypes.node
 };
 
-export type AppPropTypes = InferProps<typeof appPropTypes>;
+export type AppScaffoldingPropTypes = InferProps<
+  typeof appScaffoldingPropTypes
+>;
 
-export const App: React.FunctionComponent<AppPropTypes> = ({
+export const AppScaffolding: React.FunctionComponent<AppScaffoldingPropTypes> = ({
   email,
   github,
   bottomBar,
@@ -55,18 +57,6 @@ export const App: React.FunctionComponent<AppPropTypes> = ({
   </div>
 );
 
-App.propTypes = appPropTypes;
+AppScaffolding.propTypes = appScaffoldingPropTypes;
 
-export default App;
-
-export const appSectionPropTypes = {
-  children: PropTypes.node
-};
-
-export type AppSectionPropTypes = InferProps<typeof appSectionPropTypes>;
-
-export const AppSection: React.FunctionComponent<AppSectionPropTypes> = ({
-  children
-}) => <section className={style.section}>{children}</section>;
-
-AppSection.propTypes = appSectionPropTypes;
+export default AppScaffolding;

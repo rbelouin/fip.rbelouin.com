@@ -6,7 +6,8 @@ import { array, object, string } from "prop-types";
 import Radio from "./radio";
 import Favorites from "./favorites";
 
-import { App, AppSection } from "../../components/app";
+import { AppScaffolding } from "../../components/app-scaffolding";
+import { AppSection } from "../../components/app-section";
 import PlayerBar, { PlayerBarPropTypes } from "../../components/player-bar";
 import Navigation from "../../components/navigation";
 
@@ -102,7 +103,7 @@ export default createReactClass({
     const playerBar = <PlayerBar {...playerBarProps} />;
 
     return (
-      <App
+      <AppScaffolding
         email={this.props.email}
         github={this.props.github}
         bottomBar={playerBar}
@@ -116,7 +117,7 @@ export default createReactClass({
           />
         </AppSection>
         <AppSection>{page}</AppSection>
-      </App>
+      </AppScaffolding>
     );
   }
 });

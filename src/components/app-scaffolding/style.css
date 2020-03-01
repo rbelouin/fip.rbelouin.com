@@ -1,6 +1,7 @@
 @import "../../variables.css";
 
 .root {
+  background-color: var(--grey-4);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -19,15 +20,6 @@
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
-}
-
-.section {
-  flex: 0 0 auto;
-  overflow-x: auto;
-  padding: 10px 10px 0 10px;
-}
-.section:last-child {
-  padding-bottom: 10px;
 }
 
 .bottomBar {

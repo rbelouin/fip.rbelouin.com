@@ -1,0 +1,8 @@
+.section {
+  flex: 0 0 auto;
+  overflow-x: auto;
+  padding: 10px 10px 0 10px;
+}
+.section:last-child {
+  padding-bottom: 10px;
+}

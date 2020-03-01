@@ -35,7 +35,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  z-index: -2;
+  z-index: 1;
 }
 .navigationItem::before {
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
@@ -50,7 +50,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  z-index: -1;
+  z-index: 2;
 }
 
 .navigationItem:first-child {
@@ -71,8 +71,10 @@
   font-weight: bold;
   height: 100%;
   padding: 5px 5px 5px 10px;
+  position: relative;
   text-align: right;
   text-shadow: 1px 1px var(--black);
+  z-index: 3;
 }
 
 .navigationItemLink:active,
