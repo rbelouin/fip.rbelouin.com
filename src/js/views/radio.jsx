@@ -44,7 +44,7 @@ export default createReactClass({
   },
   componentDidMount: function() {
    const unsubscribeMIDI = MIDI.getNoteOffEvents()
-    .map(pitch => this.props.radios[pitch - 60])
+    .map(pitch => this.props.radios[(pitch - 60) % 12])
     .filter(radio => radio && radio.id === this.props.radio)
     .onValue(radio => this.props.playBus.push({ type: "radio", radio: radio.id }));
 
