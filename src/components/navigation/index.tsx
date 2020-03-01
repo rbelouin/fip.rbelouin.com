@@ -43,12 +43,19 @@ export const Navigation: React.FunctionComponent<NavigationPropTypes> = ({
 }) => {
   useEffect(() => {
     return MIDI.getNoteOnEvents()
-      .map(pitch => Object.values(radios)[pitch - 60])
-      .map(item => item && item.nowPlaying)
-      .filter(nowPlaying => nowPlaying && nowPlaying.type === "song")
-      .onValue(nowPlaying =>
-        navigateTo(getRadioUrl((nowPlaying as SongPlaying).radio))
-      );
+      .map(pitch => (pitch - 60) % 12)
+      .map(pitch => (pitch < 0 ? pitch + 12 : pitch))
+      .onValue(pitch => {
+        if (pitch === 11) {
+          navigateTo("/users/me/songs");
+        } else {
+          const radio = Object.values(radios)[pitch];
+          const nowPlaying = radio && radio.nowPlaying;
+          if (nowPlaying && nowPlaying.type === "song") {
+            navigateTo(getRadioUrl((nowPlaying as SongPlaying).radio));
+          }
+        }
+      });
   }, [radios]);
 
   useEffect(() => {
