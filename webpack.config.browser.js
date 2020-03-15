@@ -11,6 +11,8 @@ module.exports = {
   mode: "production",
   entry: [
     "./node_modules/whatwg-fetch/fetch.js",
+    "./node_modules/font-awesome/less/font-awesome.less",
+    "./src/global.css",
     "./prod/js/index.js",
     "./src/less/all.less"
   ],

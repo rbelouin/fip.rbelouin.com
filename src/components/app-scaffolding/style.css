@@ -42,7 +42,8 @@
 }
 
 .icon {
-  font-size: 18px;
+  color: var(--white);
+  font-size: 26px;
   line-height: 50px;
 }
 
@@ -62,6 +63,7 @@
   color: var(--grey-7);
   font-size: 26px;
   line-height: 50px;
+  text-decoration: none;
 }
 
 .link:hover {
@@ -71,4 +73,5 @@
 .link:active,
 .link:focus {
   color: var(--grey-5);
+  text-decoration: none;
 }

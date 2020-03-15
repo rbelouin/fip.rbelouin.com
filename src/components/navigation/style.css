@@ -73,6 +73,7 @@
   padding: 5px 5px 5px 10px;
   position: relative;
   text-align: right;
+  text-decoration: none;
   text-shadow: 1px 1px var(--black);
   z-index: 3;
 }

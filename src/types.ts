@@ -13,7 +13,9 @@ export const songPropType = {
     medium: PropTypes.string,
     small: PropTypes.string
   }).isRequired,
-  spotifyId: PropTypes.string
+  spotifyId: PropTypes.string,
+  spotify: PropTypes.string,
+  favorite: PropTypes.bool
 };
 
 export type Song = InferProps<typeof songPropType>;
@@ -44,4 +46,8 @@ export type FipClientError = Error & {
   };
 };
 
-export type PlayCommand = { type: "stop" } | { type: "radio"; radio: string };
+export type PlayCommand =
+  | { type: "stop" }
+  | { type: "radio"; radio: string }
+  | { type: "spotify"; song: Song };
+export type FavCommand = { type: "add" | "remove"; song: Song };

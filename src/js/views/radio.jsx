@@ -7,6 +7,7 @@ import { array, object, string } from "prop-types";
 import Song from "./player-song.jsx";
 import SongList from "./player-song-list.jsx";
 import * as MIDI from "../../midi";
+import SongActions from "../../components/song-actions";
 
 export default createReactClass({
   displayName: "Radio",
@@ -18,29 +19,6 @@ export default createReactClass({
     playBus: object.isRequired,
     pastSongs: array.isRequired,
     nowPlaying: object.isRequired
-  },
-  onPlay: function() {
-    var src = this.props.src;
-    var radios = this.props.radios;
-    var radio = _.find(radios, r => r.id === this.props.radio, this);
-    var isPlaying = radio && radio.audioSource === src;
-
-    this.props.playBus.push(
-      isPlaying
-        ? {
-            type: "stop"
-          }
-        : {
-            type: "radio",
-            radio: radio.id
-          }
-    );
-  },
-  onFavorite: function(song) {
-    this.props.favBus.push({
-      type: song.favorite ? "remove" : "add",
-      song: song
-    });
   },
   componentDidMount: function() {
    const unsubscribeMIDI = MIDI.getNoteOffEvents()
@@ -72,59 +50,16 @@ export default createReactClass({
         <Song.unknown />
       );
 
-    var play = (
-      <div className="fipradio-controls-play" onClick={this.onPlay}>
-        <span className={isPlaying ? "fa fa-stop" : "fa fa-play"} />
-        <FormattedMessage
-          id={isPlaying ? "stop-the-radio" : "play-the-radio"}
-        />
-      </div>
-    );
-
-    var favorite =
+    var songActions =
       nowPlaying.type === "song" ? (
-        <div
-          className="fipradio-controls-favorite"
-          onClick={_.partial(this.onFavorite, nowPlaying.song)}
-        >
-          <span className="fa fa-heart" />
-          <FormattedMessage
-            id={
-              nowPlaying.song.favorite
-                ? "remove-from-favorites"
-                : "add-to-favorites"
-            }
-          />
+        <div className="fipradio-song-actions">
+          <SongActions>
+            <SongActions.PlayAction radio={radio} isPlaying={isPlaying} playBus={playBus} />
+            <SongActions.FavoriteAction song={nowPlaying.song} favBus={favBus} />
+            <SongActions.OpenSpotifyAction song={nowPlaying.song} />
+          </SongActions>
         </div>
-      ) : (
-        ""
-      );
-
-    var spotify =
-      nowPlaying.type === "song" && nowPlaying.song.spotify ? (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={nowPlaying.song.spotify}
-          className="fipradio-controls-spotify"
-        >
-          <span className="fa fa-spotify" />
-          <FormattedMessage id="open-in-spotify" />
-        </a>
-      ) : (
-        ""
-      );
-
-    var controlsDisplay =
-      nowPlaying.type === "song" ? (
-        <div className="fipradio-controls">
-          {play}
-          {favorite}
-          {spotify}
-        </div>
-      ) : (
-        ""
-      );
+      ) : null;
 
     return (
       <div className="fipradio">
@@ -132,9 +67,7 @@ export default createReactClass({
           <FormattedMessage id="now-broadcasting" />
         </div>
         {nowPlayingDisplay}
-        {controlsDisplay}
-
-        <hr />
+        {songActions}
 
         <SongList songs={history} favBus={favBus} playBus={playBus} />
       </div>
