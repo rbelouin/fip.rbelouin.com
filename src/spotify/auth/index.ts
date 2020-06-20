@@ -2,7 +2,7 @@ import Url from "url";
 import QueryString from "querystring";
 import { Request, RequestHandler } from "express";
 import fetch from "cross-fetch";
-import uuidv4 from "uuid/v4";
+import uuid from "uuid";
 
 export type SpotifyCredentials = {
   clientId: string;
@@ -47,7 +47,7 @@ export const spotifyLogin = (config: SpotifyConfig): RequestHandler => (
       res.redirect(Url.format(url));
     });
   } else {
-    const state = uuidv4();
+    const state = uuid.v4();
     callbackUrls[state] = redirectUri;
     const callbackUrl = getCallbackUrl(req, config.callbackPath);
 
