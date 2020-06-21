@@ -2,7 +2,7 @@ import Url from "url";
 import QueryString from "querystring";
 import { Request, RequestHandler } from "express";
 import fetch from "cross-fetch";
-import uuid from "uuid";
+import * as uuid from "uuid";
 
 export type SpotifyCredentials = {
   clientId: string;
