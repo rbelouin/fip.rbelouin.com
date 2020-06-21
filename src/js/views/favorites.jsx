@@ -3,7 +3,7 @@ import createReactClass from "create-react-class";
 import { array, object } from "prop-types";
 
 import SyncSection from "../../components/sync-section";
-import SongList from "./player-song-list.jsx";
+import SongList from "../../components/song-list";
 
 export default createReactClass({
   displayName: "Favorites",

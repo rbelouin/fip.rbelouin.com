@@ -5,9 +5,9 @@ import { FormattedMessage } from "react-intl";
 import { array, object, string } from "prop-types";
 
 import Song from "./player-song.jsx";
-import SongList from "./player-song-list.jsx";
 import * as MIDI from "../../midi";
 import SongActions from "../../components/song-actions";
+import SongList from "../../components/song-list";
 
 export default createReactClass({
   displayName: "Radio",

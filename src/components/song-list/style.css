@@ -1,0 +1,59 @@
+.songList {
+  color: var(--white);
+  margin-top: 20px;
+  padding: 0;
+}
+
+.songListItem {
+  background-color: #303030;
+  list-style: none;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+}
+
+.songListItemTitle {
+  font-size: 18px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.songListItemInfo {
+  font-size: 14px;
+  font-weight: lighter;
+  min-height: 18px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.songListItemAlbum::before {
+  content: " - ";
+}
+
+.songListItemYear::before {
+  content: " (";
+}
+.songListItemYear::after {
+  content: ")";
+}
+
+.songListItemControls {
+  display: none;
+  margin-top: 5px;
+}
+
+.songListItemControls.visible {
+  display: block;
+}
+
+.songListItem.songListItemFavorite {
+  border-left: 3px solid var(--pink-fip);
+  padding-left: 7px;
+}
+
+@media (min-width: 768px) {
+  .songListItemControls {
+    display: block;
+  }
+}
