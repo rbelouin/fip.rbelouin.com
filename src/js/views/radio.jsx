@@ -4,10 +4,10 @@ import createReactClass from "create-react-class";
 import { FormattedMessage } from "react-intl";
 import { array, object, string } from "prop-types";
 
-import Song from "./player-song.jsx";
 import * as MIDI from "../../midi";
 import SongActions from "../../components/song-actions";
 import SongList from "../../components/song-list";
+import Song from "../../components/song";
 
 export default createReactClass({
   displayName: "Radio",
@@ -41,15 +41,6 @@ export default createReactClass({
     var radio = _.find(radios, r => r.id === this.props.radio, this);
     var isPlaying = radio && radio.audioSource === src;
 
-    var nowPlayingDisplay =
-      nowPlaying.type === "song" ? (
-        <Song song={nowPlaying.song} />
-      ) : nowPlaying.type === "loading" ? (
-        <Song.loading />
-      ) : (
-        <Song.unknown />
-      );
-
     var songActions =
       nowPlaying.type === "song" ? (
         <div className="fipradio-song-actions">
@@ -66,7 +57,7 @@ export default createReactClass({
         <div>
           <FormattedMessage id="now-broadcasting" />
         </div>
-        {nowPlayingDisplay}
+        <Song isLoading={nowPlaying.type === "loading"} song={nowPlaying.song} />
         {songActions}
 
         <SongList songs={history} favBus={favBus} playBus={playBus} />
