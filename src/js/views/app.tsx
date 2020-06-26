@@ -4,7 +4,7 @@ import createReactClass from "create-react-class";
 import { array, object, string } from "prop-types";
 
 import Radio from "./radio";
-import Favorites from "./favorites";
+import PageFavorites from "../../components/page-favorites";
 
 import { AppScaffolding } from "../../components/app-scaffolding";
 import { AppSection } from "../../components/app-section";
@@ -78,8 +78,8 @@ export default createReactClass({
   render: function() {
     var page =
       this.state.route === "favorites" ? (
-        <Favorites
-          favSongs={this.state.favSongs}
+        <PageFavorites
+          favoriteSongs={this.state.favSongs}
           favBus={this.props.favBus}
           syncBus={this.props.syncBus}
           playBus={this.props.playBus}
