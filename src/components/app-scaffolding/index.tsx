@@ -1,5 +1,8 @@
 import * as React from "react";
 import PropTypes, { InferProps } from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeadphones, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 const style = require("./style.css");
 
 export const appScaffoldingPropTypes = {
@@ -23,7 +26,7 @@ export const AppScaffolding: React.FunctionComponent<AppScaffoldingPropTypes> = 
     <div className={style.startBar}>
       <div className={style.startSection}>
         <button id="menu-toggle" className={style.button}>
-          <span className={`${style.icon} fa fa-headphones`} />
+          <FontAwesomeIcon className={style.icon} icon={faHeadphones} />
         </button>
         <h1 className={style.title}>FIP player</h1>
       </div>
@@ -34,9 +37,11 @@ export const AppScaffolding: React.FunctionComponent<AppScaffoldingPropTypes> = 
               href={`mailto:${email}`}
               rel="noopener noreferrer"
               target="_blank"
-              className={`${style.link} fa fa-envelope`}
+              className={style.link}
               aria-label="Send an email"
-            />
+            >
+              <FontAwesomeIcon icon={faEnvelope} />
+            </a>
           </div>
         )}
         {github && (
@@ -45,9 +50,11 @@ export const AppScaffolding: React.FunctionComponent<AppScaffoldingPropTypes> = 
               href={github}
               rel="noopener noreferrer"
               target="_blank"
-              className={`${style.link} fa fa-github`}
+              className={style.link}
               aria-label="Visit the Github page"
-            />
+            >
+              <FontAwesomeIcon icon={faGithub} />
+            </a>
           </div>
         )}
       </div>

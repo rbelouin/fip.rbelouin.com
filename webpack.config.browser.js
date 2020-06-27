@@ -11,10 +11,8 @@ module.exports = {
   mode: "production",
   entry: [
     "./node_modules/whatwg-fetch/fetch.js",
-    "./node_modules/font-awesome/less/font-awesome.less",
     "./src/global.css",
-    "./prod/js/index.js",
-    "./src/less/all.less"
+    "./prod/js/index.js"
   ],
   output: {
     path: path.resolve("./prod/public/"),
@@ -52,26 +50,6 @@ module.exports = {
           },
           {
             loader: "postcss-loader"
-          }
-        ]
-      },
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: "css-loader"
-          },
-          {
-            loader: "less-loader",
-            options: {
-              paths: [
-                path.resolve("./node_modules/bootstrap/less/"),
-                path.resolve("./node_modules/font-awesome/less/")
-              ]
-            }
           }
         ]
       },

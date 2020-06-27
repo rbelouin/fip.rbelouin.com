@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes, { InferProps, Requireable, Validator } from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { songPropType } from "../../types";
 const style = require("./style.css");
 
@@ -62,13 +64,14 @@ export const PlayButton: React.FunctionComponent<PlayButtonPropTypes> = ({
   playing,
   onClick
 }) => {
-  const icon = playing ? "stop" : "play";
+  const icon = playing ? faStop : faPlay;
+  const label = playing ? "stop" : "play";
   return (
     <button
       className={`${style.playButton} ${playing ? style.isPlaying : ""}`}
       onClick={onClick || (() => {})}
     >
-      <span className={`fa fa-${icon}`} aria-label={icon}></span>
+      <FontAwesomeIcon icon={icon} aria-label={label} />
     </button>
   );
 };
