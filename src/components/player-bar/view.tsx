@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PropTypes, { InferProps, Requireable, Validator } from "prop-types";
-import { Song } from "../../types";
+import { songPropType } from "../../types";
 const style = require("./style.css");
 
 export const playerBarViewPropTypes = {
-  song: (PropTypes.object.isRequired as any) as Validator<NonNullable<Song>>,
+  song: PropTypes.shape(songPropType).isRequired,
   playing: PropTypes.bool,
   onPlayButtonClick: PropTypes.func,
   volume: PropTypes.number,
@@ -25,7 +25,11 @@ export const PlayerBarView: React.FunctionComponent<PlayerBarViewPropTypes> = ({
   <div className={style.radioPlayerBar}>
     {children}
     <div className={style.song}>
-      <img className={style.cover} src={song.icons.medium} alt="Album cover" />
+      <img
+        className={style.cover}
+        src={song.icons.medium || undefined}
+        alt="Album cover"
+      />
       <div className={style.textSection}>
         <div id="player-bar-song-title" className={style.title}>
           {song.title}

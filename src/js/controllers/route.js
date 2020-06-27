@@ -2,9 +2,17 @@ import _ from "lodash";
 import Bacon from "baconjs";
 
 export function getRoutes(B, routes) {
-  return B.fromRoutes({
+  const buses = B.fromRoutes({
     routes
   });
+
+  return Object.keys(buses).reduce(
+    (acc, routeName) => ({
+      ...acc,
+      [routeName]: buses[routeName].toProperty()
+    }),
+    {}
+  );
 }
 
 export function browseTo(B, dest) {
@@ -19,10 +27,12 @@ export function getCurrentRoute(routes) {
   return _.reduce(
     routes,
     function(p_route, stream, name) {
-      return name === "errors" ? p_route : p_route.merge(stream.map(name));
+      return name === "errors"
+        ? p_route
+        : p_route.merge(stream.toEventStream().map(name));
     },
     Bacon.never()
-  );
+  ).toProperty();
 }
 
 export default (B, routes) => ({

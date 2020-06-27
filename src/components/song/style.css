@@ -1,0 +1,92 @@
+@import "../../variables.css";
+
+.song {
+  align-items: center;
+  background-color: var(--grey-1);
+  color: var(--white);
+  column-gap: 10px;
+  display: grid;
+  font-weight: lighter;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 40px 20px 20px;
+  grid-template-areas:
+    "cover title"
+    "cover artist"
+    "cover details";
+  padding: 10px;
+}
+
+.cover {
+  display: inline-block;
+  grid-area: cover;
+  height: 80px;
+}
+.cover.loading {
+  background: var(--grey-3);
+  width: 80px;
+}
+.cover.unknown {
+  background: var(--pink-fip);
+  line-height: 80px;
+  opacity: 70%;
+  text-align: center;
+  width: 80px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  grid-area: title;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.title.loading,
+.title.unknown {
+  opacity: 70%;
+}
+
+.artist,
+.details {
+  font-size: 14px;
+  font-weight: lighter;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artist {
+  grid-area: artist;
+}
+
+.details {
+  color: var(--grey-7);
+  grid-area: details;
+}
+
+@media (--small-viewport) {
+  .song {
+    padding: 0 10px 0 0;
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: 35px 25px 0;
+  }
+
+  .cover {
+    height: 60px;
+  }
+  .cover.loading {
+    width: 60px;
+  }
+
+  .title {
+    padding-top: 5px;
+  }
+
+  .artist {
+    padding-bottom: 5px;
+  }
+
+  .details {
+    display: none;
+  }
+}

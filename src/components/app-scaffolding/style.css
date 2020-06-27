@@ -1,6 +1,7 @@
 @import "../../variables.css";
 
 .root {
+  background-color: var(--grey-4);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -19,15 +20,6 @@
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
-}
-
-.section {
-  flex: 0 0 auto;
-  overflow-x: auto;
-  padding: 10px 10px 0 10px;
-}
-.section:last-child {
-  padding-bottom: 10px;
 }
 
 .bottomBar {
@@ -50,7 +42,8 @@
 }
 
 .icon {
-  font-size: 18px;
+  color: var(--white);
+  font-size: 26px;
   line-height: 50px;
 }
 
@@ -70,6 +63,7 @@
   color: var(--grey-7);
   font-size: 26px;
   line-height: 50px;
+  text-decoration: none;
 }
 
 .link:hover {
@@ -79,4 +73,5 @@
 .link:active,
 .link:focus {
   color: var(--grey-5);
+  text-decoration: none;
 }

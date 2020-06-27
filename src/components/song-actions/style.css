@@ -1,0 +1,89 @@
+@import "../../variables.css";
+
+.songActions {
+  display: flex;
+}
+
+.action {
+  background: none;
+  border: none;
+  color: var(--grey-7);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: lighter;
+  padding: 0;
+  text-decoration: none;
+}
+
+.action:nth-child(n + 2) {
+  margin-left: 20px;
+}
+
+.action:hover,
+.action:active,
+.action:focus {
+  color: var(--white);
+  text-decoration: none;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.action:hover .icon,
+.action:active .icon,
+.action:focus .icon {
+  color: var(--pink-fip);
+}
+
+.action.actionSpotify:hover .icon,
+.action.actionSpotify:active .icon,
+.action.actionSpotify:focus .icon {
+  color: var(--green-spotify);
+}
+
+@media (--small-viewport) {
+  .songActions {
+    flex-direction: column;
+  }
+
+  .action {
+    background: var(--grey-6);
+    color: var(--white);
+    font-weight: bold;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .actionPlay {
+    background-color: var(--pink-fip);
+  }
+
+  .actionSpotify {
+    background-color: var(--green-spotify);
+  }
+
+  .action:nth-child(n + 2) {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  .icon {
+    float: left;
+    font-size: 18px;
+    line-height: 34px;
+    margin-left: 10px;
+  }
+
+  .action:hover .icon,
+  .action.actionSpotify:hover .icon,
+  .action:active .icon,
+  .action.actionSpotify:active .icon,
+  .action:focus .icon,
+  .action.actionSpotify:focus .icon {
+    color: var(--white);
+  }
+}

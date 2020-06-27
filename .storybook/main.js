@@ -4,7 +4,8 @@ module.exports = {
   stories: ["../src/components/**/stories.tsx"],
   addons: ["@storybook/addon-actions", "@storybook/addon-links"],
   webpackFinal: async config => {
-    config.entry.push("./src/less/all.less");
+    config.entry.unshift("./src/global.css");
+    config.entry.unshift("./node_modules/font-awesome/less/font-awesome.less");
 
     config.resolve.extensions = config.resolve.extensions.concat([
       ".ts",

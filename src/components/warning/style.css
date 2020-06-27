@@ -1,0 +1,10 @@
+.warning {
+  background-color: var(--yellow);
+  color: var(--grey-5);
+  padding: 10px;
+}
+
+.warning a {
+  color: inherit;
+  font-weight: bold;
+}

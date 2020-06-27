@@ -5,6 +5,7 @@
 .radioPlayerBar {
   background-color: var(--grey-3);
   box-shadow: 0 -1px var(--grey-2);
+  color: var(--white);
   display: flex;
   justify-content: space-between;
   padding: 10px;

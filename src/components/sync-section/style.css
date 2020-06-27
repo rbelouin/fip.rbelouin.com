@@ -1,0 +1,35 @@
+.syncSection {
+  background: var(--grey-3);
+  color: var(--white);
+  font-size: 14px;
+  font-family: Oxygen, sans-serif;
+  padding: 10px;
+}
+
+.syncAction {
+  align-items: center;
+  display: flex;
+  justify-content: end;
+}
+
+.button {
+  background: var(--grey-7);
+  border: none;
+  color: var(--white);
+  flex-shrink: 0;
+  font-family: Oxygen, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  height: 34px;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+.button.buttonSync {
+  background: var(--green-spotify);
+}
+
+.buttonIcon {
+  font-size: 16px;
+  margin-right: 5px;
+}
