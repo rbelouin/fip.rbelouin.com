@@ -1,0 +1,15 @@
+.nowBroadcasting {
+  color: var(--white);
+}
+
+.songActionsContainer {
+  margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  .songActionsContainer {
+    background: var(--grey-1);
+    margin: 0;
+    padding: 0 10px 5px;
+  }
+}

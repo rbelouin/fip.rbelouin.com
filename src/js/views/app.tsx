@@ -3,7 +3,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import { array, object, string } from "prop-types";
 
-import Radio from "./radio";
+import PageRadio from "../../components/page-radio";
 import PageFavorites from "../../components/page-favorites";
 
 import { AppScaffolding } from "../../components/app-scaffolding";
@@ -86,7 +86,7 @@ export default createReactClass({
           user={this.state.user}
         />
       ) : this.state.route === "radio" ? (
-        <Radio
+        <PageRadio
           nowPlaying={this.state.bsong}
           src={this.state.src}
           pastSongs={this.state.history}
