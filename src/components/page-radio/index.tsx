@@ -34,20 +34,24 @@ export const propTypes = {
   nowPlaying: PropTypes.oneOfType([
     PropTypes.shape({ type: PropTypes.oneOf(["loading"] as const).isRequired }),
     PropTypes.shape({
-      type: PropTypes.oneOf(["song"] as const).isRequired,
+      type: PropTypes.oneOf(["song", "spotify"] as const).isRequired,
       song: PropTypes.shape(songPropType).isRequired
     }).isRequired
   ]).isRequired as PropTypes.Validator<NowPlaying>
 };
 
 export type PageRadioProps = InferProps<typeof propTypes>;
-type NowPlaying =
+export type NowPlaying =
   | {
       type: "loading";
       song?: undefined;
     }
   | {
       type: "song";
+      song: Song;
+    }
+  | {
+      type: "spotify";
       song: Song;
     };
 

@@ -25,7 +25,7 @@ import getRouteController from "./controllers/route.js";
 import getStateController from "./controllers/state.js";
 import * as SpotifyClient from "../spotify/client";
 
-import App from "./views/app";
+import App from "../components/app";
 
 export function start(conf) {
   const volBus = new Bacon.Bus();
@@ -80,7 +80,7 @@ export function start(conf) {
         email={conf.email}
         github={conf.github}
         radios={conf.radios}
-        state={state}
+        stateStreams={state}
         syncBus={syncBus}
         favBus={favBus}
         volBus={volBus}
