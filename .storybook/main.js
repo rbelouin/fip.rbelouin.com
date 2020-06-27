@@ -5,7 +5,6 @@ module.exports = {
   addons: ["@storybook/addon-actions", "@storybook/addon-links"],
   webpackFinal: async config => {
     config.entry.unshift("./src/global.css");
-    config.entry.unshift("./node_modules/font-awesome/less/font-awesome.less");
 
     config.resolve.extensions = config.resolve.extensions.concat([
       ".ts",
@@ -34,26 +33,6 @@ module.exports = {
           },
           {
             loader: "postcss-loader"
-          }
-        ]
-      },
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: "style-loader"
-          },
-          {
-            loader: "css-loader"
-          },
-          {
-            loader: "less-loader",
-            options: {
-              paths: [
-                path.resolve("./node_modules/bootstrap/less/"),
-                path.resolve("./node_modules/font-awesome/less/")
-              ]
-            }
           }
         ]
       },

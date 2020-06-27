@@ -2,6 +2,14 @@ import React from "react";
 import Bacon from "baconjs";
 import { FormattedMessage } from "react-intl";
 import PropTypes, { InferProps } from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faStop,
+  faHeart as faSolidHeart
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import {
   songPropType,
   Song,
@@ -42,8 +50,9 @@ export const PlayAction: React.FunctionComponent<PlayActionPropTypes> = ({
     className={`${style.action} ${style.actionPlay}`}
     onClick={() => togglePlay(radio, isPlaying, playBus)}
   >
-    <span
-      className={`${style.icon} ${isPlaying ? "fa fa-stop" : "fa fa-play"}`}
+    <FontAwesomeIcon
+      className={style.icon}
+      icon={isPlaying ? faStop : faPlay}
     />
     <FormattedMessage id={isPlaying ? "stop-the-radio" : "play-the-radio"} />
   </button>
@@ -88,7 +97,10 @@ export const FavoriteAction: React.FunctionComponent<FavoriteActionPropTypes> = 
     type="button"
     className={`${style.action} ${song.favorite ? style.isFavorite : ""}`}
   >
-    <span className={`${style.icon} fa fa-heart`} />
+    <FontAwesomeIcon
+      className={style.icon}
+      icon={song.favorite ? faSolidHeart : faRegularHeart}
+    />
     <FormattedMessage
       id={song.favorite ? "remove-from-favorites" : "add-to-favorites"}
     />
@@ -125,7 +137,7 @@ export const OpenSpotifyAction: React.FunctionComponent<OpenSpotifyActionPropTyp
       className={`${style.action} ${style.actionSpotify}`}
       rel="noopener noreferrer"
     >
-      <span className={`${style.icon} fa fa-spotify`} />
+      <FontAwesomeIcon className={style.icon} icon={faSpotify} />
       <FormattedMessage id="open-in-spotify" />
     </a>
   ) : null;
@@ -152,7 +164,10 @@ export const PlaySpotifyAction: React.FunctionComponent<PlaySpotifyActionPropTyp
       className={`${style.action} ${style.actionSpotify}`}
       onClick={() => playSpotify(song, playBus)}
     >
-      <span className={`${style.icon} ${style.iconSpotify} fa fa-play`} />
+      <FontAwesomeIcon
+        className={`${style.icon} ${style.iconSpotify}`}
+        icon={faPlay}
+      />
       <FormattedMessage id="play-with-spotify" />
     </button>
   ) : null;

@@ -1,17 +1,19 @@
-import React, { ReactChild, ReactChildren } from "react";
+import React, { ReactChild } from "react";
 import PropTypes, { InferProps } from "prop-types";
 import { FormattedMessage } from "react-intl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { songPropType } from "../../types";
 const style = require("./style.css");
 
 export const songDetailsPropTypes = {
-  song: PropTypes.shape(songPropType).isRequired,
+  song: PropTypes.shape(songPropType).isRequired
 };
 
 export type SongDetailsProps = InferProps<typeof songDetailsPropTypes>;
 
 export const SongDetails: React.FunctionComponent<SongDetailsProps> = ({
-  song,
+  song
 }) => {
   return song.label ? (
     <div className={style.details}>
@@ -20,7 +22,7 @@ export const SongDetails: React.FunctionComponent<SongDetailsProps> = ({
         values={{
           album: <span className="song-album">{song.album}</span>,
           year: <span className="song-year">{song.year}</span>,
-          label: <span className="song-label">{song.label}</span>,
+          label: <span className="song-label">{song.label}</span>
         }}
       />
     </div>
@@ -30,7 +32,7 @@ export const SongDetails: React.FunctionComponent<SongDetailsProps> = ({
         id="song-details-no-label"
         values={{
           album: <span className="song-album">{song.album}</span>,
-          year: <span className="song-year">{song.year}</span>,
+          year: <span className="song-year">{song.year}</span>
         }}
       />
     </div>
@@ -41,14 +43,14 @@ SongDetails.propTypes = songDetailsPropTypes;
 
 export const songCoverPropTypes = {
   song: PropTypes.shape(songPropType),
-  isLoading: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export type SongCoverProps = InferProps<typeof songCoverPropTypes>;
 
 export const SongCover: React.FunctionComponent<SongCoverProps> = ({
   song,
-  isLoading,
+  isLoading
 }) => {
   const cover = song?.icons.medium || song?.icons.small;
 
@@ -62,21 +64,21 @@ export const SongCover: React.FunctionComponent<SongCoverProps> = ({
 
   return (
     <div className={`${style.cover} ${style.unknown}`}>
-      <span className="fa fa-question" />
+      <FontAwesomeIcon icon={faQuestion} />
     </div>
   );
 };
 
 export const propTypes = {
   song: PropTypes.shape(songPropType),
-  isLoading: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export type SongProps = InferProps<typeof propTypes>;
 
 export const Song: React.FunctionComponent<SongProps> = ({
   song,
-  isLoading,
+  isLoading
 }) => {
   const wrapper = (content: ReactChild) => (
     <div className={style.song}>
@@ -109,5 +111,7 @@ export const Song: React.FunctionComponent<SongProps> = ({
     </div>
   );
 };
+
+Song.propTypes = propTypes;
 
 export default Song;

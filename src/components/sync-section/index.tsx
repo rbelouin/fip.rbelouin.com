@@ -2,6 +2,8 @@ import React from "react";
 import Bacon from "baconjs";
 import { FormattedMessage } from "react-intl";
 import PropTypes, { InferProps } from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 const style = require("./style.css");
 
 export const syncSectionPropTypes = {
@@ -40,7 +42,7 @@ export const SyncSection: React.FunctionComponent<SyncSectionPropTypes> = ({
         }`}
         onClick={() => toggleSync(syncBus, user || undefined)}
       >
-        <span className={`${style.buttonIcon} fa fa-spotify`} />
+        <FontAwesomeIcon icon={faSpotify} />
         {user ? "Unsync" : "Sync"}
       </button>
     </div>
