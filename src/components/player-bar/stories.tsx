@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Bacon from "baconjs";
 import PlayerBar from "./index";
 import { PlayCommand } from "../../types";
+import { DispatchContext, Dispatcher, Events } from "../../events";
 
 export default {
   title: "PlayerBar"
@@ -16,16 +16,19 @@ export const WithPlayingRadioSong = () => (
 );
 export const WithPlayableSong = () => {
   const [playing, setPlaying] = useState(false);
-  const playBus = new Bacon.Bus<any, PlayCommand>();
-
-  playBus.onValue(event => setPlaying(event.type === "radio"));
+  const dispatch: Dispatcher = (name, data) => {
+    if (name === "play") {
+      setPlaying(((data as Events["play"]).type === "radio");
+    }
+  };
 
   return (
-    <PlayerBar
-      nowPlaying={{ type: "radio", song, radio }}
-      playing={playing}
-      playBus={playBus}
-    />
+    <DispatchContext.Provider value={dispatch}>
+      <PlayerBar
+        nowPlaying={{ type: "radio", song, radio }}
+        playing={playing}
+      />
+    </DispatchContext.Provider>
   );
 };
 export const WithSpotifySong = () => (

@@ -1,5 +1,4 @@
 import React from "react";
-import Bacon from "baconjs";
 import { Song, Radio } from "../../types";
 import {
   SongActions,
@@ -17,34 +16,31 @@ export const Empty = () => <SongActions />;
 
 export const PlaySpotify = () => (
   <SongActions>
-    <PlaySpotifyAction playBus={new Bacon.Bus()} song={song} />
+    <PlaySpotifyAction song={song} />
   </SongActions>
 );
 
 export const PlayRadio = () => (
   <SongActions>
-    <PlayAction playBus={new Bacon.Bus()} radio={radio} isPlaying={false} />
+    <PlayAction radio={radio} isPlaying={false} />
   </SongActions>
 );
 
 export const StopRadio = () => (
   <SongActions>
-    <PlayAction playBus={new Bacon.Bus()} radio={radio} isPlaying={true} />
+    <PlayAction radio={radio} isPlaying={true} />
   </SongActions>
 );
 
 export const AddToFavorite = () => (
   <SongActions>
-    <FavoriteAction favBus={new Bacon.Bus()} song={song} />
+    <FavoriteAction song={song} />
   </SongActions>
 );
 
 export const AddedToFavorite = () => (
   <SongActions>
-    <FavoriteAction
-      favBus={new Bacon.Bus()}
-      song={{ ...song, favorite: true }}
-    />
+    <FavoriteAction song={{ ...song, favorite: true }} />
   </SongActions>
 );
 
@@ -56,14 +52,11 @@ export const OpenSpotify = () => (
 
 export const All = () => (
   <SongActions>
-    <PlaySpotifyAction playBus={new Bacon.Bus()} song={song} />
-    <PlayAction playBus={new Bacon.Bus()} radio={radio} isPlaying={false} />
-    <PlayAction playBus={new Bacon.Bus()} radio={radio} isPlaying={true} />
-    <FavoriteAction favBus={new Bacon.Bus()} song={song} />
-    <FavoriteAction
-      favBus={new Bacon.Bus()}
-      song={{ ...song, favorite: true }}
-    />
+    <PlaySpotifyAction song={song} />
+    <PlayAction radio={radio} isPlaying={false} />
+    <PlayAction radio={radio} isPlaying={true} />
+    <FavoriteAction song={song} />
+    <FavoriteAction song={{ ...song, favorite: true }} />
     <OpenSpotifyAction song={song} />
   </SongActions>
 );

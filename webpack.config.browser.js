@@ -12,7 +12,7 @@ module.exports = {
   entry: [
     "./node_modules/whatwg-fetch/fetch.js",
     "./src/global.css",
-    "./prod/js/index.js"
+    "./prod/js/index.ts"
   ],
   output: {
     path: path.resolve("./prod/public/"),

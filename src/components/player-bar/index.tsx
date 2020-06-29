@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes, { InferProps, Requireable } from "prop-types";
 import { Radio, Song, PlayCommand } from "../../types";
+import { DispatchContext } from "../../events";
 import * as SpotifyClient from "../../spotify/client";
 const style = require("./style.css");
 
@@ -20,9 +21,6 @@ export type PlayerBarNowPlaying =
 
 export const playerBarPropTypes = {
   nowPlaying: (PropTypes.object as any) as Requireable<PlayerBarNowPlaying>,
-  playBus: (PropTypes.object as any) as Requireable<
-    Bacon.Bus<any, PlayCommand>
-  >,
   playing: PropTypes.bool
 };
 
@@ -30,9 +28,9 @@ export type PlayerBarPropTypes = InferProps<typeof playerBarPropTypes>;
 
 export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
   nowPlaying,
-  playBus,
   playing
 }) => {
+  const dispatch = useContext(DispatchContext);
   const [volume, setVolume] = useState(100);
   let Component;
 
@@ -54,7 +52,6 @@ export const PlayerBar: React.FunctionComponent<PlayerBarPropTypes> = ({
     Component && (
       <Component
         nowPlaying={nowPlaying}
-        playBus={playBus}
         playing={playing}
         volume={volume}
         onVolumeChange={setVolume}
@@ -168,31 +165,30 @@ export const RadioPlayerBar: React.FunctionComponent<PlayerBarInstancePropTypes>
   nowPlaying,
   playing,
   volume,
-  onVolumeChange,
-  playBus
+  onVolumeChange
 }) => {
+  const dispatch = useContext(DispatchContext);
   const onPlayButtonClick = () => {
-    if (playBus) {
-      playBus.push(
-        playing || nowPlaying.type !== "radio"
-          ? { type: "stop" }
-          : { type: "radio", radio: nowPlaying.radio.id }
-      );
-    }
+    dispatch(
+      "play",
+      playing || nowPlaying.type !== "radio"
+        ? { type: "stop" }
+        : { type: "radio", radio: nowPlaying.radio.id }
+    );
   };
 
   useMediaSessionActionHandler(
     action => {
-      if (playBus && nowPlaying.type === "radio" && action === "play") {
-        playBus.push({ type: "radio", radio: nowPlaying.radio.id });
-      } else if (playBus && action === "pause") {
-        playBus.push({ type: "stop" });
+      if (nowPlaying.type === "radio" && action === "play") {
+        dispatch("play", { type: "radio", radio: nowPlaying.radio.id });
+      } else if (action === "pause") {
+        dispatch("play", { type: "stop" });
       }
     },
-    [playBus, playing]
+    [dispatch, playing]
   );
 
-  useSpaceBarHandler(onPlayButtonClick, [playBus, playing, nowPlaying]);
+  useSpaceBarHandler(onPlayButtonClick, [dispatch, playing, nowPlaying]);
 
   return (
     <PlayerBarView

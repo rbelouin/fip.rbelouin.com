@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import { IntlProvider } from "react-intl";
 
 import Promise from "promise";
-window.Promise = Promise;
+window.Promise = Promise as any;
 
 import Bacon from "baconjs";
 
@@ -11,6 +11,14 @@ import Bacon from "baconjs";
 window.Bacon = Bacon;
 require("bacon-routes"); // eslint-disable-line no-undef
 
+import {
+  DispatchContext,
+  Dispatcher,
+  Events,
+  SyncEvent,
+  FavEvent,
+  PlayEvent
+} from "../events";
 import Intl from "./models/intl.js";
 
 import getHttp from "./models/http.js";
@@ -28,10 +36,9 @@ import * as SpotifyClient from "../spotify/client";
 import App from "../components/app";
 
 export function start(conf) {
-  const volBus = new Bacon.Bus();
-  const syncBus = new Bacon.Bus();
-  const favBus = new Bacon.Bus();
-  const playBus = new Bacon.Bus();
+  const syncBus = new Bacon.Bus<any, SyncEvent>();
+  const favBus = new Bacon.Bus<any, FavEvent>();
+  const playBus = new Bacon.Bus<any, PlayEvent>();
 
   const intl = Intl.getIntlData(conf.DefaultLanguage);
 
@@ -59,14 +66,14 @@ export function start(conf) {
     TokenController,
     SongController,
     RouteController,
-    PlayController,
+    PlayController
   );
 
   const state = StateController.getState(
     Bacon.history,
     favBus,
     syncBus,
-    playBus,
+    playBus
   );
 
   state.route.onValue(function() {
@@ -74,18 +81,27 @@ export function start(conf) {
     ga("send", "pageview");
   });
 
+  const dispatch: Dispatcher = (name, data) => {
+    switch (name) {
+      case "play":
+        return playBus.push(data as Events["play"]);
+      case "fav":
+        return favBus.push(data as Events["fav"]);
+      case "sync":
+        return syncBus.push(data as Events["sync"]);
+    }
+  };
+
   render(
     <IntlProvider locale={intl.locales} messages={intl.messages}>
-      <App
-        email={conf.email}
-        github={conf.github}
-        radios={conf.radios}
-        stateStreams={state}
-        syncBus={syncBus}
-        favBus={favBus}
-        volBus={volBus}
-        playBus={playBus}
-      />
+      <DispatchContext.Provider value={dispatch}>
+        <App
+          email={conf.email}
+          github={conf.github}
+          radios={conf.radios}
+          stateStreams={state}
+        />
+      </DispatchContext.Provider>
     </IntlProvider>,
     document.querySelector("#app")
   );
