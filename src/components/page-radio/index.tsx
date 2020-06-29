@@ -1,17 +1,10 @@
-import React, { useEffect } from "react";
-import Bacon from "baconjs";
-import createReactClass from "create-react-class";
+import React, { useContext, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import PropTypes, { InferProps } from "prop-types";
 const style = require("./style.css");
 
-import {
-  songPropType,
-  radioPropType,
-  FavCommand,
-  PlayCommand,
-  Song
-} from "../../types";
+import { songPropType, radioPropType, Song } from "../../types";
+import { DispatchContext } from "../../events";
 
 import * as MIDI from "../../midi";
 import SongActions from "../../components/song-actions";
@@ -23,12 +16,6 @@ export const propTypes = {
   radios: PropTypes.arrayOf(PropTypes.shape(radioPropType).isRequired)
     .isRequired,
   radio: PropTypes.string.isRequired,
-  favBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, FavCommand>
-  >,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, PlayCommand>
-  >,
   pastSongs: PropTypes.arrayOf(PropTypes.shape(songPropType).isRequired)
     .isRequired,
   nowPlaying: PropTypes.oneOfType([
@@ -59,11 +46,10 @@ export const PageRadio: React.FunctionComponent<PageRadioProps> = ({
   pastSongs,
   nowPlaying,
   src,
-  favBus,
-  playBus,
   radios,
   radio
 }) => {
+  const dispatch = useContext(DispatchContext);
   const selectedRadio = radios.find(r => r.id === radio);
   const isPlaying = selectedRadio ? selectedRadio.audioSource === src : false;
 
@@ -74,22 +60,18 @@ export const PageRadio: React.FunctionComponent<PageRadioProps> = ({
       .map(radioIndex => radios[radioIndex])
       .filter(givenRadio => givenRadio && givenRadio.id === radio)
       .onValue(givenRadio =>
-        playBus.push({ type: "radio", radio: givenRadio.id })
+        dispatch("play", { type: "radio", radio: givenRadio.id })
       );
 
     return unsubscribeMIDI;
-  }, [playBus, radios, radio]);
+  }, [dispatch, radios, radio]);
 
   const songActions =
     nowPlaying.type === "song" && selectedRadio ? (
       <div className={style.songActionsContainer}>
         <SongActions>
-          <SongActions.PlayAction
-            radio={selectedRadio}
-            isPlaying={isPlaying}
-            playBus={playBus}
-          />
-          <SongActions.FavoriteAction song={nowPlaying.song} favBus={favBus} />
+          <SongActions.PlayAction radio={selectedRadio} isPlaying={isPlaying} />
+          <SongActions.FavoriteAction song={nowPlaying.song} />
           <SongActions.OpenSpotifyAction song={nowPlaying.song} />
         </SongActions>
       </div>
@@ -106,7 +88,7 @@ export const PageRadio: React.FunctionComponent<PageRadioProps> = ({
       />
       {songActions}
 
-      <SongList songs={pastSongs} favBus={favBus} playBus={playBus} />
+      <SongList songs={pastSongs} />
     </div>
   );
 };

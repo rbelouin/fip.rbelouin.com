@@ -49,15 +49,6 @@ export const propTypes = {
   stateStreams: PropTypes.object.isRequired as PropTypes.Validator<
     StateStreams
   >,
-  favBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, FavCommand>
-  >,
-  syncBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, boolean>
-  >,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, PlayCommand>
-  >,
   radios: PropTypes.arrayOf(PropTypes.shape(radioPropType).isRequired)
     .isRequired,
   email: PropTypes.string.isRequired,
@@ -67,7 +58,6 @@ export const propTypes = {
 export type AppProps = InferProps<typeof propTypes>;
 
 export const getPlayerBarProps = (
-  playBus: Bacon.Bus<any, PlayCommand>,
   psong: NowPlaying,
   src: string | null
 ): PlayerBarPropTypes => {
@@ -89,16 +79,12 @@ export const getPlayerBarProps = (
 
   return {
     nowPlaying,
-    playBus,
     playing: src !== null
   };
 };
 
 export const App: React.FunctionComponent<AppProps> = ({
   stateStreams,
-  favBus,
-  syncBus,
-  playBus,
   radios,
   email,
   github
@@ -121,13 +107,7 @@ export const App: React.FunctionComponent<AppProps> = ({
 
   const page =
     state.route === "favorites" ? (
-      <PageFavorites
-        favoriteSongs={state.favSongs}
-        favBus={favBus}
-        syncBus={syncBus}
-        playBus={playBus}
-        user={state.user}
-      />
+      <PageFavorites favoriteSongs={state.favSongs} user={state.user} />
     ) : state.route === "radio" ? (
       <PageRadio
         nowPlaying={state.bsong}
@@ -135,12 +115,10 @@ export const App: React.FunctionComponent<AppProps> = ({
         pastSongs={state.history}
         radio={state.radio}
         radios={radios}
-        favBus={favBus}
-        playBus={playBus}
       />
     ) : null;
 
-  const playerBarProps = getPlayerBarProps(playBus, state.psong, state.src);
+  const playerBarProps = getPlayerBarProps(state.psong, state.src);
   const playerBar = <PlayerBar {...playerBarProps} />;
 
   return (

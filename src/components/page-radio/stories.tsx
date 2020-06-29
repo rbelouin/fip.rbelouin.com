@@ -1,5 +1,4 @@
 import React from "react";
-import Bacon from "baconjs";
 import PageRadio from "./index";
 import { Song, Radio } from "../../types";
 
@@ -54,8 +53,6 @@ export default {
 
 export const Empty = () => (
   <PageRadio
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
     pastSongs={[]}
     nowPlaying={{ type: "loading" }}
     radios={[]}
@@ -65,8 +62,6 @@ export const Empty = () => (
 
 export const NotPlaying = () => (
   <PageRadio
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
     pastSongs={[]}
     nowPlaying={{ type: "song", song: songOne }}
     radios={[radioOne, radioTwo]}
@@ -76,8 +71,6 @@ export const NotPlaying = () => (
 
 export const PlayingWithHistory = () => (
   <PageRadio
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
     pastSongs={[songOne]}
     nowPlaying={{ type: "song", song: songTwo }}
     radios={[radioOne, radioTwo]}

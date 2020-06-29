@@ -1,5 +1,4 @@
 import React from "react";
-import Bacon from "baconjs";
 import PageFavorites from "./index";
 import { Song } from "../../types";
 
@@ -38,39 +37,19 @@ export default {
   title: "PageFavorites"
 };
 
-export const Empty = () => (
-  <PageFavorites
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
-    syncBus={new Bacon.Bus()}
-    favoriteSongs={[]}
-  />
-);
+export const Empty = () => <PageFavorites favoriteSongs={[]} />;
 
 export const WithUser = () => (
   <PageFavorites
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
-    syncBus={new Bacon.Bus()}
     user={{ display_name: "Rodolphe Belouin" }}
     favoriteSongs={[]}
   />
 );
 
-export const WithSongs = () => (
-  <PageFavorites
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
-    syncBus={new Bacon.Bus()}
-    favoriteSongs={songs}
-  />
-);
+export const WithSongs = () => <PageFavorites favoriteSongs={songs} />;
 
 export const WithUserAndSongs = () => (
   <PageFavorites
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
-    syncBus={new Bacon.Bus()}
     user={{ display_name: "Rodolphe Belouin" }}
     favoriteSongs={songs}
   />

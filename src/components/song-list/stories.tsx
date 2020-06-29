@@ -1,15 +1,12 @@
 import React from "react";
-import Bacon from "baconjs";
 import { SongList } from "./index";
 import { Song } from "../../types";
 
 export default {
-  title: "SongList",
+  title: "SongList"
 };
 
-export const Empty = () => (
-  <SongList songs={[]} favBus={new Bacon.Bus()} playBus={new Bacon.Bus()} />
-);
+export const Empty = () => <SongList songs={[]} />;
 
 const song1: Song = {
   id: "4Ce66JznW8QbeyTdSzdGwR",
@@ -22,7 +19,7 @@ const song2: Song = {
   id: "5vmFVIJV9XN1l01YsFuKL3",
   title: "Conscious Club",
   artist: "Vulfpeck",
-  icons: {},
+  icons: {}
 };
 
 const song3: Song = {
@@ -31,8 +28,8 @@ const song3: Song = {
   album: "GroundUP",
   artist: "Snarky Puppy",
   icons: {
-    medium: "https://i.scdn.co/image/ab67616d0000b2731f6a69634529e41a5cd27b44",
-  },
+    medium: "https://i.scdn.co/image/ab67616d0000b2731f6a69634529e41a5cd27b44"
+  }
 };
 
 const song4: Song = {
@@ -42,8 +39,8 @@ const song4: Song = {
   artist: "Esperanza Spalding",
   year: "2008",
   icons: {
-    small: "https://i.scdn.co/image/ab67616d00001e023d0bdc59a47cf5b39a5d68a9",
-  },
+    small: "https://i.scdn.co/image/ab67616d00001e023d0bdc59a47cf5b39a5d68a9"
+  }
 };
 
 const song5: Song = {
@@ -53,16 +50,12 @@ const song5: Song = {
   year: "2020",
   label: "Decca (UMO)",
   icons: {
-    medium: "https://i.scdn.co/image/ab67616d0000b273dd2d7a7056e203e7a24e0145",
+    medium: "https://i.scdn.co/image/ab67616d0000b273dd2d7a7056e203e7a24e0145"
   },
   favorite: true,
-  spotify: "spotify:track:68j5DYmCikBzcp60Sv6xWO",
+  spotify: "spotify:track:68j5DYmCikBzcp60Sv6xWO"
 };
 
 export const SimpleList = () => (
-  <SongList
-    songs={[song1, song2, song3, song4, song5]}
-    favBus={new Bacon.Bus()}
-    playBus={new Bacon.Bus()}
-  />
+  <SongList songs={[song1, song2, song3, song4, song5]} />
 );

@@ -7,9 +7,7 @@ const style = require("./style.css");
 export const songListItemPropTypes = {
   song: PropTypes.shape(songPropType).isRequired,
   active: PropTypes.bool.isRequired,
-  favBus: PropTypes.object.isRequired as PropTypes.Validator<Bacon.Bus<FavCommand, any>>,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<Bacon.Bus<PlayCommand, any>>,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export type SongListItemProps = InferProps<typeof songListItemPropTypes>;
@@ -17,17 +15,15 @@ export type SongListItemProps = InferProps<typeof songListItemPropTypes>;
 export const SongListItem: React.FunctionComponent<SongListItemProps> = ({
   song,
   active,
-  favBus,
-  playBus,
-  onClick,
+  onClick
 }) => {
   const className = [style.songListItem]
     .concat(song.favorite ? [style.songListItemFavorite] : [])
     .join(" ");
-  
+
   const album = song.album && (
     <span className={style.songListItemAlbum}>{song.album}</span>
-  )
+  );
 
   const year = song.year && (
     <span className={style.songListItemYear}>{song.year}</span>
@@ -47,11 +43,8 @@ export const SongListItem: React.FunctionComponent<SongListItemProps> = ({
       </div>
       <div className={controlsClassName}>
         <SongActions>
-          <SongActions.PlaySpotifyAction
-            playBus={playBus}
-            song={song}
-          />
-          <SongActions.FavoriteAction favBus={favBus} song={song} />
+          <SongActions.PlaySpotifyAction song={song} />
+          <SongActions.FavoriteAction song={song} />
         </SongActions>
       </div>
     </li>
@@ -61,27 +54,31 @@ export const SongListItem: React.FunctionComponent<SongListItemProps> = ({
 SongListItem.propTypes = songListItemPropTypes;
 
 export const songListPropTypes = {
-  songs: PropTypes.arrayOf(PropTypes.shape(songPropType).isRequired).isRequired,
-  favBus: PropTypes.object.isRequired as PropTypes.Validator<Bacon.Bus<FavCommand, any>>,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<Bacon.Bus<PlayCommand, any>>,
-}
+  songs: PropTypes.arrayOf(PropTypes.shape(songPropType).isRequired).isRequired
+};
 
 export type SongListProps = InferProps<typeof songListPropTypes>;
 
-export const SongList: React.FunctionComponent<SongListProps> = ({ songs, favBus, playBus }) => {
-  const [selectedSongId, setSelectedSongId] = useState<string | undefined>(undefined);
+export const SongList: React.FunctionComponent<SongListProps> = ({ songs }) => {
+  const [selectedSongId, setSelectedSongId] = useState<string | undefined>(
+    undefined
+  );
 
-  return <ul className={style.songList}>
-    {songs.map(song => (<SongListItem
-      song={song}
-      key={song.id}
-      active={song.id === selectedSongId}
-      onClick={() => setSelectedSongId(song.id === selectedSongId ? undefined : song.id)}
-      playBus={playBus}
-      favBus={favBus}
-    />))}
-  </ul>
-}
+  return (
+    <ul className={style.songList}>
+      {songs.map(song => (
+        <SongListItem
+          song={song}
+          key={song.id}
+          active={song.id === selectedSongId}
+          onClick={() =>
+            setSelectedSongId(song.id === selectedSongId ? undefined : song.id)
+          }
+        />
+      ))}
+    </ul>
+  );
+};
 
 SongList.propTypes = songListPropTypes;
 

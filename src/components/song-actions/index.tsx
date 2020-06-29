@@ -1,5 +1,4 @@
-import React from "react";
-import Bacon from "baconjs";
+import React, { useContext } from "react";
 import { FormattedMessage } from "react-intl";
 import PropTypes, { InferProps } from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,14 +9,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
-import {
-  songPropType,
-  Song,
-  radioPropType,
-  Radio,
-  PlayCommand,
-  FavCommand
-} from "../../types";
+import { songPropType, Song, radioPropType, Radio } from "../../types";
+import { DispatchContext, Dispatcher } from "../../events";
 const style = require("./style.css");
 
 export const songActionsPropTypes = {
@@ -34,38 +27,38 @@ SongActions.propTypes = songActionsPropTypes;
 
 export const playActionPropTypes = {
   radio: PropTypes.shape(radioPropType).isRequired,
-  isPlaying: PropTypes.bool.isRequired,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, PlayCommand>
-  >
+  isPlaying: PropTypes.bool.isRequired
 };
 export type PlayActionPropTypes = InferProps<typeof playActionPropTypes>;
 
 export const PlayAction: React.FunctionComponent<PlayActionPropTypes> = ({
   radio,
-  isPlaying,
-  playBus
-}) => (
-  <button
-    className={`${style.action} ${style.actionPlay}`}
-    onClick={() => togglePlay(radio, isPlaying, playBus)}
-  >
-    <FontAwesomeIcon
-      className={style.icon}
-      icon={isPlaying ? faStop : faPlay}
-    />
-    <FormattedMessage id={isPlaying ? "stop-the-radio" : "play-the-radio"} />
-  </button>
-);
+  isPlaying
+}) => {
+  const dispatch = useContext(DispatchContext);
+  return (
+    <button
+      className={`${style.action} ${style.actionPlay}`}
+      onClick={() => togglePlay(radio, isPlaying, dispatch)}
+    >
+      <FontAwesomeIcon
+        className={style.icon}
+        icon={isPlaying ? faStop : faPlay}
+      />
+      <FormattedMessage id={isPlaying ? "stop-the-radio" : "play-the-radio"} />
+    </button>
+  );
+};
 
 PlayAction.propTypes = playActionPropTypes;
 
 export const togglePlay = (
   radio: Radio,
   isPlaying: boolean,
-  playBus: Bacon.Bus<any, PlayCommand>
+  dispatch: Dispatcher
 ) => {
-  playBus.push(
+  dispatch(
+    "play",
     isPlaying
       ? {
           type: "stop"
@@ -78,9 +71,6 @@ export const togglePlay = (
 };
 
 export const favoriteActionPropTypes = {
-  favBus: (PropTypes.object as PropTypes.Requireable<
-    Bacon.Bus<any, FavCommand>
-  >).isRequired,
   song: PropTypes.shape(songPropType).isRequired
 };
 
@@ -89,31 +79,30 @@ export type FavoriteActionPropTypes = InferProps<
 >;
 
 export const FavoriteAction: React.FunctionComponent<FavoriteActionPropTypes> = ({
-  favBus,
   song
-}) => (
-  <button
-    onClick={() => toggleFavorite(favBus, song)}
-    type="button"
-    className={`${style.action} ${song.favorite ? style.isFavorite : ""}`}
-  >
-    <FontAwesomeIcon
-      className={style.icon}
-      icon={song.favorite ? faSolidHeart : faRegularHeart}
-    />
-    <FormattedMessage
-      id={song.favorite ? "remove-from-favorites" : "add-to-favorites"}
-    />
-  </button>
-);
+}) => {
+  const dispatch = useContext(DispatchContext);
+  return (
+    <button
+      onClick={() => toggleFavorite(dispatch, song)}
+      type="button"
+      className={`${style.action} ${song.favorite ? style.isFavorite : ""}`}
+    >
+      <FontAwesomeIcon
+        className={style.icon}
+        icon={song.favorite ? faSolidHeart : faRegularHeart}
+      />
+      <FormattedMessage
+        id={song.favorite ? "remove-from-favorites" : "add-to-favorites"}
+      />
+    </button>
+  );
+};
 
 FavoriteAction.propTypes = favoriteActionPropTypes;
 
-export const toggleFavorite = (
-  favBus: Bacon.Bus<any, FavCommand>,
-  song: Song
-) => {
-  favBus.push({
+export const toggleFavorite = (dispatch: Dispatcher, song: Song) => {
+  dispatch("fav", {
     type: song.favorite ? "remove" : "add",
     song
   });
@@ -145,10 +134,7 @@ export const OpenSpotifyAction: React.FunctionComponent<OpenSpotifyActionPropTyp
 OpenSpotifyAction.propTypes = openSpotifyActionPropTypes;
 
 export const playSpotifyActionPropTypes = {
-  song: PropTypes.shape(songPropType).isRequired,
-  playBus: PropTypes.object.isRequired as PropTypes.Validator<
-    Bacon.Bus<any, PlayCommand>
-  >
+  song: PropTypes.shape(songPropType).isRequired
 };
 
 export type PlaySpotifyActionPropTypes = InferProps<
@@ -156,13 +142,13 @@ export type PlaySpotifyActionPropTypes = InferProps<
 >;
 
 export const PlaySpotifyAction: React.FunctionComponent<PlaySpotifyActionPropTypes> = ({
-  song,
-  playBus
-}) =>
-  song.spotify ? (
+  song
+}) => {
+  const dispatch = useContext(DispatchContext);
+  return song.spotify ? (
     <button
       className={`${style.action} ${style.actionSpotify}`}
-      onClick={() => playSpotify(song, playBus)}
+      onClick={() => playSpotify(song, dispatch)}
     >
       <FontAwesomeIcon
         className={`${style.icon} ${style.iconSpotify}`}
@@ -171,14 +157,12 @@ export const PlaySpotifyAction: React.FunctionComponent<PlaySpotifyActionPropTyp
       <FormattedMessage id="play-with-spotify" />
     </button>
   ) : null;
+};
 
 PlaySpotifyAction.propTypes = playSpotifyActionPropTypes;
 
-export const playSpotify = (
-  song: Song,
-  playBus: Bacon.Bus<any, PlayCommand>
-) => {
-  playBus.push({
+export const playSpotify = (song: Song, dispatch: Dispatcher) => {
+  dispatch("play", {
     type: "spotify",
     song
   });
