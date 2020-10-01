@@ -31,13 +31,13 @@ export const spotifyLogin = (config: SpotifyConfig): RequestHandler => (
 ) => {
   const redirectUri = req.query.redirect_uri;
   const token = req.query.refresh_token;
-  const scope = Array.prototype.isPrototypeOf(req.query.scope)
+  const scope = Array.isArray(req.query.scope)
     ? req.query.scope
     : typeof req.query.scope === "string"
     ? [req.query.scope]
     : [];
 
-  if (token) {
+  if (typeof token === "string" && typeof redirectUri === "string") {
     const url = Url.parse(redirectUri);
     refreshToken(config, token).then(newToken => {
       url.search = QueryString.stringify({
@@ -46,7 +46,7 @@ export const spotifyLogin = (config: SpotifyConfig): RequestHandler => (
       });
       res.redirect(Url.format(url));
     });
-  } else {
+  } else if (typeof redirectUri === "string") {
     const state = uuid.v4();
     callbackUrls[state] = redirectUri;
     const callbackUrl = getCallbackUrl(req, config.callbackPath);
@@ -62,6 +62,8 @@ export const spotifyLogin = (config: SpotifyConfig): RequestHandler => (
     });
 
     res.redirect(Url.format(url));
+  } else {
+    res.status(400).send("Invalid redirect_uri");
   }
 };
 
@@ -69,11 +71,12 @@ export const spotifyCallback = (config: SpotifyConfig): RequestHandler => (
   req,
   res
 ) => {
-  const code = req.query.code || "";
-  const redirect_uri = callbackUrls[req.query.state || ""];
+  const code = typeof req.query.code === "string" ? req.query.code : "";
+  const state = typeof req.query.state === "string" ? req.query.state : "";
+  const redirect_uri = callbackUrls[state];
   const callbackUrl = getCallbackUrl(req, config.callbackPath);
 
-  createToken(config, callbackUrl, req.query.code).then(token => {
+  createToken(config, callbackUrl, code).then(token => {
     const url = Url.parse(redirect_uri);
     url.search = QueryString.stringify({
       ...QueryString.parse(url.search || ""),

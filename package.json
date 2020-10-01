@@ -1,7 +1,7 @@
 {
-  "name": "fip-client",
-  "version": "0.0.0",
-  "description": "HTML5 Player for the awesome FIP Radio",
+  "name": "fip.rbelouin.com",
+  "version": "0.1.0",
+  "description": "Web player for Radio FIP | https://fip.rbelouin.com",
   "main": "./src/js/index.jsx",
   "keywords": [
     "fip",
@@ -13,9 +13,9 @@
   ],
   "author": "Rodolphe Belouin <me@rbelouin.com>",
   "license": "MIT",
-  "repository": "https://github.com/rbelouin/fip-client",
+  "repository": "https://github.com/rbelouin/fip.rbelouin.com",
   "engines": {
-    "node": 12
+    "node": "^12.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
