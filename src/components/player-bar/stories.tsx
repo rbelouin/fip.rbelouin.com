@@ -18,7 +18,7 @@ export const WithPlayableSong = () => {
   const [playing, setPlaying] = useState(false);
   const dispatch: Dispatcher = (name, data) => {
     if (name === "play") {
-      setPlaying(((data as Events["play"]).type === "radio");
+      setPlaying((data as Events["play"]).type === "radio");
     }
   };
 
