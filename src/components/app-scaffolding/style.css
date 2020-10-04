@@ -32,11 +32,13 @@
   align-items: center;
 }
 
-.button {
+.logo {
   background: var(--pink-fip);
   border: 0;
   height: 50px;
+  line-height: 50px;
   margin: 0;
+  text-align: center;
   padding: 0;
   width: 50px;
 }

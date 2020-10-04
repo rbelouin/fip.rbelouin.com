@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes, { InferProps, Requireable, Validator } from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStop, faVolumeOff, faVolumeDown, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { songPropType } from "../../types";
 const style = require("./style.css");
 
@@ -70,8 +70,9 @@ export const PlayButton: React.FunctionComponent<PlayButtonPropTypes> = ({
     <button
       className={`${style.playButton} ${playing ? style.isPlaying : ""}`}
       onClick={onClick || (() => {})}
+      aria-label={label} 
     >
-      <FontAwesomeIcon icon={icon} aria-label={label} />
+      <FontAwesomeIcon icon={icon} />
     </button>
   );
 };
@@ -91,12 +92,10 @@ export const VolumeControls: React.FunctionComponent<VolumeControlsPropTypes> = 
   volume,
   onVolumeChange
 }) => {
-  const icon = volume === 0 ? "off" : volume < 50 ? "down" : "up";
+  const icon = volume === 0 ? faVolumeOff : volume < 50 ? faVolumeDown : faVolumeUp;
   return (
     <div className={style.volumeControls}>
-      <span
-        className={`${style.volumeIcon} glyphicon glyphicon-volume-${icon}`}
-      />
+      <FontAwesomeIcon className={style.volumeIcon} icon={icon} aria-hidden />
       <input
         className={style.volumePicker}
         type="range"
@@ -104,6 +103,7 @@ export const VolumeControls: React.FunctionComponent<VolumeControlsPropTypes> = 
         min="0"
         max="100"
         value={volume}
+        aria-label="volume"
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           onVolumeChange && onVolumeChange(parseInt(event.target.value))
         }

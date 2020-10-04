@@ -25,9 +25,9 @@ export const AppScaffolding: React.FunctionComponent<AppScaffoldingPropTypes> = 
   <div className={style.root}>
     <div className={style.startBar}>
       <div className={style.startSection}>
-        <button id="menu-toggle" className={style.button}>
+        <div className={style.logo}>
           <FontAwesomeIcon className={style.icon} icon={faHeadphones} />
-        </button>
+        </div>
         <h1 className={style.title}>FIP player</h1>
       </div>
       <div className={style.endSection}>

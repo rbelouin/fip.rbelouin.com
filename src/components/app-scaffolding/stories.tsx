@@ -7,7 +7,7 @@ export default {
 
 const bottomBar = <div style={{ background: "black" }}>Bottom Bar</div>;
 const content = (
-  <div style={{ background: "white", color: "black" }}>
+  <div style={{ background: "white", color: "black" }} tabIndex={0}>
     {new Array(100).fill(undefined).map((_, index) => (
       <div key={index}>Line number {index}</div>
     ))}

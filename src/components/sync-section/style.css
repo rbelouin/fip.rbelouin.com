@@ -15,7 +15,7 @@
 .button {
   background: var(--grey-7);
   border: none;
-  color: var(--white);
+  color: var(--grey-2);
   flex-shrink: 0;
   font-family: Oxygen, sans-serif;
   font-size: 14px;
