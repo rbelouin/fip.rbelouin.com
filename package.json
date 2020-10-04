@@ -24,7 +24,7 @@
     "@babel/preset-typescript": "^7.8.3",
     "@sentry/node": "^5.12.4",
     "@storybook/addon-a11y": "^6.0.25",
-    "@storybook/addon-actions": "^5.3.13",
+    "@storybook/addon-actions": "^6.0.25",
     "@storybook/addon-links": "^5.3.13",
     "@storybook/addons": "^5.3.13",
     "@storybook/react": "^5.3.13",
