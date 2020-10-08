@@ -1,5 +1,3 @@
-@import "../../variables.css";
-
 .song {
   align-items: center;
   background-color: var(--grey-1);

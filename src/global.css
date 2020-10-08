@@ -1,3 +1,10 @@
+/**
+ * Import the variables globally.
+ * 1. Because the compilation does not fail if a CSS file uses variables without importing the file.
+ * 2. Because postcss-loader/postcss-custom-media don’t transform the custom media queries in any file that would processed before variables.css
+ */
+@import "./variables.css";
+
 body {
   background-color: var(--grey-4);
   font-family: "Oxygen", sans-serif;
