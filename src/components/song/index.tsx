@@ -1,4 +1,4 @@
-import React, { ReactChild } from "react";
+import React, { ReactChild, useEffect, useRef, useState } from "react";
 import PropTypes, { InferProps } from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,14 +52,34 @@ export const SongCover: React.FunctionComponent<SongCoverProps> = ({
   song,
   isLoading
 }) => {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [imgLoaded, setImgLoaded] = useState<"success" | "error" | "pending">("pending");
   const cover = song?.icons.medium || song?.icons.small;
+
+  useEffect(() => {
+    const setSuccess = () => setImgLoaded("success");
+    const setError = () => setImgLoaded("error");
+
+    if (imgRef.current) {
+      imgRef.current.addEventListener("load", setSuccess);
+      imgRef.current.addEventListener("error", setError);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        imgRef.current.removeEventListener("load", setSuccess);
+        imgRef.current.removeEventListener("error", setError);
+      }
+    };
+  }, [imgRef, setImgLoaded]);
 
   if (isLoading) {
     return <div className={`${style.cover} ${style.loading}`}></div>;
   }
 
-  if (cover) {
-    return <img className={style.cover} alt="cover" src={cover} />;
+  if (cover && imgLoaded !== "error") {
+    const className = imgLoaded === "success" ? style.cover : `${style.cover} ${style.loading}`;
+    return <img className={className} alt="cover" src={cover} ref={imgRef} />;
   }
 
   return (

@@ -3,7 +3,7 @@ import { Song as SongComponent } from "./index";
 import { Song } from "../../types";
 
 export default {
-  title: "Song",
+  title: "Song"
 };
 
 export const Loading = () => <SongComponent isLoading />;
@@ -17,10 +17,10 @@ const song: Song = {
   label: "Columbia",
   icons: {
     medium: "https://i.scdn.co/image/ab67616d0000b27314fe72d19e86a2901a0f7eeb",
-    small: "https://i.scdn.co/image/ab67616d00001e0214fe72d19e86a2901a0f7eeb",
+    small: "https://i.scdn.co/image/ab67616d00001e0214fe72d19e86a2901a0f7eeb"
   },
   spotify: "spotify:track:1eQJjcLSsHPdjbmVuEHtTf",
-  favorite: false,
+  favorite: false
 };
 
 export const SongAndLoading = () => <SongComponent isLoading song={song} />;
@@ -29,6 +29,15 @@ export const SampleSong = () => <SongComponent song={song} />;
 
 export const SongWithNoCover = () => (
   <SongComponent song={{ ...song, icons: {} }} />
+);
+
+export const SongWithWrongCover = () => (
+  <SongComponent
+    song={{
+      ...song,
+      icons: { medium: "https://fip.rbelouin.com/non-existing-picture" }
+    }}
+  />
 );
 
 export const Unknown = () => <SongComponent />;

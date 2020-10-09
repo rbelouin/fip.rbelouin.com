@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   stories: ["../src/components/**/stories.tsx"],
-  addons: ["@storybook/addon-actions", "@storybook/addon-links", "@storybook/addon-a11y"],
+  addons: ["@storybook/addon-actions", "@storybook/addon-links", "@storybook/addon-a11y", "@storybook/addon-viewport/register"],
   webpackFinal: async config => {
     config.entry.unshift("./src/global.css");
 

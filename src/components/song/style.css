@@ -1,5 +1,3 @@
-@import "../../variables.css";
-
 .song {
   align-items: center;
   background-color: var(--grey-1);
@@ -23,6 +21,8 @@
 }
 .cover.loading {
   background: var(--grey-3);
+  line-height: 80px;
+  text-align: center;
   width: 80px;
 }
 .cover.unknown {
@@ -75,6 +75,11 @@
     height: 60px;
   }
   .cover.loading {
+    line-height: 60px;
+    width: 60px;
+  }
+  .cover.unknown {
+    line-height: 60px;
     width: 60px;
   }
 

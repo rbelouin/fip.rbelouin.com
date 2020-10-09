@@ -40,7 +40,7 @@ export const SyncSection: React.FunctionComponent<SyncSectionPropTypes> = ({
           }`}
           onClick={() => dispatch("sync", !user)}
         >
-          <FontAwesomeIcon icon={faSpotify} />
+          <FontAwesomeIcon className={style.buttonIcon} icon={faSpotify} />
           {user ? "Unsync" : "Sync"}
         </button>
       </div>
