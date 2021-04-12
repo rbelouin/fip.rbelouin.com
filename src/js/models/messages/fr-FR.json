@@ -16,7 +16,7 @@
     "remove-from-favorites": "Retirer des favoris",
     "added-to-favorites": "Ajouté !",
     "radios": "Radios",
-    "favorites": "Chansons favorites",
+    "favorites": "Favoris",
     "favorites-alert": "Cliquez sur les petits cœurs pour ajouter ou retirer une chanson de vos favoris. Vous pouvez garder cette liste sur votre navigateur ou bien la synchroniser avec Spotify.",
     "sync-with-spotify": "Synchroniser",
     "unsync-from-spotify": "Désynchroniser",
@@ -27,13 +27,14 @@
     "now-broadcasting": "En cours de diffusion :",
     "play-the-radio": "Écouter la radio",
     "stop-the-radio": "Éteindre la radio",
-    "fip-radio": "FIP Radio",
-    "fip-autour-du-rock": "Autour du Rock",
-    "fip-autour-du-jazz": "Autour du Jazz",
-    "fip-autour-du-groove": "Autour du Groove",
-    "fip-autour-du-monde": "Autour du Monde",
-    "tout-nouveau-tout-fip": "Tout nouveau tout FIP",
-    "fip-autour-du-reggae": "Autour du Reggae",
-    "fip-autour-de-l-electro": "Autour de l'Électro"
+    "fip": "FIP",
+    "rock": "Rock",
+    "jazz": "Jazz",
+    "groove": "Groove",
+    "monde": "Monde",
+    "nouveautés": "Nouveautés",
+    "reggae": "Reggae",
+    "electro": "Electro",
+    "pop": "Pop"
   }
 }
