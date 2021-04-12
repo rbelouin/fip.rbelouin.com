@@ -33,7 +33,7 @@ export const PlayerBarView: React.FunctionComponent<PlayerBarViewPropTypes> = ({
         alt="Album cover"
       />
       <div className={style.textSection}>
-        <div id="player-bar-song-title" className={style.title}>
+        <div data-testid="player-bar-song-title" className={style.title}>
           {song.title}
         </div>
         <div className={style.artist}>{song.artist}</div>

@@ -10,14 +10,31 @@ const slowMo = parseInt(
     ? "0"
     : process.env.SLOW_MO || "300"
 );
+const host = process.env.FIP_PLAYER_HOST || "fip.cleverapps.io";
 
-test("End-to-end scenario", async function(done) {
-  const browser = await puppeteer.launch({
+jest.setTimeout(300000);
+
+let browser;
+
+beforeEach(async function() {
+  browser = await puppeteer.launch({
     defaultViewport: null,
     headless,
     devTools,
-    slowMo
+    slowMo,
+    args: [
+      // This option prevents the target browser from closing unexpectedly.
+      // See https://stackoverflow.com/a/66644276
+      '--disable-dev-shm-usage',
+    ],
   });
+});
+
+afterEach(async function() {
+  await browser.close();
+});
+
+test("End-to-end scenario", async function() {
   const page = await browser.newPage();
 
   await page.goto("https://fip.fr");
@@ -27,11 +44,11 @@ test("End-to-end scenario", async function(done) {
   );
 
   // We open the app with another URL to avoid impacting GA
-  await page.goto("http://fip.cleverapps.io");
+  await page.goto(`http://${host}`);
 
-  await page.waitForSelector(".fipradio-nowplaying-title");
+  await page.waitForSelector("[data-testid='song-component-title']");
   const actualRadioTitle = await page.$eval(
-    ".fipradio-nowplaying-title",
+    "[data-testid='song-component-title']",
     node => node.textContent
   );
 
@@ -39,9 +56,9 @@ test("End-to-end scenario", async function(done) {
     expectedTitle.toUpperCase()
   );
 
-  await page.waitForSelector("#player-bar-song-title");
+  await page.waitForSelector("[data-testid='player-bar-song-title']");
   const actualPlayerTitle = await page.$eval(
-    "#player-bar-song-title",
+    "[data-testid='player-bar-song-title']",
     node => node.textContent
   );
 
@@ -58,7 +75,7 @@ test("End-to-end scenario", async function(done) {
   ]);
 
   const actualNextRadioTitle = await page.$eval(
-    ".fipradio-nowplaying-title",
+    "[data-testid='song-component-title']",
     node => node.textContent
   );
 
@@ -67,7 +84,7 @@ test("End-to-end scenario", async function(done) {
   );
 
   const actualNextPlayerTitle = await page.$eval(
-    "#player-bar-song-title",
+    "[data-testid='player-bar-song-title']",
     node => node.textContent
   );
 
@@ -81,7 +98,7 @@ test("End-to-end scenario", async function(done) {
   ]);
 
   const actualSyncButtonLabel = await page.$eval(
-    ".sync",
+    "[data-testid='sync-button']",
     node => node.textContent
   );
 
@@ -89,7 +106,7 @@ test("End-to-end scenario", async function(done) {
 
   await Promise.all([
     page.waitForNavigation(),
-    page.$eval(".sync", node => node.click())
+    page.$eval("[data-testid='sync-button']", node => node.click())
   ]);
 
   await page.type("#login-username", username);
@@ -100,25 +117,16 @@ test("End-to-end scenario", async function(done) {
     page.$eval("#login-button", node => node.click())
   ]);
 
-  await page.waitForSelector(".unsync", { timeout: 2000 });
+  await page.waitForSelector("[data-testid='sync-button']", { timeout: 2000 });
   const actualUnsyncButtonLabel = await page.$eval(
-    ".unsync",
+    "[data-testid='sync-button']",
     node => node.textContent
   );
 
   expect(actualUnsyncButtonLabel).toStrictEqual("Unsync");
-
-  await browser.close();
-  done();
 });
 
 test("Configuration is up-to-date", async () => {
-  const browser = await puppeteer.launch({
-    defaultViewport: null,
-    headless,
-    devTools,
-    slowMo
-  });
   const page = await browser.newPage();
   await page.evaluateOnNewDocument(() => {
     Object.defineProperty(navigator, "languages", {
@@ -141,7 +149,7 @@ test("Configuration is up-to-date", async () => {
   );
 
   // We open the app with another URL to avoid impacting GA
-  await page.goto("http://fip-local.rbelouin.com:8080");
+  await page.goto(`http://${host}`);
 
   await page.waitForSelector("nav ul li", { timeout: 2000 });
   const navigationItems = await page.$$eval(
@@ -155,5 +163,4 @@ test("Configuration is up-to-date", async () => {
   const actualStations = navigationItems.slice(0, -1); // Favorite Songs is not a station
 
   expect(actualStations).toEqual(expectedStations);
-  await browser.close();
-}, 20000);
+});

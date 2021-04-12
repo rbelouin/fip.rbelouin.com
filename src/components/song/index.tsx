@@ -118,7 +118,7 @@ export const Song: React.FunctionComponent<SongProps> = ({
   if (song) {
     return wrapper(
       <>
-        <div className={style.title}>{song.title}</div>
+        <div data-testid="song-component-title" className={style.title}>{song.title}</div>
         <div className={style.artist}>{song.artist}</div>
         <SongDetails song={song} />
       </>
