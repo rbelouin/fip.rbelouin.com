@@ -67,6 +67,14 @@
       "color": "#00d3ff"
     },
     {
+      "id": "fip-autour-de-la-pop",
+      "audioSource": "http://icecast.radiofrance.fr/fippop-midfi.mp3",
+      "metadataHref": "https://www.fip.fr/livemeta/70",
+      "picture": "https://www.fip.fr/sites/default/files/asset/images/2016/06/fip_tout_nouveau_logo_hd_player.png",
+      "stationId": 78,
+      "color": "#25d362"
+    },
+    {
       "id": "tout-nouveau-tout-fip",
       "audioSource": "https://direct.fipradio.fr/live/fip-webradio5.mp3",
       "metadataHref": "https://www.fip.fr/livemeta/70",
