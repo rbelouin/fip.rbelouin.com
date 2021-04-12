@@ -35,7 +35,7 @@ export type StateStreams = {
 
 export const initialState: State = {
   route: "radio",
-  radio: "fip-radio",
+  radio: "fip",
   radios: {},
   history: [],
   bsong: { type: "loading" },

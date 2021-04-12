@@ -30,7 +30,7 @@ const songTwo: Song = {
 };
 
 const radioOne: Radio = {
-  id: "fip-radio",
+  id: "fip",
   stationId: 0,
   metadataHref: "metadata1",
   audioSource: "audioSource1",
@@ -39,7 +39,7 @@ const radioOne: Radio = {
 };
 
 const radioTwo: Radio = {
-  id: "fip-autour-du-jazz",
+  id: "jazz",
   stationId: 0,
   metadataHref: "metadata2",
   audioSource: "audioSource2",
@@ -56,7 +56,7 @@ export const Empty = () => (
     pastSongs={[]}
     nowPlaying={{ type: "loading" }}
     radios={[]}
-    radio="fip-radio"
+    radio="fip"
   />
 );
 
@@ -65,7 +65,7 @@ export const NotPlaying = () => (
     pastSongs={[]}
     nowPlaying={{ type: "song", song: songOne }}
     radios={[radioOne, radioTwo]}
-    radio="fip-autour-du-jazz"
+    radio="jazz"
   />
 );
 
@@ -74,7 +74,7 @@ export const PlayingWithHistory = () => (
     pastSongs={[songOne]}
     nowPlaying={{ type: "song", song: songTwo }}
     radios={[radioOne, radioTwo]}
-    radio="fip-autour-du-jazz"
+    radio="jazz"
     src="audioSource2"
   />
 );

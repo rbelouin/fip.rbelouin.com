@@ -9,7 +9,7 @@ export default {
 export const Empty = () => (
   <Navigation
     route="radio"
-    radio="fip-autour-du-jazz"
+    radio="jazz"
     radios={{
       one: {
         nowPlaying: {
@@ -24,7 +24,7 @@ export const Empty = () => (
 export const Default = () => (
   <Navigation
     route="radio"
-    radio="fip-autour-du-jazz"
+    radio="jazz"
     radios={{
       one: {
         nowPlaying: {
@@ -48,7 +48,7 @@ export const Default = () => (
 export const WithManyItems = () => (
   <Navigation
     route="radio"
-    radio="fip-radio"
+    radio="fip"
     radios={{
       one: {
         nowPlaying: {
@@ -128,7 +128,7 @@ const songTwo: Song = {
 };
 
 const radioOne: Radio = {
-  id: "fip-radio",
+  id: "fip",
   stationId: 0,
   metadataHref: "metadata",
   audioSource: "audioSource",
@@ -137,7 +137,7 @@ const radioOne: Radio = {
 };
 
 const radioTwo: Radio = {
-  id: "fip-autour-du-jazz",
+  id: "jazz",
   stationId: 0,
   metadataHref: "metadata",
   audioSource: "audioSource",

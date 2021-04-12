@@ -121,7 +121,7 @@ export function getState(
 
   saveFavoriteSongs(SongController, p_syncs, p_favSongs);
 
-  RouteController.redirectRoute(routes, "home", "/radios/fip-radio");
+  RouteController.redirectRoute(routes, "home", "/radios/fip");
   RouteController.redirectRoute(routes, "errors", "/");
 
   return {

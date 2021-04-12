@@ -71,7 +71,7 @@ const spotifySong = {
 };
 
 const radio = {
-  id: "fip-radio",
+  id: "fip",
   audioSource: "https://direct.fipradio.fr/live/fip-midfi.mp3",
   metadataHref: "https://www.fip.fr/livemeta/7",
   picture:
