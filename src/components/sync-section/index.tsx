@@ -35,6 +35,7 @@ export const SyncSection: React.FunctionComponent<SyncSectionPropTypes> = ({
         ) : null}
         <button
           type="button"
+          data-testid="sync-button"
           className={`${style.button} ${
             user ? style.buttonUnsync : style.buttonSync
           }`}
