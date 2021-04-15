@@ -117,7 +117,11 @@ test("End-to-end scenario", async function() {
     page.$eval("#login-button", node => node.click())
   ]);
 
-  await page.waitForSelector("[data-testid='sync-button']", { timeout: 2000 });
+  await page.waitFor(() => {
+    const syncButton = document.querySelector("[data-testid='sync-button']");
+    return syncButton && syncButton.textContent !== "Sync";
+  });
+
   const actualUnsyncButtonLabel = await page.$eval(
     "[data-testid='sync-button']",
     node => node.textContent
