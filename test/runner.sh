@@ -1,7 +1,7 @@
 #! /bin/bash
 
 if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
-  npm run test:e2e
+  yarn test:e2e
 else
-  npm run test:unit
+  yarn test:unit
 fi
