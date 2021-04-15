@@ -155,7 +155,11 @@ test("Configuration is up-to-date", async () => {
   // We open the app with another URL to avoid impacting GA
   await page.goto(`http://${host}`);
 
-  await page.waitForSelector("nav ul li", { timeout: 2000 });
+  await page.waitFor(() => {
+    const stations = document.querySelectorAll("nav ul li");
+    return stations && stations.length > 1;
+  });
+
   const navigationItems = await page.$$eval(
     "nav ul li",
     nodes => Array.from(nodes).map(node => ({
