@@ -1,0 +1,99 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: baconjs
+    versions:
+    - ">= 1.a, < 2"
+  - dependency-name: baconjs
+    versions:
+    - ">= 2.a, < 3"
+  - dependency-name: baconjs
+    versions:
+    - ">= 3.a, < 4"
+  - dependency-name: bootstrap
+    versions:
+    - ">= 4.a, < 5"
+  - dependency-name: "@types/baconjs"
+    versions:
+    - ">= 3.a, < 4"
+  - dependency-name: "@storybook/addon-actions"
+    versions:
+    - 6.1.15
+    - 6.1.17
+    - 6.1.18
+    - 6.1.20
+    - 6.1.21
+    - 6.2.2
+    - 6.2.7
+  - dependency-name: css-loader
+    versions:
+    - 5.0.1
+    - 5.0.2
+    - 5.1.0
+    - 5.1.1
+    - 5.1.2
+    - 5.1.3
+    - 5.2.0
+    - 5.2.1
+  - dependency-name: fork-ts-checker-webpack-plugin
+    versions:
+    - 6.1.0
+    - 6.1.1
+    - 6.2.0
+    - 6.2.1
+  - dependency-name: "@storybook/addons"
+    versions:
+    - 6.1.15
+    - 6.1.17
+    - 6.1.18
+    - 6.1.20
+    - 6.1.21
+    - 6.2.2
+    - 6.2.7
+  - dependency-name: "@storybook/react"
+    versions:
+    - 6.1.15
+    - 6.1.17
+    - 6.1.18
+    - 6.1.20
+    - 6.1.21
+    - 6.2.2
+    - 6.2.7
+  - dependency-name: "@sentry/node"
+    versions:
+    - 6.0.1
+    - 6.0.3
+    - 6.1.0
+    - 6.2.0
+    - 6.2.1
+    - 6.2.2
+    - 6.2.3
+    - 6.2.5
+  - dependency-name: y18n
+    versions:
+    - 4.0.1
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.22
+    - 14.14.25
+    - 14.14.28
+    - 14.14.31
+    - 14.14.32
+    - 14.14.34
+    - 14.14.35
+    - 14.14.37
+  - dependency-name: eslint-plugin-react
+    versions:
+    - 7.22.0
+    - 7.23.1
+  - dependency-name: puppeteer
+    versions:
+    - 5.5.0
+    - 7.0.1
+    - 7.1.0
+    - 8.0.0
