@@ -27,7 +27,7 @@
     "@storybook/addon-actions": "^5.3.13",
     "@storybook/addon-links": "^5.3.13",
     "@storybook/addon-viewport": "^6.0.25",
-    "@storybook/addons": "^5.3.13",
+    "@storybook/addons": "^6.3.2",
     "@storybook/react": "^5.3.13",
     "@testing-library/react": "^10.4.3",
     "@types/baconjs": "^0.7.34",
